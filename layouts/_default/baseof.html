@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ partial "head" . }}
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <a href="/" class="navbar-item">JAMboss 2</a>
+            </div>
+
+            <div class="column">
+                {{ range where .Site.RegularPages "Type" "page" }}
+                <a href="{{ .Permalink }}" class="navbar-item">{{ .Title }}</a>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+
+
+    {{ block "content" . }}{{ end }}
+</body>
+
+</html>
