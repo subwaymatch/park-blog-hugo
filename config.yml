@@ -1,3 +1,3 @@
-baseURL: "https://park-blog.netlify.app/"
+baseURL: "http://example.org/"
 languageCode: "en-us"
-title: "Park's Hugo Blog"
+title: "My New Hugo Site"
