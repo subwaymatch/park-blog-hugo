@@ -1,5 +1,6 @@
 # Hugo build output
 public/
+resources/
 
 # VSCode
 .vscode
