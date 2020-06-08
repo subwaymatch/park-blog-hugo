@@ -4,10 +4,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.0/milligram.min.css"
         integrity="sha256-baSxKEISHdSAWiipPkWRuquIMjgNIR//a++CyhnQdIM=" crossorigin="anonymous" />
     {{ $style := resources.Get "scss/main.scss" }}
-    {{ $components := readDir "assets/scss/components" }}
+    {{ $components := resources.Match "scss/components/*.scss" }}
+
     {{ range $components }}
-    {{ $component := resources.Get (printf "scss/components/%s" .Name) }}
-    {{ $style = slice $style $component | resources.Concat .Name }}
+    {{ $style = slice $style . | resources.Concat .Name }}
+    <meta name="scss-resource-matched" value="{{ .Name }}" />
     {{ end }}
 
     {{ $style = slice $style | resources.Concat "all.css" | toCSS | minify | fingerprint }}
