@@ -14,8 +14,20 @@ body {
 }
 
 #header {
+    padding: 1.6rem 1.8rem;
+
+    .header-right {
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-end; 
+    }
+
     img.logo-img {
-        max-width: 5rem; 
+        max-width: 5rem;
+    }
+
+    img.icon-menu {
+        width: 1.6rem; 
     }
 }
 

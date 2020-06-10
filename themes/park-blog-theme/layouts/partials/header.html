@@ -11,9 +11,15 @@
         </div>
     
         <div class="col-6">
-            {{ range where .Site.RegularPages "Type" "page" }}
-            <a href="{{ .Permalink }}" class="navbar-item">{{ .Title }}</a>
-            {{ end }}
+            <div class="header-right">
+                <img src="/images/icon_hamburger.svg" class="icon-menu" alt="Kiwi standing on oval">
+            </div>
+
+            <div style="display: none; ">
+                {{ range where .Site.RegularPages "Type" "page" }}
+                    <a href="{{ .Permalink }}" class="navbar-item">{{ .Title }}</a>
+                {{ end }}
+            </div>
         </div>
     </div>
     
