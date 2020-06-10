@@ -1,3 +1,5 @@
 baseURL: "https://park-blog.netlify.app/"
 languageCode: "en-us"
-title: "Park's Hugo Blog"
+title: "Park's Blog"
+taxonomies:
+  category: categories
