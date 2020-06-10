@@ -3,3 +3,4 @@ languageCode: "en-us"
 title: "Park's Blog"
 taxonomies:
   category: categories
+theme: "park-blog-theme"
