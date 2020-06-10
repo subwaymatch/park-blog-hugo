@@ -4,3 +4,5 @@ title: "Park's Blog"
 taxonomies:
   category: categories
 theme: "park-blog-theme"
+params:
+  logo_image: /images/logo_park.png

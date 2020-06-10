@@ -1,22 +1,28 @@
 {{ define "content" }}
 
-<div class="container">
-    <p>
-        Index page Check out our blog posts:
-    </p>
-
-    {{ range where site.RegularPages "Type" "!=" "page" }}
-
-    <div>{{ .Params }}</div>
-
-    <a href="{{ .RelPermalink }}" class="navbar-item">
-        {{ if isset .Params "categories" }}
-        <div>{{ delimit .Params.Categories ", " }} ⟶</div>
-        {{ end }}
-
-        <h4>{{ .Title }}</h4>
-    </a>
-    {{ end }}
+<div id="page-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="list-posts">
+                    {{ range where site.RegularPages "Type" "!=" "page" }}
+    
+                    <a href="{{ .RelPermalink }}" class="post-item">
+                        {{ if isset .Params "categories" }}
+                            <span class="categories">
+                                {{ delimit .Params.Categories ", " }} ⟶
+                            </span>
+                        {{ end }}
+                
+                        <h4>{{ .Title }}</h4>
+                
+                        <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+                    </a>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{ end }}

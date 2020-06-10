@@ -4,6 +4,50 @@ html { font-family: 'Inter', sans-serif; }
   html { font-family: 'Inter var', sans-serif; }
 }
 
+a {
+    color: black; 
+    text-decoration: none; 
+}
+
 body {
-    background-color: $color-lightest;
+    line-height: 1.7; 
+}
+
+#header {
+    img.logo-img {
+        max-width: 5rem; 
+    }
+}
+
+.list-posts {
+    .post-item {
+        display: block; 
+        margin: 1.25rem 0;
+        padding: 0.5rem 0;
+
+        .categories,
+        .date {
+            display: block; 
+            font-size: 1.125rem;
+            font-weight: light; 
+        }
+    
+        .categories {
+            color: $color-primary;
+        }
+    
+        .date {
+            color: #bdbdbd;
+        }
+    
+        h4 {
+            font-size: 1.75rem; 
+        }
+
+        &:hover {
+            .date, h4 {
+                color: $color-primary; 
+            }
+        }
+    }
 }

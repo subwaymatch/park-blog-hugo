@@ -1,13 +1,20 @@
-<div class="container">
+<div id="header">
     <div class="row">
-        <div class="column">
-            <a href="/" class="navbar-item">{{ .Site.Title }}</a>
+        <div class="col-6">
+            <a href="/" title="Homepage">
+                {{ if isset .Site.Params "logo_image" }}
+                    <img src="{{ .Site.Params.Logo_image }}" class="logo-img" />
+                {{ else }}
+                    {{ .Site.Title }}
+                {{ end }}
+            </a>
         </div>
-
-        <div class="column">
+    
+        <div class="col-6">
             {{ range where .Site.RegularPages "Type" "page" }}
             <a href="{{ .Permalink }}" class="navbar-item">{{ .Title }}</a>
             {{ end }}
         </div>
     </div>
+    
 </div>
