@@ -1,15 +1,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.0/milligram.min.css"
-        integrity="sha256-baSxKEISHdSAWiipPkWRuquIMjgNIR//a++CyhnQdIM=" crossorigin="anonymous" />
+
+    <!-- Reset CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha256-gvEnj2axkqIj4wbYhPjbWV7zttgpzBVEgHub9AAZQD4=" crossorigin="anonymous" />
 
     {{ $variablesSCSS := resources.Get "scss/_variables.scss" }}
-    {{ $anotherSCSS := resources.Get "scss/another.scss" }}
-    {{ $testSCSS := resources.Get "scss/test.scss" }}
+    {{ $gridSCSS := resources.Get "scss/_grid.scss" }}
     {{ $mainSCSS := resources.Get "scss/main.scss" }}
 
-    {{ $CSS := slice $variablesSCSS $anotherSCSS $testSCSS $mainSCSS | resources.Concat "main.scss" | toCSS | minify | fingerprint}}
+    {{ $CSS := slice $variablesSCSS $gridSCSS $mainSCSS | resources.Concat "main.scss" | toCSS | minify | fingerprint}}
 
     <link rel="stylesheet" href="{{ $CSS.RelPermalink }}" media="all">
 

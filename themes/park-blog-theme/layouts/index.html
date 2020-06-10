@@ -2,15 +2,20 @@
 
 <div class="container">
     <p>
-        Index page
-
-        Check out our blog posts:
+        Index page Check out our blog posts:
     </p>
 
-    {{/* List of all non-regular pages */}}
     {{ range where site.RegularPages "Type" "!=" "page" }}
-    <div>{{ .Type }}</div>
-    <a href="{{ .RelPermalink }}" class="navbar-item">{{ .Title }}</a>
+
+    <div>{{ .Params }}</div>
+
+    <a href="{{ .RelPermalink }}" class="navbar-item">
+        {{ if isset .Params "categories" }}
+        <div>{{ delimit .Params.Categories ", " }} ⟶</div>
+        {{ end }}
+
+        <h4>{{ .Title }}</h4>
+    </a>
     {{ end }}
 </div>
 
