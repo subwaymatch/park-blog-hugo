@@ -6,3 +6,7 @@ taxonomies:
 theme: "park-blog-theme"
 params:
   logo_image: /images/logo_park.png
+markup:
+  highlight:
+    style: colorful
+

@@ -1,5 +1,7 @@
 ---
-title: post1
+title: Elevate Your Jupyter Notebook Environment Experience
+categories: 
+    - Environment
 ---
 
 We design and engineer value for global leading brands

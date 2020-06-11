@@ -1,7 +1,9 @@
 ---
-title: Featured Images
+title: Handling Featured Images with Directory Structure
 description: "In this page, we will explain what featured images are and show you some examples how to add a featured \
 image for a page."
+categories:
+  - Image Processing
 date: 2019-09-12
 ---
 

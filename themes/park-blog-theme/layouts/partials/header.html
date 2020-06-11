@@ -1,6 +1,6 @@
 <div id="header">
     <div class="row">
-        <div class="col-6">
+        <div class="col-6-sm">
             <a href="/" title="Homepage">
                 {{ if isset .Site.Params "logo_image" }}
                     <img src="{{ .Site.Params.Logo_image }}" class="logo-img" />
@@ -10,9 +10,9 @@
             </a>
         </div>
     
-        <div class="col-6">
+        <div class="col-6-sm">
             <div class="header-right">
-                <img src="/images/icon_hamburger.svg" class="icon-menu" alt="Kiwi standing on oval">
+                <div id="btn-menu"><img src="/images/icon_hamburger.svg" class="icon-menu" alt="Kiwi standing on oval"></div>
             </div>
 
             <div style="display: none; ">

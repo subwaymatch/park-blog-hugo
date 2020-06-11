@@ -5,6 +5,8 @@ date: 2019-09-23
 mathjax: true
 tags:
   - "MathJax"
+categories:
+  - "MathJax"
 ---
 
 MathJax JavaScript library allows you to include mathematics in your web pages for viewing in any modern browser.

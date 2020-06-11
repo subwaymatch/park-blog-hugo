@@ -1,5 +1,7 @@
 ---
-title: post2
+title: Making Plots in Jupyter Notebook Beautiful & More Meaningful
+categories:
+    - Plotly
 ---
 
 ## Profile

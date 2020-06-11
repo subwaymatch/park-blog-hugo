@@ -1,5 +1,5 @@
 ---
-title: Basic HTML Elements
+title: Basic HTML Elements with Hugo
 description: Example test article that contains basic HTML elements for text formatting on the Web.
 date: 2019-09-24
 categories:
