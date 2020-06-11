@@ -4,120 +4,254 @@ date: 2020-06-10
 categories:
   - Data Analytics
 ---
-Yellow Cab Chicago has hired your small accounting and consulting firm to help them reduce costs and increase revenues. Like many traditional cab companies, Yellow Cab is feeling significant pressure from ride-hailing companies like Lyft and Uber. You are a recent graduate and new to the firm and are excited to learn you will have a role in this engagement. 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Yellow Cab Chicago has hired your small accounting and consulting firm to help them reduce costs and increase revenues. Like many traditional cab companies, Yellow Cab is feeling significant pressure from ride-hailing companies like Lyft and Uber. You are a recent graduate and new to the firm and are excited to learn you will have a role in this engagement.</p>
 
-## Load and Look at the Data
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Load-and-Look-at-the-Data">Load and Look at the Data<a class="anchor-link" href="#Load-and-Look-at-the-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Accompanying the case is a CSV file containing 2,000,000 rows of actual cab data from the City of Chicago. Load the data from the CSV file into a DataFrame using the Pandas package. Look at the columns and their data types. How many rows and columns does the DataFrame have? Do any of the <code>DataFrame</code> columns have null values?</p>
 
-Accompanying the case is a CSV file containing 2,000,000 rows of actual cab data from the City of Chicago. Load the data from the CSV file into a DataFrame using the Pandas package. Look at the columns and their data types. How many rows and columns does the DataFrame have? Do any of the `DataFrame` columns have null values?
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<center><img src="/images/rocket.png" alt="Rocket" /></center>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Testing-Code-Cells">Testing Code Cells<a class="anchor-link" href="#Testing-Code-Cells">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Like any kind of real data, there are mistakes and omissions in our table. Let’s start by removing null values from key columns of interest. We will not remove all null values, because that would eliminate too much data. Rather, we will think strategically about what variables (or columns) we really care about, and eliminate any nulls in those columns.</p>
 
-![Rocket](/images/rocket.png)
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-### Testing Code Cells
+<span class="n">friends</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">70</span><span class="p">,</span>  <span class="mi">65</span><span class="p">,</span>  <span class="mi">72</span><span class="p">,</span>  <span class="mi">63</span><span class="p">,</span>  <span class="mi">71</span><span class="p">,</span>  <span class="mi">64</span><span class="p">,</span>  <span class="mi">60</span><span class="p">,</span>  <span class="mi">64</span><span class="p">,</span>  <span class="mi">67</span><span class="p">]</span>
+<span class="n">minutes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">175</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">205</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">190</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">]</span>
 
-Like any kind of real data, there are mistakes and omissions in our table. Let’s start by removing null values from key columns of interest. We will not remove all null values, because that would eliminate too much data. Rather, we will think strategically about what variables (or columns) we really care about, and eliminate any nulls in those columns.
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">friends</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span>
 
+<span class="c1"># label each point</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">friend_count</span><span class="p">,</span> <span class="n">minute_count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">friends</span><span class="p">,</span> <span class="n">minutes</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span>
+        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">friend_count</span><span class="p">,</span> <span class="n">minute_count</span><span class="p">),</span> <span class="c1"># Put the label with its point</span>
+        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">),</span>                  <span class="c1"># but slightly offset</span>
+        <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
 
-```python
-import matplotlib.pyplot as plt
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily Minutes vs. Number of Friends&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;# of friends&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;daily minutes spent on the site&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
 
-friends = [ 70,  65,  72,  63,  71,  64,  60,  64,  67]
-minutes = [175, 170, 205, 120, 220, 130, 105, 145, 190]
-labels =  ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    </div>
+</div>
+</div>
 
-plt.scatter(friends, minutes)
-
-# label each point
-for label, friend_count, minute_count in zip(labels, friends, minutes):
-    plt.annotate(label,
-        xy=(friend_count, minute_count), # Put the label with its point
-        xytext=(5, -5),                  # but slightly offset
-        textcoords='offset points')
-
-plt.title("Daily Minutes vs. Number of Friends")
-plt.xlabel("# of friends")
-plt.ylabel("daily minutes spent on the site")
-plt.show()
-```
-
-
-    <Figure size 640x480 with 1 Axes>
-
-
-But how about NumPy arrays?
-
-
-```python
-import numpy as np
-
-numpy_array = np.random.rand(6, 12)
-numpy_array
-```
-
-
-
-
-    array([[0.91641824, 0.54310168, 0.8091056 , 0.88245616, 0.91964695,
-            0.91648015, 0.63045884, 0.29604678, 0.19678313, 0.39994041,
-            0.38253659, 0.57745387],
-           [0.73317156, 0.89589541, 0.25502668, 0.08824095, 0.97800119,
-            0.358111  , 0.56699541, 0.14422642, 0.14421129, 0.07024278,
-            0.564233  , 0.84338071],
-           [0.34844971, 0.46429215, 0.78501114, 0.53640208, 0.69418632,
-            0.51274316, 0.88041439, 0.90257281, 0.23093572, 0.62138988,
-            0.64943243, 0.78328884],
-           [0.73316043, 0.26546137, 0.86807861, 0.8238116 , 0.46813309,
-            0.04077674, 0.90260839, 0.29770408, 0.93569717, 0.26011497,
-            0.07114519, 0.71901327],
-           [0.66877959, 0.40267311, 0.31362379, 0.39005604, 0.14184502,
-            0.88909397, 0.61879475, 0.78452009, 0.88572798, 0.63119705,
-            0.39234353, 0.57453366],
-           [0.6995472 , 0.37564836, 0.97052624, 0.02683573, 0.0733955 ,
-            0.76443673, 0.67437029, 0.34452404, 0.27337582, 0.6010999 ,
-            0.12309178, 0.51363463]])
-
-
-
-Alright, let's see how my blog handles syntax highlighting.
-
-
-```python
-# Program to count the number of each vowels
-
-# string of vowels
-vowels = 'aeiou'
-
-ip_str = 'Hello, have you tried our tutorial section yet?'
-
-# make it suitable for caseless comparisions
-ip_str = ip_str.casefold()
-
-# make a dictionary with each vowel a key and value 0
-count = {}.fromkeys(vowels,0)
-
-# count the vowels
-for char in ip_str:
-   if char in count:
-       count[char] += 1
-
-print(count)
-```
-
-    {'a': 2, 'e': 5, 'i': 3, 'o': 5, 'u': 3}
-    
-
-Simple table
+<div class="output_wrapper">
+<div class="output">
 
 
-```python
-import seaborn as sns
+<div class="output_area">
 
-df_titanic = sns.load_dataset('titanic')
-df_titanic.head()
-```
+    <div class="prompt"></div>
 
 
 
 
+<div class="output_text output_subarea ">
+<pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But how about NumPy arrays?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">numpy_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">numpy_array</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[2]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0.91641824, 0.54310168, 0.8091056 , 0.88245616, 0.91964695,
+        0.91648015, 0.63045884, 0.29604678, 0.19678313, 0.39994041,
+        0.38253659, 0.57745387],
+       [0.73317156, 0.89589541, 0.25502668, 0.08824095, 0.97800119,
+        0.358111  , 0.56699541, 0.14422642, 0.14421129, 0.07024278,
+        0.564233  , 0.84338071],
+       [0.34844971, 0.46429215, 0.78501114, 0.53640208, 0.69418632,
+        0.51274316, 0.88041439, 0.90257281, 0.23093572, 0.62138988,
+        0.64943243, 0.78328884],
+       [0.73316043, 0.26546137, 0.86807861, 0.8238116 , 0.46813309,
+        0.04077674, 0.90260839, 0.29770408, 0.93569717, 0.26011497,
+        0.07114519, 0.71901327],
+       [0.66877959, 0.40267311, 0.31362379, 0.39005604, 0.14184502,
+        0.88909397, 0.61879475, 0.78452009, 0.88572798, 0.63119705,
+        0.39234353, 0.57453366],
+       [0.6995472 , 0.37564836, 0.97052624, 0.02683573, 0.0733955 ,
+        0.76443673, 0.67437029, 0.34452404, 0.27337582, 0.6010999 ,
+        0.12309178, 0.51363463]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Alright, let's see how my blog handles syntax highlighting.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Program to count the number of each vowels</span>
+
+<span class="c1"># string of vowels</span>
+<span class="n">vowels</span> <span class="o">=</span> <span class="s1">&#39;aeiou&#39;</span>
+
+<span class="n">ip_str</span> <span class="o">=</span> <span class="s1">&#39;Hello, have you tried our tutorial section yet?&#39;</span>
+
+<span class="c1"># make it suitable for caseless comparisions</span>
+<span class="n">ip_str</span> <span class="o">=</span> <span class="n">ip_str</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+
+<span class="c1"># make a dictionary with each vowel a key and value 0</span>
+<span class="n">count</span> <span class="o">=</span> <span class="p">{}</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">vowels</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># count the vowels</span>
+<span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">ip_str</span><span class="p">:</span>
+   <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span>
+       <span class="n">count</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;a&#39;: 2, &#39;e&#39;: 5, &#39;i&#39;: 3, &#39;o&#39;: 5, &#39;u&#39;: 3}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Simple table</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">df_titanic</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
+<span class="n">df_titanic</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[4]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -247,18 +381,38 @@ df_titanic.head()
   </tbody>
 </table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_iris</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;iris&#39;</span><span class="p">)</span>
+<span class="n">df_iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
 
 
 
-
-```python
-df_iris = sns.load_dataset('iris')
-df_iris.head()
-```
-
-
-
-
+<div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -328,20 +482,46 @@ df_iris.head()
   </tbody>
 </table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Brain networks dataset</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_brain_networks</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;brain_networks&#39;</span><span class="p">)</span>
+<span class="n">df_brain_networks</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
 
 
 
-Brain networks dataset
-
-
-```python
-df_brain_networks = sns.load_dataset('brain_networks')
-df_brain_networks
-```
-
-
-
-
+<div class="output_html rendered_html output_subarea output_execute_result">
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1852,13 +2032,36 @@ df_brain_networks
 </table>
 <p>923 rows × 63 columns</p>
 </div>
+</div>
 
+</div>
 
+</div>
+</div>
 
-## Other elements in Jupyter notebook
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Other-elements-in-Jupyter-notebook">Other elements in Jupyter notebook<a class="anchor-link" href="#Other-elements-in-Jupyter-notebook">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>I recommend you download and install the Anaconda distribution of Python. This is a premiere distribution of Python that is designed for data science. It includes a Jupyter notebook server and JupyterLab.</li>
+<li>If you want to work on the cloud, you can try Microsoft Azure Notebooks. This is a free service from Microsoft that you can use to study the following:<ul>
+<li>Statistics</li>
+<li>Calculus</li>
+<li>Data Analytics</li>
+</ul>
+</li>
+</ul>
 
-- I recommend you download and install the Anaconda distribution of Python. This is a premiere distribution of Python that is designed for data science. It includes a Jupyter notebook server and JupyterLab.
-- If you want to work on the cloud, you can try Microsoft Azure Notebooks. This is a free service from Microsoft that you can use to study the following:
-    * Statistics
-    * Calculus
-    * Data Analytics
+</div>
+</div>
+</div>
+ 
+

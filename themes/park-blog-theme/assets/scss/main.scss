@@ -103,3 +103,46 @@ body {
         font-family: monospace;
     }
 }
+
+.section-post {
+    h1 {
+        font-size: 1.25rem; 
+        margin-bottom: 3rem; 
+    }
+    
+    p {
+        margin-bottom: 2rem; 
+    }
+
+    h2, h3, h4, h5, h6 {
+        margin-bottom: 1rem; 
+    }
+
+    .input {
+        position: relative; 
+
+        .prompt.input_prompt {
+            color: #303F93;
+            font-size: 1.1rem; 
+            position: absolute; 
+            left: -4rem;
+            top: 0.8rem;
+        }
+    }
+
+    @media only screen and (min-width: $breakpoint-small) {
+        font-size: 1.15rem; 
+
+        h1 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media only screen and (min-width: $breakpoint-large) {
+        font-size: 1.25rem; 
+
+        h1 {
+            font-size: 2.25rem;
+        }
+    }
+}
