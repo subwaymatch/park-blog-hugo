@@ -51,7 +51,7 @@ categories:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -61,17 +61,6 @@ categories:
 <span class="n">labels</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">]</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">friends</span><span class="p">,</span> <span class="n">minutes</span><span class="p">)</span>
-
-<span class="c1"># label each point</span>
-<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">friend_count</span><span class="p">,</span> <span class="n">minute_count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">friends</span><span class="p">,</span> <span class="n">minutes</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span>
-        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">friend_count</span><span class="p">,</span> <span class="n">minute_count</span><span class="p">),</span> <span class="c1"># Put the label with its point</span>
-        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">),</span>                  <span class="c1"># but slightly offset</span>
-        <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Daily Minutes vs. Number of Friends&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;# of friends&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;daily minutes spent on the site&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
@@ -90,8 +79,10 @@ categories:
 
 
 
-<div class="output_text output_subarea ">
-<pre>&lt;Figure size 640x480 with 1 Axes&gt;</pre>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -135,24 +126,24 @@ categories:
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([[0.91641824, 0.54310168, 0.8091056 , 0.88245616, 0.91964695,
-        0.91648015, 0.63045884, 0.29604678, 0.19678313, 0.39994041,
-        0.38253659, 0.57745387],
-       [0.73317156, 0.89589541, 0.25502668, 0.08824095, 0.97800119,
-        0.358111  , 0.56699541, 0.14422642, 0.14421129, 0.07024278,
-        0.564233  , 0.84338071],
-       [0.34844971, 0.46429215, 0.78501114, 0.53640208, 0.69418632,
-        0.51274316, 0.88041439, 0.90257281, 0.23093572, 0.62138988,
-        0.64943243, 0.78328884],
-       [0.73316043, 0.26546137, 0.86807861, 0.8238116 , 0.46813309,
-        0.04077674, 0.90260839, 0.29770408, 0.93569717, 0.26011497,
-        0.07114519, 0.71901327],
-       [0.66877959, 0.40267311, 0.31362379, 0.39005604, 0.14184502,
-        0.88909397, 0.61879475, 0.78452009, 0.88572798, 0.63119705,
-        0.39234353, 0.57453366],
-       [0.6995472 , 0.37564836, 0.97052624, 0.02683573, 0.0733955 ,
-        0.76443673, 0.67437029, 0.34452404, 0.27337582, 0.6010999 ,
-        0.12309178, 0.51363463]])</pre>
+<pre>array([[0.13962294, 0.87761065, 0.41104851, 0.3473787 , 0.74189422,
+        0.0144535 , 0.50861946, 0.68430249, 0.64010613, 0.51074718,
+        0.90689542, 0.6949895 ],
+       [0.61127365, 0.57578185, 0.66863659, 0.29907296, 0.76391015,
+        0.30305216, 0.72693037, 0.30488708, 0.02110544, 0.94547793,
+        0.62459415, 0.71154387],
+       [0.36310251, 0.23603497, 0.56676969, 0.03785169, 0.78082334,
+        0.91100643, 0.37822872, 0.51919898, 0.03114835, 0.3033703 ,
+        0.64347917, 0.84627086],
+       [0.92119849, 0.88520654, 0.49509965, 0.75188237, 0.48052393,
+        0.07112154, 0.49469314, 0.45305839, 0.42103655, 0.71158219,
+        0.38927259, 0.73671201],
+       [0.95287936, 0.66453244, 0.16784101, 0.58649491, 0.26731373,
+        0.03179279, 0.01003879, 0.27241261, 0.13196537, 0.58893952,
+        0.51545099, 0.1741409 ],
+       [0.76495872, 0.26793728, 0.81012043, 0.42211437, 0.57418331,
+        0.2761942 , 0.68348613, 0.50741163, 0.20480163, 0.12502683,
+        0.25707839, 0.13642688]])</pre>
 </div>
 
 </div>

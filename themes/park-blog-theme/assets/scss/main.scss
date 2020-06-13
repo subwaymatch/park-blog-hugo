@@ -11,6 +11,21 @@ a {
 
 body {
     line-height: 1.9; 
+
+    @media only screen and (min-width: $breakpoint-small) {
+        font-size: 1.15rem; 
+
+        h1 { font-size: 1.5rem; }
+    }
+
+    @media only screen and (min-width: $breakpoint-large) {
+        font-size: 1.2rem; 
+
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4, h5, h6 { font-size: 1.5rem; }
+    }
 }
 
 #header {
@@ -95,30 +110,35 @@ body {
 
 .section-post {
     padding-bottom: 10rem; 
+    font-family: freight-text-pro, serif;
+    font-weight: 400;
+    line-height: 1.65; 
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Inter var', sans-serif;
+        line-height: 1.6; 
+    }
 
     h1 {
         font-size: 1.25rem; 
-        margin-bottom: 2rem; 
-    }
-    
-    p {
-        color: #333; 
         margin-bottom: 2rem; 
     }
 
     h2, h3, h4, h5, h6 {
         margin-bottom: 1rem; 
     }
+    
+    p {
+        font-size: 1.35rem; 
+        font-style: normal;
+        margin-bottom: 2rem; 
+    }
 
     @media only screen and (min-width: $breakpoint-small) {
-        font-size: 1.15rem; 
-
         h1 { font-size: 1.5rem; }
     }
 
     @media only screen and (min-width: $breakpoint-large) {
-        font-size: 1.2rem; 
-
         h1 { font-size: 2.25rem; }
         h2 { font-size: 2rem; }
         h3 { font-size: 1.75rem; }
