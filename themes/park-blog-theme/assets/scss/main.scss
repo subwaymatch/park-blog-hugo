@@ -5,7 +5,7 @@ html { font-family: 'Inter', sans-serif; }
 }
 
 a {
-    color: black; 
+    color: $color-primary; 
     text-decoration: none; 
 }
 
@@ -89,6 +89,7 @@ body {
         }
     
         h4 {
+            color: black; 
             font-size: 1.25rem; 
 
             @media only screen and (min-width: $breakpoint-small) {
@@ -134,6 +135,10 @@ body {
         margin-bottom: 2rem; 
     }
 
+    img {
+        max-width: 100%; 
+    }
+
     @media only screen and (min-width: $breakpoint-small) {
         h1 { font-size: 1.5rem; }
     }
@@ -161,4 +166,8 @@ ul {
 
 ol {
     list-style-type: decimal;
+}
+
+table {
+    font-family: 'inter', sans-serif; 
 }

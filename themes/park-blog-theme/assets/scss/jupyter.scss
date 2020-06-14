@@ -1,6 +1,7 @@
 .cell {
     .input {
         position: relative; 
+        margin-bottom: 0.6rem; 
 
         pre {
             padding: 0.9rem 1.1rem;
@@ -16,11 +17,34 @@
 
     &.code_cell {
         .input {
-            margin-bottom: 0.6rem; 
+            .highlight {
+                pre {
+                    white-space: pre-wrap; 
+                }
+            }
+            
         }
 
         .output_wrapper {
             margin-bottom: 2rem; 
+        }
+
+        .output_text, 
+        .output_html {
+            overflow-x: auto;
+        }
+
+        .output_execute_result {
+            p {
+                font-size: 1.3rem; 
+                font-family: monospace;
+                margin-top: 1rem; 
+            }
+        }
+
+        .output_subarea.output_text {
+            max-height: 24rem; 
+            overflow-y: auto; 
         }
     }
 
@@ -78,8 +102,6 @@ table.dataframe {
         border-bottom: 1px solid black;
         vertical-align: bottom;
     }
-
-
 }
 
 .rendered_html 
@@ -94,8 +116,6 @@ table.dataframe {
     max-width: none;
     border: none;
 }
-
-
 
   .rendered_html th {
     font-weight: bold;
