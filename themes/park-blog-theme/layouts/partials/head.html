@@ -3,7 +3,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Reset CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha256-gvEnj2axkqIj4wbYhPjbWV7zttgpzBVEgHub9AAZQD4=" crossorigin="anonymous" />
+    {{ $resetCSS := resources.Get "css/reset.css" }}
+    {{ $CSS :=  $resetCSS | minify | fingerprint}}
+    <link rel="stylesheet" href="{{ $CSS.RelPermalink }}" media="all">
+
+    <!-- TypeKit -->
     <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css">
 
     {{ $variablesSCSS := resources.Get "scss/_variables.scss" }}
@@ -11,9 +15,9 @@
     {{ $mainSCSS := resources.Get "scss/main.scss" }}
     {{ $jupyterSCSS := resources.Get "scss/jupyter.scss" }}
 
-    {{ $CSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint}}
+    {{ $SCSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint}}
 
-    <link rel="stylesheet" href="{{ $CSS.RelPermalink }}" media="all">
+    <link rel="stylesheet" href="{{ $SCSS.RelPermalink }}" media="all">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 

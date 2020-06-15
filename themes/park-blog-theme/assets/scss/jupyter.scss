@@ -1,4 +1,4 @@
-$cell-width: 46.25rem;
+$cell-width: 43rem;;
 
 %cell-container {
     width: $cell-width;
@@ -23,6 +23,14 @@ $cell-width: 46.25rem;
                 @extend %cell-container;
                 
                 position: relative; 
+
+                .highlight {
+                    font-size: 0.95em; 
+
+                    pre {
+                        margin-bottom: 0;
+                    }
+                }
             }
 
             /* Input & output prompts (e.g., In [1]:, Out [1]:) */
@@ -64,13 +72,20 @@ $cell-width: 46.25rem;
             .output_area {
                 position: relative; 
 
-                .output_text,
-                .output_html {
-                    font-size: 1.2rem; 
-                }
-
                 .output_text {
                     font-family: monospace; 
+                }
+
+                .output_stdout {
+                    font-size: 1.2rem; 
+                    margin-top: 0.4rem; 
+                }
+
+                pre {
+                    padding: 0; 
+                    margin: 0;
+                    border: none; 
+                    background: transparent;
                 }
             }
     
