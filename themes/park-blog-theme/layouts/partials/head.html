@@ -11,7 +11,7 @@
     {{ $mainSCSS := resources.Get "scss/main.scss" }}
     {{ $jupyterSCSS := resources.Get "scss/jupyter.scss" }}
 
-    {{ $CSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | minify | fingerprint}}
+    {{ $CSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint}}
 
     <link rel="stylesheet" href="{{ $CSS.RelPermalink }}" media="all">
 

@@ -1,7 +1,7 @@
 @import url('https://rsms.me/inter/inter.css');
-html { font-family: 'Inter', sans-serif; }
+html { font-family: $font-sans-serif; }
 @supports (font-variation-settings: normal) {
-  html { font-family: 'Inter var', sans-serif; }
+  html { font-family: $font-sans-serif; }
 }
 
 a {
@@ -10,26 +10,130 @@ a {
 }
 
 body {
+    font-size: 1.35rem; 
     line-height: 1.9; 
 
-    @media only screen and (min-width: $breakpoint-small) {
+    @include media-medium-and-smaller {
+        font-size: 1.25rem; 
+    }
+
+    @include media-small {
         font-size: 1.15rem; 
+    }
+}
 
-        h1 { font-size: 1.5rem; }
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-sans-serif;
+    line-height: 1.6; 
+    margin-bottom: 1rem; 
+}
+
+h1 { 
+    font-size: 2.25rem;
+    margin-bottom: 2rem;
+
+    @include media-medium-and-smaller {
+        font-size: 2rem;
+    }
+}
+
+h2 { 
+    font-size: 2rem; 
+
+    @include media-medium-and-smaller {
+        font-size: 1.75rem;
+    }
+}
+
+h3 { 
+    font-size: 1.75rem; 
+
+    @include media-medium-and-smaller {
+        font-size: 1.5rem;
+    }
+}
+
+h4, h5, h6 { 
+    font-size: 1.5rem; 
+    
+    @include media-medium-and-smaller {
+        font-size: 1.3rem;
+    }
+}
+
+p {
+    margin-bottom: 1.6rem; 
+
+    @include media-medium-and-smaller {
+        margin-bottom: 1.2rem; 
     }
 
-    @media only screen and (min-width: $breakpoint-large) {
-        font-size: 1.2rem; 
-
-        h1 { font-size: 2.25rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.75rem; }
-        h4, h5, h6 { font-size: 1.5rem; }
+    @include media-small {
+        margin-bottom: 1rem;
     }
+}
+
+img {
+    max-width: 100%; 
+}
+
+pre {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    background-color: #f8f8f8;
+    border: 1px solid #f2f2f2;
+    border-radius: 6px; 
+    white-space: pre-wrap; 
+
+    line-height: 1.4;
+    font-family: $font-monospace;
+
+    overflow-x: auto; 
+    margin-bottom: 2rem; 
+
+    font-size: 1rem; 
+
+    code {
+        font-size: 1rem;
+        padding: none; 
+        border: none; 
+        background-color: transparent; 
+    }
+}
+
+code {
+    font-family: $font-monospace; 
+    background-color: #f8f8f8;
+    padding: 0.4rem 0.5rem; 
+    border: 1px solid #f2f2f2; 
+    border-radius: 6px; 
+    font-size: 0.9em; 
+}
+
+ul, dl, ol {
+    margin-bottom: 2rem; 
+    list-style-position: inside; 
+}
+
+ul {
+    list-style-type: disc;
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+table {
+    font-family: 'inter', sans-serif; 
 }
 
 #header {
     padding: 1.6rem 1.8rem 0.4rem 1.8rem;
+
+    @include media-medium-and-smaller{
+        padding-left: 0; 
+        padding-right: 0; 
+    }
 
     .header-right {
         display: flex; 
@@ -55,8 +159,6 @@ body {
             }
         }
     }
-
-
 }
 
 .list-posts {
@@ -90,14 +192,14 @@ body {
     
         h4 {
             color: black; 
-            font-size: 1.25rem; 
+            font-size: 1.75rem;
 
-            @media only screen and (min-width: $breakpoint-small) {
-                font-size: 1.5rem;
+            @include media-small {
+                font-size: 1.25rem; 
             }
-        
-            @media only screen and (min-width: $breakpoint-large) {
-                font-size: 1.75rem;
+
+            @include media-medium-and-smaller {
+                font-size: 1.5rem; 
             }
         }
 
@@ -114,60 +216,4 @@ body {
     font-family: freight-text-pro, serif;
     font-weight: 400;
     line-height: 1.65; 
-
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Inter var', sans-serif;
-        line-height: 1.6; 
-    }
-
-    h1 {
-        font-size: 1.25rem; 
-        margin-bottom: 2rem; 
-    }
-
-    h2, h3, h4, h5, h6 {
-        margin-bottom: 1rem; 
-    }
-    
-    p {
-        font-size: 1.35rem; 
-        font-style: normal;
-        margin-bottom: 2rem; 
-    }
-
-    img {
-        max-width: 100%; 
-    }
-
-    @media only screen and (min-width: $breakpoint-small) {
-        h1 { font-size: 1.5rem; }
-    }
-
-    @media only screen and (min-width: $breakpoint-large) {
-        h1 { font-size: 2.25rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.75rem; }
-        h4, h5, h6 { font-size: 1.5rem; }
-    }
-}
-
-.code {
-    
-}
-
-ul, dl, ol {
-    margin-bottom: 2rem; 
-    list-style-position: inside; 
-}
-
-ul {
-    list-style-type: disc;
-}
-
-ol {
-    list-style-type: decimal;
-}
-
-table {
-    font-family: 'inter', sans-serif; 
 }
