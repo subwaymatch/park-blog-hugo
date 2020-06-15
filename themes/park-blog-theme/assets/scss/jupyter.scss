@@ -37,7 +37,7 @@ $cell-width: 43rem;;
             .prompt.input_prompt,
             .prompt.output_prompt {
                 font-size: 1rem;
-                font-family: monospace;
+                font-family: $font-monospace;
                 position: absolute;
                 left: -5.5rem;
                 width: 4.5rem;
@@ -73,7 +73,7 @@ $cell-width: 43rem;;
                 position: relative; 
 
                 .output_text {
-                    font-family: monospace; 
+                    font-family: $font-monospace; 
                 }
 
                 .output_stdout {

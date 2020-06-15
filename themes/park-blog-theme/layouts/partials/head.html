@@ -3,19 +3,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Reset CSS -->
-    {{ $resetCSS := resources.Get "css/reset.css" }}
-    {{ $CSS :=  $resetCSS | minify | fingerprint}}
-    <link rel="stylesheet" href="{{ $CSS.RelPermalink }}" media="all">
+    {{ $resetCSS := resources.Get "css/reset.css" | minify }}
+
+    <link rel="stylesheet" href="{{ $resetCSS.RelPermalink }}" media="all">
 
     <!-- TypeKit -->
     <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css">
+
+
+    {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS | minify | fingerprint }}
+
+    <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all">
+
+
+    <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
     {{ $variablesSCSS := resources.Get "scss/_variables.scss" }}
     {{ $gridSCSS := resources.Get "scss/_grid.scss" }}
     {{ $mainSCSS := resources.Get "scss/main.scss" }}
     {{ $jupyterSCSS := resources.Get "scss/jupyter.scss" }}
 
-    {{ $SCSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint}}
+    {{ $SCSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint }}
 
     <link rel="stylesheet" href="{{ $SCSS.RelPermalink }}" media="all">
 
