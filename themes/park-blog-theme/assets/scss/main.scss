@@ -16,7 +16,7 @@ body {
     }
 
     @include media-small {
-        font-size: 1.15rem; 
+        font-size: 1.2rem; 
     }
 }
 
@@ -243,4 +243,8 @@ table {
     font-family: freight-text-pro, serif;
     font-weight: 400;
     line-height: 1.65; 
+
+    @include media-small {
+        line-height: 1.55;
+    }
 }
