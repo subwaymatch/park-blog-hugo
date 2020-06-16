@@ -43,7 +43,7 @@ $cell-width: 43rem;;
 
             .prompt.input_prompt { 
                 color: #303F93;
-                top: 0.8rem;
+                top: 0.9rem;
             }
             .prompt.output_prompt { 
                 color: #D84315;
@@ -75,7 +75,7 @@ $cell-width: 43rem;;
                 }
 
                 @include media-medium-and-smaller {
-                    width: 100%
+                    width: 100%;
                 }
             }
 
