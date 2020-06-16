@@ -10,11 +10,9 @@
     <!-- TypeKit -->
     <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css">
 
-
     {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS | minify | fingerprint }}
 
     <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all">
-
 
     <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
