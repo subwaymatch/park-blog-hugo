@@ -4,6 +4,14 @@ $cell-width: 43rem;;
     width: $cell-width;
     margin-left: auto;
     margin-right: auto;
+
+    @include media-medium-and-smaller {
+        width: 90%;
+    }
+
+    @include media-small {
+        width: 94%;
+    }
 }
 
 .format-jupyter {
@@ -33,17 +41,6 @@ $cell-width: 43rem;;
                 }
             }
 
-            /* Input & output prompts (e.g., In [1]:, Out [1]:) */
-            .prompt.input_prompt,
-            .prompt.output_prompt {
-                font-size: 1rem;
-                font-family: $font-monospace;
-                position: absolute;
-                left: -5.5rem;
-                width: 4.5rem;
-                text-align: right; 
-            }
-
             .prompt.input_prompt { 
                 color: #303F93;
                 top: 0.8rem;
@@ -51,6 +48,35 @@ $cell-width: 43rem;;
             .prompt.output_prompt { 
                 color: #D84315;
                 top: 0.2rem;
+            }
+
+            /* Input & output prompts (e.g., In [1]:, Out [1]:) */
+            .prompt.input_prompt,
+            .prompt.output_prompt {
+                font-size: 0.85rem;
+                font-family: $font-monospace;
+                position: absolute;
+                left: -5rem;
+                width: 4.5rem;
+                text-align: right;
+
+                @media only screen and (max-width: 1100px) {
+                    display: block;
+                    text-align: left;
+                    position: relative; 
+                    top: 0;
+                    left: 0; 
+                    
+                    width: $cell-width;
+                    padding-top: 1rem; 
+                    padding-bottom: 0.6rem; 
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                @include media-medium-and-smaller {
+                    width: 100%
+                }
             }
 
             .output_wrapper {
@@ -67,6 +93,18 @@ $cell-width: 43rem;;
                 display: inline-block;
                 max-width: 85%;
                 min-width: $cell-width;
+
+                @include media-medium-and-smaller {
+                    width: 90%;
+                    max-width: 90%; 
+                    min-width: 90%; 
+                }
+            
+                @include media-small {
+                    width: 94%;
+                    max-width: 94%;
+                    min-width: 90%;
+                }
             }
 
             .output_area {
