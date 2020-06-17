@@ -159,6 +159,10 @@ table {
             font-size: 3rem;
             display: block;
             color:#000;
+
+            @include media-small {
+                font-size: 1.5rem; 
+            }
         }
     }
 }

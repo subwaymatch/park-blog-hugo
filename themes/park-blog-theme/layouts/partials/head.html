@@ -12,7 +12,9 @@
 
     {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS | minify | fingerprint }}
 
-    <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all">
+    {{ $hamburgerCSS := resources.Get "css/hamburgers.css" }}
+
+    <link rel="stylesheet" href="{{ $hamburgerCSS.RelPermalink }}" media="all">
 
     <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -29,8 +31,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
     <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <script type="text/javascript">
+        /* Menu pop-up */
+        window.addEventListener('DOMContentLoaded', e => {
+            let isMenuOpen = false; 
+            let menuBtnEl = document.getElementById("btn-menu");
+            let menuPopUpEl = document.getElementById("menu-overlay");
+
+            console.log(menuBtnEl);
+            
+            menuBtnEl.addEventListener('click', e => {
+                e.preventDefault(); 
+                
+                isMenuOpen = !isMenuOpen;
+
+                if (isMenuOpen) {
+                    menuBtnEl.classList.add('is-active');
+                    menuPopUpEl.style.display = 'flex';
+                } else {
+                    menuBtnEl.classList.remove('is-active');
+                    menuPopUpEl.style.display = 'none';
+                }
+            });
+        })
+    </script>
 
     <title>{{ .Site.Title }}</title>
 </head>
