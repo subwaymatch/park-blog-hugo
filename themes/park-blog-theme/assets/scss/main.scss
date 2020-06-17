@@ -220,7 +220,7 @@ table {
         }
     
         .date {
-            color: #bdbdbd;
+            color: $color-inactive-gray;
             margin-top: 0.25rem;
         }
     
@@ -254,5 +254,63 @@ table {
 
     @include media-small {
         line-height: 1.55;
+    }
+}
+
+.pagination-wrapper {
+    text-align: center; 
+
+    ul.pagination {
+        display: inline-block; 
+        font-size: 1.2rem; 
+
+        li.page-item {
+            display: inline-block; 
+            position: relative; 
+            z-index: 1; 
+
+            .active-indicator {
+                color: $color-primary;
+                display: inline-block;
+                position: absolute; 
+                width: 100%; 
+                text-align: center; 
+                bottom: -6px;
+                left: 0; 
+                z-index: -1; 
+            }
+
+            a.page-link {
+                display: block; 
+                padding: 0.8rem 1rem;
+                color: $color-inactive-gray; 
+
+                &:hover {
+                    color: #444; 
+                }
+
+                @include media-small {
+                    padding: 0.6rem 0.8rem; 
+                }
+            }
+
+            &.active {
+                a.page-link {
+                    color: $color-primary; 
+                }
+            }
+
+            &.disabled {
+                color: #ddd; 
+
+                a.page-link {
+                    color: #ddd; 
+
+                    &:hover {
+                        color: #ddd; 
+                    }
+                }
+            }
+        }
     }
 }

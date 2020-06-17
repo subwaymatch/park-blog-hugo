@@ -5,20 +5,22 @@
         <div class="row">
             <div class="col-12">
                 <div class="list-posts">
-                    {{ range where site.RegularPages "Type" "!=" "page" }}
-    
-                    <a href="{{ .RelPermalink }}" class="post-item">
-                        {{ if isset .Params "categories" }}
-                            <span class="categories">
-                                {{ delimit .Params.Categories "humanize" ", " }} ⟶
-                            </span>
-                        {{ end }}
-                
-                        <h4>{{ .Title }}</h4>
-                
-                        <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
-                    </a>
+                    {{ $paginator := .Paginate (where site.RegularPages "Type" "!=" "page") }}
+                    {{ range $paginator.Pages }}
+                        <a href="{{ .RelPermalink }}" class="post-item">
+                            {{ if isset .Params "categories" }}
+                                <span class="categories">
+                                    {{ delimit .Params.Categories "humanize" ", " }} ⟶
+                                </span>
+                            {{ end }}
+                    
+                            <h4>{{ .Title }}</h4>
+                    
+                            <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+                        </a>
                     {{ end }}
+
+                    {{ partial "pagination" . }}
                 </div>
             </div>
         </div>

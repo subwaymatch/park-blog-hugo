@@ -9,4 +9,4 @@ params:
 markup:
   highlight:
     style: colorful
-
+paginate: 5
