@@ -38,7 +38,7 @@
         window.addEventListener('DOMContentLoaded', e => {
             let isMenuOpen = false; 
             let menuBtnEl = document.getElementById("btn-menu");
-            let menuPopUpEl = document.getElementById("menu-overlay");
+            let menuOverlayEl = document.getElementById("menu-overlay");
 
             console.log(menuBtnEl);
             
@@ -49,10 +49,10 @@
 
                 if (isMenuOpen) {
                     menuBtnEl.classList.add('is-active');
-                    menuPopUpEl.style.display = 'flex';
+                    menuOverlayEl.classList.add('is-active');
                 } else {
                     menuBtnEl.classList.remove('is-active');
-                    menuPopUpEl.style.display = 'none';
+                    menuOverlayEl.classList.remove('is-active');
                 }
             });
         })

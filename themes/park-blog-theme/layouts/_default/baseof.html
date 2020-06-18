@@ -5,8 +5,11 @@
 <body>
     {{ partial "header" . }}
 
+    <div class="content-wrapper">
+        {{ block "content" . }}{{ end }}
+    </div>
 
-    {{ block "content" . }}{{ end }}
+    {{ partial "footer" . }}
 </body>
 
 </html>
