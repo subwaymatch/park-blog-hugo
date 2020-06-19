@@ -12,9 +12,7 @@
 
     {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS | minify | fingerprint }}
 
-    {{ $hamburgerCSS := resources.Get "css/hamburgers.css" }}
-
-    <link rel="stylesheet" href="{{ $hamburgerCSS.RelPermalink }}" media="all">
+    <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all">
 
     <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">

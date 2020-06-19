@@ -1,4 +1,5 @@
 @import url('https://rsms.me/inter/inter.css');
+
 html { font-family: $font-sans-serif; }
 
 a {
@@ -202,25 +203,28 @@ table {
             top: 2rem;
             right: 2rem; 
 
-            animation: fadeOutIn ease 500ms; 
+            animation: fadeOutIn ease 400ms; 
+        }
+
+        #btn-menu {
+            outline: none; 
         }
     }
 
-    #btn-menu {
+    @keyframes fadeOutIn {
+        0% {
+            opacity: 0;
+        }
+        30% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 }
 
-@keyframes fadeOutIn {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
+
 
 .content-wrapper {
     margin-bottom: 6rem; 
