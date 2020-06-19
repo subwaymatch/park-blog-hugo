@@ -197,10 +197,13 @@ table {
 
     #btn-menu-wrapper {
         z-index: 100; 
+        position: relative; 
+        top: -8px; 
+        right: -8px; 
 
         &.is-active {
             position: fixed; 
-            top: 2rem;
+            top: 1.5rem;
             right: 2rem; 
 
             animation: fadeOutIn ease 400ms; 
