@@ -38,6 +38,7 @@
         window.addEventListener('DOMContentLoaded', e => {
             let isMenuOpen = false; 
             let menuBtnEl = document.getElementById("btn-menu");
+            let menuBtnWrapperEl = document.getElementById("btn-menu-wrapper");
             let menuOverlayEl = document.getElementById("menu-overlay");
 
             console.log(menuBtnEl);
@@ -48,9 +49,11 @@
                 isMenuOpen = !isMenuOpen;
 
                 if (isMenuOpen) {
+                    menuBtnWrapperEl.classList.add('is-active');
                     menuBtnEl.classList.add('is-active');
                     menuOverlayEl.classList.add('is-active');
                 } else {
+                    menuBtnWrapperEl.classList.remove('is-active');
                     menuBtnEl.classList.remove('is-active');
                     menuOverlayEl.classList.remove('is-active');
                 }

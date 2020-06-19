@@ -184,9 +184,9 @@ table {
     }
 
     .header-right {
-        display: flex; 
-        align-items: center; 
-        justify-content: flex-end; 
+        display: block;
+        text-align: right; 
+        position: relative; 
     }
 
     img.logo-img {
@@ -195,15 +195,30 @@ table {
     }
 
     #btn-menu-wrapper {
-        position: relative; 
-        z-index: 200; 
+        z-index: 100; 
+
+        &.is-active {
+            position: fixed; 
+            top: 2rem;
+            right: 2rem; 
+
+            animation: fadeOutIn ease 500ms; 
+        }
     }
 
     #btn-menu {
-        /*
-        position: relative;
-        top: -2px; 
-        */
+    }
+}
+
+@keyframes fadeOutIn {
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
