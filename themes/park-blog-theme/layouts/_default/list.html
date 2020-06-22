@@ -4,22 +4,30 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
+                {{ with .Title }}
+                <div class="list-title">
+                    <div class="taxonomy-name">{{ $.Data.Singular | humanize }}</div>
+                    <h3>{{ . }}</h3>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
                 <div class="list-posts">
-                    {{ $paginator := .Paginate (where site.RegularPages "Type" "!=" "page") }}
-                    {{ range $paginator.Pages }}
+
+                    {{ range .Paginator.Pages }}
                         <div class="post-item">
                             {{ if isset .Params "categories" }}
-                                <span class="categories">
+                                <div class="categories">
                                     <ul>
-                                    {{ range .Params.Categories }}
-                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a> </li>
+                                    {{ range $key, $value := .Params.Categories }}
+                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
                                     {{ end }}
                                     </ul>
-
                                     ⟶
-
-                                    
-                                </span>
+                                </div>
                             {{ end }}
                     
                             <a href="{{ .RelPermalink }}">
@@ -31,7 +39,8 @@
                     {{ end }}
 
                     {{ partial "pagination" . }}
-                </div>
+
+                    
             </div>
         </div>
     </div>

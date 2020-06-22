@@ -9,17 +9,14 @@
                     {{ range $paginator.Pages }}
                         <div class="post-item">
                             {{ if isset .Params "categories" }}
-                                <span class="categories">
+                                <div class="categories">
                                     <ul>
-                                    {{ range .Params.Categories }}
-                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a> </li>
+                                    {{ range $key, $value := .Params.Categories }}
+                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
                                     {{ end }}
                                     </ul>
-
                                     ⟶
-
-                                    
-                                </span>
+                                </div>
                             {{ end }}
                     
                             <a href="{{ .RelPermalink }}">
