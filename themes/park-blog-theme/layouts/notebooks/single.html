@@ -6,6 +6,10 @@
     </div>
 
     {{ .Content }}
+
+    <div class="cell border-box-sizing text_cell rendered">
+        {{ template "_internal/disqus.html" . }}
+    </div>
 </div>
 
 {{ end }}

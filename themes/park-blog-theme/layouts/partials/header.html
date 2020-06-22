@@ -1,7 +1,9 @@
 <div id="menu-overlay">
     <div id="menu-content">
         {{ range where .Site.RegularPages "Type" "page" }}
-            <a href="{{ .Permalink }}" class="menu-item">{{ .Title }}</a>
+            <div class="menu-item">
+                <a href="{{ .Permalink }}">{{ .Title }}</a>
+            </div>
         {{ end }}
     </div>
 </div>

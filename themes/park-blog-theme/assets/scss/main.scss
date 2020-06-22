@@ -10,7 +10,11 @@ a {
 body {
     font-size: 1.35rem; 
     line-height: 1.9; 
-    position: relative; 
+    position: relative;
+
+    &.menu-open {
+        overflow-y: hidden; 
+    }
 
     @include media-medium-and-smaller {
         font-size: 1.25rem; 
@@ -158,19 +162,25 @@ table {
     transition: all 0.3s ease;
     z-index: 50; 
 
-    &.is-active {
+    body.menu-open & {
         right: 0;
     }
 
     #menu-content {
         .menu-item {
-            font-size: 3rem;
-            font-weight: 300; 
-            display: block;
-            color:#222;
+            a {
+                font-size: 3rem;
+                font-weight: 300; 
+                display: inline-block;
+                color:#222;
 
-            @include media-small {
-                font-size: 1.5rem; 
+                &:hover {
+                    background: linear-gradient(transparent 0%, transparent 50%, $color-primary 50%, $color-primary 65%, transparent 65%, transparent 100%);
+                }
+
+                @include media-small {
+                    font-size: 1.5rem; 
+                }
             }
         }
     }
@@ -201,7 +211,7 @@ table {
         top: -8px; 
         right: -8px; 
 
-        &.is-active {
+        body.menu-open & {
             position: fixed; 
             top: 1.5rem;
             right: 2rem; 
