@@ -272,10 +272,8 @@ table {
             @include media-medium-and-smaller {
                 font-size: 1.5rem; 
             }
-        }
 
-        &:hover {
-            .date, h4 {
+            &:hover {
                 color: $color-primary; 
             }
         }

@@ -1,15 +1,40 @@
 {{ define "content" }}
-<div class="container">
-    <h1>{{ .Title }}</h1>
 
-    {{ range .Params.Components }}
+<div class="section-list">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="list-posts">
+                    {{ $paginator := .Paginate (where site.RegularPages "Type" "!=" "page") }}
+                    {{ range $paginator.Pages }}
+                        <div class="post-item">
+                            {{ if isset .Params "categories" }}
+                                <span class="categories">
+                                    <ul>
+                                    {{ range .Params.Categories }}
+                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a> </li>
+                                    {{ end }}
+                                    </ul>
 
-    {{ range $component, $data := . }}
-    {{ partial (printf "%s" $component) (dict $component $data) }}
-    {{ end }}
+                                    ⟶
 
-    {{ end }}
+                                    
+                                </span>
+                            {{ end }}
+                    
+                            <a href="{{ .RelPermalink }}">
+                                <h4>{{ .Title }}</h4>
+                            </a>
+                    
+                            <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+                        </div>
+                    {{ end }}
 
-    {{ partial "blog" . }}
+                    {{ partial "pagination" . }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {{ end }}

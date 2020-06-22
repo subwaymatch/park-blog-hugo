@@ -7,17 +7,27 @@
                 <div class="list-posts">
                     {{ $paginator := .Paginate (where site.RegularPages "Type" "!=" "page") }}
                     {{ range $paginator.Pages }}
-                        <a href="{{ .RelPermalink }}" class="post-item">
+                        <div class="post-item">
                             {{ if isset .Params "categories" }}
                                 <span class="categories">
-                                    {{ delimit .Params.Categories "humanize" ", " }} ⟶
+                                    <ul>
+                                    {{ range .Params.Categories }}
+                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a> </li>
+                                    {{ end }}
+                                    </ul>
+
+                                    ⟶
+
+                                    
                                 </span>
                             {{ end }}
                     
-                            <h4>{{ .Title }}</h4>
+                            <a href="{{ .RelPermalink }}">
+                                <h4>{{ .Title }}</h4>
+                            </a>
                     
                             <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
-                        </a>
+                        </div>
                     {{ end }}
 
                     {{ partial "pagination" . }}

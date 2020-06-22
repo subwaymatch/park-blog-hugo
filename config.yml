@@ -10,3 +10,5 @@ markup:
   highlight:
     style: colorful
 paginate: 5
+googleAnalytics: "UA-170280017-1"
+disqusShortname: "park"
