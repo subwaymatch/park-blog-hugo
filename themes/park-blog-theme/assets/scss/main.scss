@@ -198,15 +198,20 @@ table {
         padding-right: 0; 
     }
 
+    a.link-site-title {
+        svg {
+            width: 5rem; 
+        }
+
+        &:hover svg {
+            fill: $color-primary;
+        }
+    }
+
     .header-right {
         display: block;
         text-align: right; 
         position: relative; 
-    }
-
-    img.logo-img {
-        max-width: 5rem;
-        padding: 0.15rem 0;
     }
 
     #btn-menu-wrapper {

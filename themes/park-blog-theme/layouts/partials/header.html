@@ -12,9 +12,9 @@
     <div class="container-full">
         <div class="row">
             <div class="col-6-sm">
-                <a href="/" title="Homepage">
-                    {{ if isset .Site.Params "logo_image" }}
-                        <img src="{{ .Site.Params.Logo_image }}" class="logo-img" />
+                <a href="/" title="Homepage" class="link-site-title">
+                    {{ if templates.Exists "partials/svg/logo.html" }}
+                        {{ partial "svg/logo" . }}
                     {{ else }}
                         {{ .Site.Title }}
                     {{ end }}

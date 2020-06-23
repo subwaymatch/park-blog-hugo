@@ -1,6 +1,6 @@
 ---
 title: About
-slug: abooooot
+menu: "main"
 ---
 ## What We Do
 
