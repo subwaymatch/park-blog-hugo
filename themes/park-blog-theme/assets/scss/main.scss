@@ -203,8 +203,8 @@ table {
             width: 5rem; 
         }
 
-        &:hover svg {
-            fill: $color-primary;
+        &:hover {
+            background: linear-gradient(transparent 0%, transparent 25%, $color-primary 25%, $color-primary 55%, transparent 55%, transparent 100%);
         }
     }
 
