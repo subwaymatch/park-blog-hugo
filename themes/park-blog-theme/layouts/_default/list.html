@@ -6,7 +6,9 @@
             <div class="col-12">
                 {{ with .Title }}
                 <div class="list-title">
-                    <div class="taxonomy-name">{{ $.Data.Singular | humanize }}</div>
+                    <span class="circle">●</span>
+                    <span class="taxonomy-name">{{ $.Data.Singular | humanize }}</span>
+                    <span class="connector">―</span>
                     <h3>{{ . }}</h3>
                 </div>
                 {{ end }}

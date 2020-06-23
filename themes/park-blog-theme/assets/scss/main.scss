@@ -254,7 +254,6 @@ table {
         .date {
             display: block; 
             font-size: 1rem;
-            font-weight: light; 
 
             @media only screen and (min-width: $breakpoint-small) {
                 font-size: 1.125rem;
@@ -317,25 +316,33 @@ table {
 
 .section-list {
     .list-title {
+        font-size: 1.1rem;
+        position: relative;
+        padding: 1.2rem 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+
+        .circle {
+            color: $color-primary;
+            position: absolute;
+            top: 1.8rem;
+            left: -3.6rem;
+            font-size: 3rem; 
+            line-height: 1;
+        }
+
         .taxonomy-name {
-            position: relative; 
-            top: 0.7rem;
+            color: #ccc;
         }
 
-        text-align: center; 
-    }
-
-    h3 {
-        color: black; 
-        font-size: 3.2rem;
-        font-weight: light; 
-    
-        @include media-medium-and-smaller {
-            font-size: 2.5rem;
+        .connector {
+            color: $color-primary;
         }
 
-        @include media-small {
-            font-size: 2.25rem;
+        h3 {
+            display: block;
+            font-size: 1.1rem;
         }
     }
 }

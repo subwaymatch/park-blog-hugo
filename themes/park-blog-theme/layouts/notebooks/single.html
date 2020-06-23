@@ -2,6 +2,9 @@
 
 <div class="section-post format-jupyter">
     <div class="cell border-box-sizing text_cell rendered">
+        {{ if isset .Params "categories" }}
+            {{ .Params.categories}}
+        {{ end }}
         <h1>{{ .Title }}</h1>
     </div>
 
