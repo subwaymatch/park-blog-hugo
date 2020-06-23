@@ -3,7 +3,18 @@
 <div class="section-post format-jupyter">
     <div class="cell border-box-sizing text_cell rendered">
         {{ if isset .Params "categories" }}
-            {{ .Params.categories}}
+            <div class="post-metadata">
+                <span class="circle">
+                    {{ partial "svg/circle-memphis" }}
+                </span>
+                <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+                <span class="connector">―</span>
+                <ul class="list-categories">
+                    {{ range $key, $value := .Params.Categories }}
+                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
+                    {{ end }}
+                </ul>
+            </div>
         {{ end }}
         <h1>{{ .Title }}</h1>
     </div>

@@ -374,6 +374,69 @@ table {
     @include media-small {
         line-height: 1.55;
     }
+
+    .post-metadata {
+        position: relative;
+        font-size: 1rem; 
+        font-family: $font-sans-serif;
+        color: $color-primary;
+        margin-bottom: 0.3rem; 
+
+        .circle {
+            position: absolute;
+            top: 0.2rem;
+            left: -1.6rem;
+            width: 1rem;
+
+            @include media-medium-and-smaller {
+                display: none; 
+            }
+
+            svg {
+                fill: $color-primary;
+            }
+        }
+
+        .connector {
+            display: inline-block; 
+            color: $color-primary; 
+            padding: 0 0.3rem; 
+
+            @include media-small {
+                color: #222; 
+            }
+        }
+        
+        ul.list-categories {
+            list-style-type: none;
+            margin: 0;
+            display: inline-block;
+            color: #bbb;
+
+            li {
+                display: inline-block; 
+
+                a {
+                    color: #bbb; 
+                    &:hover {
+                        color: $color-primary; 
+                    }
+
+                    @include media-small {
+                        color: $color-primary;
+                    }
+                }
+
+                &::after {
+                    content: ", ";
+                }
+
+                &:last-child::after {
+                    content: "";
+                }
+            }
+        }
+    }
 }
 
 .pagination-wrapper {
