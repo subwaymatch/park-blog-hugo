@@ -175,7 +175,7 @@ table {
                 color:#222;
 
                 &:hover {
-                    background: linear-gradient(transparent 0%, transparent 50%, $color-primary 50%, $color-primary 65%, transparent 65%, transparent 100%);
+                    background: linear-gradient(transparent 0%, transparent 65%, $color-primary 65%, $color-primary 75%, transparent 75%, transparent 100%);
                 }
 
                 @include media-small {
@@ -318,7 +318,7 @@ table {
     .list-title {
         font-size: 1.1rem;
         position: relative;
-        padding: 1.2rem 0;
+        padding: 0;
         border-left: none;
         border-right: none;
         border-top: none;
@@ -326,13 +326,13 @@ table {
         .circle {
             color: $color-primary;
             position: absolute;
-            top: 1.8rem;
-            left: -4.2rem;
+            top: 0.4rem;
+            left: -4.4rem;
             font-size: 3rem; 
             line-height: 1;
 
             svg {
-                fill: $color-primary;;
+                fill: $color-primary;
                 width: 3rem; 
             }
 
