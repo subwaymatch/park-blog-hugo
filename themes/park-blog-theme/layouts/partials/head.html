@@ -39,6 +39,18 @@
         window.addEventListener('DOMContentLoaded', e => {
             let isMenuOpen = false; 
             let menuBtnEl = document.getElementById("btn-menu");
+
+            let openMenu = () => {
+                isMenuOpen = true; 
+                document.body.classList.add('menu-open')
+                menuBtnEl.classList.add('is-active');
+            }
+
+            let closeMenu = () => {
+                isMenuOpen = false;
+                document.body.classList.remove('menu-open')
+                menuBtnEl.classList.remove('is-active');
+            }
             
             menuBtnEl.addEventListener('click', e => {
                 e.preventDefault(); 
@@ -46,13 +58,17 @@
                 isMenuOpen = !isMenuOpen;
 
                 if (isMenuOpen) {
-                    document.body.classList.add('menu-open')
-                    menuBtnEl.classList.add('is-active');
+                    openMenu();
                 } else {
-                    document.body.classList.remove('menu-open')
-                    menuBtnEl.classList.remove('is-active');
+                    closeMenu();
                 }
             });
+
+            document.body.addEventListener('keydown', e => {
+                if (e.key == 'Escape') {
+                    closeMenu(); 
+                }
+            })
         })
     </script>
 
