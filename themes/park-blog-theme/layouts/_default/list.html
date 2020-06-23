@@ -6,7 +6,9 @@
             <div class="col-12">
                 {{ with .Title }}
                 <div class="list-title">
-                    <span class="circle">●</span>
+                    <span class="circle">
+                        {{ partial "svg/circle-memphis" }}
+                    </span>
                     <span class="taxonomy-name">{{ $.Data.Singular | humanize }}</span>
                     <span class="connector">―</span>
                     <h3>{{ . }}</h3>
