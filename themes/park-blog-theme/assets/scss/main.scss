@@ -552,3 +552,7 @@ kbd {
     padding: 0.125rem 0.25rem;
     white-space: nowrap;
 }
+
+mark {
+    background: linear-gradient(transparent 0%, transparent 30%, #ffff99 30%, #ffff99 85%, transparent 85%, transparent 100%);
+}
