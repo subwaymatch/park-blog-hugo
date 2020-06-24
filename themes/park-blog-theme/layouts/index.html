@@ -6,28 +6,8 @@
             <div class="col-12">
                 <div class="list-posts">
                     {{ $paginator := .Paginate (where site.RegularPages "Type" "!=" "page") }}
-                    {{ range $paginator.Pages }}
-                        <div class="post-item">
-                            {{ if isset .Params "categories" }}
-                                <div class="categories">
-                                    <ul class="list-categories">
-                                    {{ range $key, $value := .Params.Categories }}
-                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
-                                    {{ end }}
-                                    </ul>
-                                    ⟶
-                                </div>
-                            {{ end }}
-                    
-                            <a href="{{ .RelPermalink }}">
-                                <h4>{{ .Title }}</h4>
-                            </a>
-                    
-                            <span class="date">{{ dateFormat "January 2, 2006" .Date }}</span>
-                        </div>
-                    {{ end }}
 
-                    {{ partial "pagination" . }}
+                    {{ partial "list-posts" . }}
                 </div>
             </div>
         </div>

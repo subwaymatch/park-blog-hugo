@@ -2,7 +2,7 @@ baseURL = "https://park.is/"
 languageCode = "en-us"
 title = "Park's Blog"
 theme = "park-blog-theme"
-paginate = 5.0
+paginate = 5
 googleAnalytics = "UA-170280017-1"
 
 [taxonomies]

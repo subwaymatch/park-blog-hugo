@@ -1,9 +1,5 @@
-{{ . }}
-
-{{ $ }}
-{{/*  
 <div class="list-posts">
-    {{ range .Paginator.Pages }}
+    {{ range $.Paginator.Pages }}
         <div class="post-item">
             {{ if isset .Params "categories" }}
                 <div class="categories">
@@ -25,4 +21,4 @@
     {{ end }}
 
     {{ partial "pagination" . }}
-</div>  */}}
+</div>
