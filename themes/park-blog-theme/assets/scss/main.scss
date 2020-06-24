@@ -514,30 +514,41 @@ ol {
 }
 
 sub, sup {
-    /* Specified in % so that the sup/sup is the
-       right size relative to the surrounding text */
+    /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
     font-size: 75%;
-  
-    /* Zero out the line-height so that it doesn't
-       interfere with the positioning that follows */
+
+    /* Zero out the line-height so that it doesn't interfere with the positioning that follows */
     line-height: 0;
-  
-    /* Where the magic happens: makes all browsers position
-       the sup/sup properly, relative to the surrounding text */
+
+    /* Where the magic happens: makes all browsers position the sup/sup properly, relative to the surrounding text */
     position: relative;
-  
-    /* Note that if you're using Eric Meyer's reset.css, this
-       is already set and you can remove this rule */
+
+    /* Note that if you're using Eric Meyer's reset.css, this is already set and you can remove this rule */
     vertical-align: baseline;
-  }
-  
-  sup {
+}
+
+/* from https://gist.github.com/unruthless/413930 */
+sup {
     /* Move the superscripted text up */
     top: -0.5em;
-  }
-  
-  sub {
+}
+
+sub {
     /* Move the subscripted text down, but only
-       half as far down as the superscript moved up */
+        half as far down as the superscript moved up */
     bottom: -0.25em;
-  }
+}
+
+/* from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd */
+kbd {
+    background-color: #eee;
+    border-radius: 0.2rem;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: .85em;
+    line-height: 1;
+    padding: 0.125rem 0.25rem;
+    white-space: nowrap;
+}

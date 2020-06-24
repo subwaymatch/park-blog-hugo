@@ -163,6 +163,6 @@ C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>
 
 X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
 
-Press <kbd>X</kbd> to win. Or press <kbd><kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>F</kbd></kbd> to show FPS counter.
+Press <kbd>X</kbd> to win. Or press <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>F</kbd> to show FPS counter.
 
 <mark>As a unit of information in information theory, the bit has alternatively been called a shannon</mark>, named after Claude Shannon, the founder of field of information theory.
