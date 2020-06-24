@@ -7,7 +7,9 @@
         <h1>{{ .Title }}</h1>
     </div>
 
-    {{ .Content }}
+    <div class="post-content">
+        {{ .Content }}
+    </div>
 
     <div class="cell border-box-sizing text_cell rendered">
         {{ partial "comments" }}

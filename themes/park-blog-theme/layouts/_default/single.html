@@ -7,7 +7,9 @@
                 {{ partial "post-meta" . }}
                 <h1>{{ .Title }}</h1>
 
-                {{ .Content }}
+                <div class="post-content">
+                    {{ .Content }}
+                </div>
             </div>
         </div>
 

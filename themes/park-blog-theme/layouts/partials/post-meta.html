@@ -3,7 +3,7 @@
         <span class="circle">
             ●
         </span>
-        <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+        <span class="date">{{ dateFormat "January 2, 2006" .Date }}</span>
         <span class="connector">―</span>
         <ul class="list-categories">
             {{ range $key, $value := .Params.Categories }}

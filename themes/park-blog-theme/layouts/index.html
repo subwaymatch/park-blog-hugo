@@ -23,7 +23,7 @@
                                 <h4>{{ .Title }}</h4>
                             </a>
                     
-                            <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
+                            <span class="date">{{ dateFormat "January 2, 2006" .Date }}</span>
                         </div>
                     {{ end }}
 

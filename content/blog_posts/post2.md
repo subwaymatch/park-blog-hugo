@@ -2,6 +2,7 @@
 title: Making Plots in Jupyter Notebook Beautiful & More Meaningful
 categories:
     - Plotly
+date: 2018-01-02
 ---
 
 ## Profile

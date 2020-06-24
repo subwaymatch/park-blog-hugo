@@ -4,14 +4,9 @@ title = "Park's Blog"
 theme = "park-blog-theme"
 paginate = 5.0
 googleAnalytics = "UA-170280017-1"
-disqusEnabled = true
-disqusShortname = "park"
 
 [taxonomies]
 category = "categories"
-
-[params]
-logo_image = "/images/logo_park.png"
 
 [markup]
 
