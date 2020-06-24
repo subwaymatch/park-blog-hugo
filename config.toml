@@ -17,3 +17,6 @@ logo_image = "/images/logo_park.png"
 
   [markup.highlight]
   style = "colorful"
+
+  [markup.goldmark.renderer]
+  unsafe = true

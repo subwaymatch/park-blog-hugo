@@ -19,30 +19,7 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="list-posts">
-                    {{ range .Paginator.Pages }}
-                        <div class="post-item">
-                            {{ if isset .Params "categories" }}
-                                <div class="categories">
-                                    <ul>
-                                    {{ range $key, $value := .Params.Categories }}
-                                        <li><a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
-                                    {{ end }}
-                                    </ul>
-                                    ⟶
-                                </div>
-                            {{ end }}
-                    
-                            <a href="{{ .RelPermalink }}">
-                                <h4>{{ .Title }}</h4>
-                            </a>
-                    
-                            <span class="date">{{ .Date.Format "January 1, 2006" }}</span>
-                        </div>
-                    {{ end }}
-
-                    {{ partial "pagination" . }}
-                </div>
+                {{ partial "list-posts" .Paginator.Pages }}
             </div>
         </div>
     </div>
