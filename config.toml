@@ -15,3 +15,9 @@ category = "categories"
 
   [markup.goldmark.renderer]
   unsafe = true
+
+[[menu.main]]
+  name = "GitHub"
+  weight = 0
+  identifier = "GitHub"
+  url = "http://github.com/subwaymatch"
