@@ -11,8 +11,6 @@
 # Park Blog
 A personal blog built with [Hugo](https://gohugo.io/). The main goal of this blog was to use Jupyter notebooks as a blogging source without fancy converters. Jupyter's [nbconvert](https://github.com/jupyter/nbconvert) is  used to convert notebooks into HTML formats (`$ jupyter nbconvert notebook.ipynb --to html --template basic` ).<br><br>
 
-:pray: Special thanks to Yuliya Onukevych - the Project Manager.
-
 ## Screenshots
 
 Main Page
