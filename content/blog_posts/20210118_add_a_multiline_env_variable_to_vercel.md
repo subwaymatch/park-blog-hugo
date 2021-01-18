@@ -2,7 +2,6 @@
 title: Add a multiline environment variable to Vercel (or Heroku)
 date: 2021-01-18
 categories:
-  - Next.js
   - Vercel
 ---
 
