@@ -1,0 +1,1610 @@
+---
+title: Cleaning Chicago Ridesharing Registered Vehicles Dataset
+date: 2021-03-12
+categories:
+  - Dataset
+---
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>All vehicles 🚗 reported by Transportation Network Providers (sometimes called rideshare companies) to the City of Chicago as part of routine reporting required by ordinance. Inclusion of a vehicle in a monthly report indicates that the vehicle was eligible for trips in Chicago in that month for at least one day, regardless of whether it actually provided any rides. If a vehicle is eligible in multiple months, which is common, it will have records in each of these reporting months.</p>
+<p>Source: <a href="https://data.cityofchicago.org/Transportation/Transportation-Network-Providers-Vehicles/bc6b-sq4u">Chicago Data Portal Transportation Network Providers - Vehicles</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Goal-of-this-Notebook">Goal of this Notebook<a class="anchor-link" href="#Goal-of-this-Notebook">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>🚀 This notebook will make the dataset more <strong>usable</strong> by perfoming these tasks:</p>
+<ul>
+<li>Remove rows with missing values in <code>MAKE</code>, <code>MODEL</code>, <code>COLOR</code>, <code>YEAR</code> columns</li>
+<li>Only fitler vehicles with 100 or more trips</li>
+<li>Filter rows with valid State 2-letter codes</li>
+<li>Extract Year/Month Reported</li>
+<li>Remove make &amp; model combinations that are extremely rare</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Load-Data">Load Data<a class="anchor-link" href="#Load-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The dataset can be downloaded at <a href="https://data.cityofchicago.org/Transportation/Transportation-Network-Providers-Vehicles/bc6b-sq4u">Chicago Data Portal Transportation Network Providers - Vehicles</a> (~350 MB). The dataset contains information about registered ridesharing vehicles in Chicago as of October 30, 2020.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Transportation_Network_Providers_-_Vehicles.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[3]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MONTH_REPORTED</th>
+      <th>STATE</th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COLOR</th>
+      <th>YEAR</th>
+      <th>LAST_INSPECTION_MONTH</th>
+      <th>NUMBER_OF_TRIPS</th>
+      <th>MULTIPLE_TNPS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2017-09</td>
+      <td>IL</td>
+      <td>Nissan</td>
+      <td>Pathfinder</td>
+      <td>Red</td>
+      <td>2016.0</td>
+      <td>2017-06</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2016-10</td>
+      <td>IL</td>
+      <td>Nissan</td>
+      <td>Altima</td>
+      <td>NaN</td>
+      <td>2016.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-01</td>
+      <td>IL</td>
+      <td>Nissan</td>
+      <td>Altima</td>
+      <td>Gray</td>
+      <td>2014.0</td>
+      <td>2017-10</td>
+      <td>NaN</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Data-Overview">Data Overview<a class="anchor-link" href="#Data-Overview">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Number-of-rows-and-columns">Number of rows and columns<a class="anchor-link" href="#Number-of-rows-and-columns">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There are </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> rows and </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> columns.&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>There are 7156604 rows and 9 columns.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Data-types">Data types<a class="anchor-link" href="#Data-types">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>MONTH_REPORTED            object
+STATE                     object
+MAKE                      object
+MODEL                     object
+COLOR                     object
+YEAR                     float64
+LAST_INSPECTION_MONTH     object
+NUMBER_OF_TRIPS          float64
+MULTIPLE_TNPS               bool
+dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>YEAR</code> and <code>NUMBER_OF_TRIPS</code> are <code>float64</code>s since those columns contain missing values.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Missing-values">Missing values<a class="anchor-link" href="#Missing-values">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>MONTH_REPORTED                 0
+STATE                      14210
+MAKE                        5035
+MODEL                       5053
+COLOR                     870992
+YEAR                        5031
+LAST_INSPECTION_MONTH    2939655
+NUMBER_OF_TRIPS            12129
+MULTIPLE_TNPS                  0
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Removing-Unwanted-Rows-and-Columns">Removing Unwanted Rows and Columns<a class="anchor-link" href="#Removing-Unwanted-Rows-and-Columns">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Filtering-rows-with-missing-values-in-columns-of-interest">Filtering rows with missing values in columns of interest<a class="anchor-link" href="#Filtering-rows-with-missing-values-in-columns-of-interest">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;MAKE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL&#39;</span><span class="p">,</span> <span class="s1">&#39;COLOR&#39;</span><span class="p">,</span> <span class="s1">&#39;YEAR&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Only-select-vehicles-that-had-100-or-more-trips">Only select vehicles that had 100 or more trips<a class="anchor-link" href="#Only-select-vehicles-that-had-100-or-more-trips">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fitlered dataset will be used to analyze popular cars used by Uber and Lyft drivers. 🚙 We only select rows with 100 or more trips on the corresponding given month.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;NUMBER_OF_TRIPS&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Only-filter-valid-States">Only filter valid States<a class="anchor-link" href="#Only-filter-valid-States">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Count the number of vehicles by State</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>IL            1324779
+IN              19637
+FL               5542
+WI               3081
+TX               2794
+CA               2616
+MI               2057
+GA               1660
+OH               1632
+MO               1251
+IA               1131
+PA               1082
+NY                921
+VA                764
+CO                729
+TN                724
+AZ                683
+LA                676
+KY                636
+NJ                604
+ID                595
+MN                500
+MD                499
+WA                485
+MA                468
+OK                462
+SC                461
+NC                425
+MS                353
+AL                339
+NV                252
+AR                247
+KS                231
+CT                192
+OR                168
+NE                163
+NM                127
+SD                114
+UT                113
+ND                 99
+WV                 96
+AK                 86
+DE                 82
+RI                 76
+VT                 28
+MT                 28
+DC                 27
+ME                 19
+NH                 17
+HI                 15
+0                  12
+WY                 10
+CALIFORNIA          6
+LEXUS               4
+S                   3
+VIRGINIA            2
+AS                  1
+Name: STATE, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>While most values look valid, there are some rows where the 2-letter codes are invalid. Replace full state names (e.g., "CALIFORNIA", "VIRGINIA) with the 2 letter codes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CALIFORNIA&#39;</span><span class="p">,</span> <span class="s1">&#39;STATE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;CA&#39;</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;VIRGINIA&#39;</span><span class="p">,</span> <span class="s1">&#39;STATE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Drop the other ones.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Filter valid states only</span>
+<span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AL&quot;</span><span class="p">,</span> <span class="s2">&quot;AK&quot;</span><span class="p">,</span> <span class="s2">&quot;AZ&quot;</span><span class="p">,</span> <span class="s2">&quot;AR&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;CO&quot;</span><span class="p">,</span> <span class="s2">&quot;CT&quot;</span><span class="p">,</span> <span class="s2">&quot;DC&quot;</span><span class="p">,</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;FL&quot;</span><span class="p">,</span> <span class="s2">&quot;GA&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;HI&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;IL&quot;</span><span class="p">,</span> <span class="s2">&quot;IN&quot;</span><span class="p">,</span> <span class="s2">&quot;IA&quot;</span><span class="p">,</span> <span class="s2">&quot;KS&quot;</span><span class="p">,</span> <span class="s2">&quot;KY&quot;</span><span class="p">,</span> <span class="s2">&quot;LA&quot;</span><span class="p">,</span> <span class="s2">&quot;ME&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;MA&quot;</span><span class="p">,</span> <span class="s2">&quot;MI&quot;</span><span class="p">,</span> <span class="s2">&quot;MN&quot;</span><span class="p">,</span> <span class="s2">&quot;MS&quot;</span><span class="p">,</span> <span class="s2">&quot;MO&quot;</span><span class="p">,</span> <span class="s2">&quot;MT&quot;</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="s2">&quot;NV&quot;</span><span class="p">,</span> <span class="s2">&quot;NH&quot;</span><span class="p">,</span> <span class="s2">&quot;NJ&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;NM&quot;</span><span class="p">,</span> <span class="s2">&quot;NY&quot;</span><span class="p">,</span> <span class="s2">&quot;NC&quot;</span><span class="p">,</span> <span class="s2">&quot;ND&quot;</span><span class="p">,</span> <span class="s2">&quot;OH&quot;</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="s2">&quot;OR&quot;</span><span class="p">,</span> <span class="s2">&quot;PA&quot;</span><span class="p">,</span> <span class="s2">&quot;RI&quot;</span><span class="p">,</span> <span class="s2">&quot;SC&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;SD&quot;</span><span class="p">,</span> <span class="s2">&quot;TN&quot;</span><span class="p">,</span> <span class="s2">&quot;TX&quot;</span><span class="p">,</span> <span class="s2">&quot;UT&quot;</span><span class="p">,</span> <span class="s2">&quot;VT&quot;</span><span class="p">,</span> <span class="s2">&quot;VA&quot;</span><span class="p">,</span> <span class="s2">&quot;WA&quot;</span><span class="p">,</span> <span class="s2">&quot;WV&quot;</span><span class="p">,</span> <span class="s2">&quot;WI&quot;</span><span class="p">,</span> <span class="s2">&quot;WY&quot;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">states</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Drop-LAST_INSPECTION_MONTH">Drop <code>LAST_INSPECTION_MONTH</code><a class="anchor-link" href="#Drop-LAST_INSPECTION_MONTH">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Drop LAST_INSPECTION_MONTH column</span>
+<span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LAST_INSPECTION_MONTH&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-Types">Data Types<a class="anchor-link" href="#Data-Types">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Convert-YEAR-and-NUMBER_OF_TRIPS-to-integers">Convert <code>YEAR</code> and <code>NUMBER_OF_TRIPS</code> to integers<a class="anchor-link" href="#Convert-YEAR-and-NUMBER_OF_TRIPS-to-integers">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;YEAR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;YEAR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;NUMBER_OF_TRIPS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;NUMBER_OF_TRIPS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[14]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>MONTH_REPORTED     object
+STATE              object
+MAKE               object
+MODEL              object
+COLOR              object
+YEAR                int64
+NUMBER_OF_TRIPS     int64
+MULTIPLE_TNPS        bool
+dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Make-&amp;-Model">Make &amp; Model<a class="anchor-link" href="#Make-&amp;-Model">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Rename-YEAR-to-MODEL_YEAR">Rename <code>YEAR</code> to <code>MODEL_YEAR</code><a class="anchor-link" href="#Rename-YEAR-to-MODEL_YEAR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;YEAR&#39;</span><span class="p">:</span> <span class="s1">&#39;MODEL_YEAR&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Number-of-registrations-by-make-&amp;-model">Number of registrations by make &amp; model<a class="anchor-link" href="#Number-of-registrations-by-make-&amp;-model">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_count_by_vehicle</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;MAKE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span>
+    <span class="s1">&#39;MODEL_YEAR&#39;</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span>
+<span class="p">})</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;MODEL_YEAR&#39;</span><span class="p">:</span> <span class="s1">&#39;COUNT&#39;</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;COUNT&#39;</span><span class="p">)</span>
+
+<span class="n">df_count_by_vehicle</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[16]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COUNT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Acura</td>
+      <td>3.2 Tl</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>354</th>
+      <td>Gmc</td>
+      <td>Mv1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>935</th>
+      <td>Nissan</td>
+      <td>Wingroad</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>Ford</td>
+      <td>Transit Van</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>336</th>
+      <td>Ford</td>
+      <td>Transit</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Remove-rows-with-make-&amp;-model-registrations-&lt;=-15">Remove rows with make &amp; model registrations &lt;= 15<a class="anchor-link" href="#Remove-rows-with-make-&amp;-model-registrations-&lt;=-15">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[17]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COUNT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>250</th>
+      <td>Dodge</td>
+      <td>Ram</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>385</th>
+      <td>Honda</td>
+      <td>Cr</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>123</th>
+      <td>Cadillac</td>
+      <td>Xt4</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>1172</th>
+      <td>Volkswagen</td>
+      <td>Jetta Hybrid</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>554</th>
+      <td>Jeep</td>
+      <td>Wrangler Jk</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>462</th>
+      <td>Hyundai</td>
+      <td>Xg300</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>845</th>
+      <td>Mercury</td>
+      <td>Milan Hybrid</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>625</th>
+      <td>Lexus</td>
+      <td>Es Series</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>661</th>
+      <td>Lexus</td>
+      <td>Nx 200t</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>131</th>
+      <td>Chevrolet</td>
+      <td>Astra</td>
+      <td>16</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Find make &amp; model combinations that were registered at least 15 times. The threshold number 15 is purely subjective.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_threshold</span> <span class="o">=</span> <span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">]</span>
+<span class="n">df_threshold</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[18]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(659, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Use an inner merge to remove rows where the make &amp; model combinations were too rare.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_threshold</span><span class="p">[[</span><span class="s1">&#39;MAKE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL&#39;</span><span class="p">]],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;MAKE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[19]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MONTH_REPORTED</th>
+      <th>STATE</th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COLOR</th>
+      <th>MODEL_YEAR</th>
+      <th>NUMBER_OF_TRIPS</th>
+      <th>MULTIPLE_TNPS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-01</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Gold</td>
+      <td>2013</td>
+      <td>151</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2017-07</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Dark Red</td>
+      <td>2009</td>
+      <td>400</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2017-08</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Black</td>
+      <td>2016</td>
+      <td>362</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2017-05</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Silver</td>
+      <td>2016</td>
+      <td>159</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2015-08</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Black</td>
+      <td>2015</td>
+      <td>113</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Extract-Year/Month-Reported">Extract Year/Month Reported<a class="anchor-link" href="#Extract-Year/Month-Reported">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;REPORTED_YEAR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;MONTH_REPORTED&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;REPORTED_MONTH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;MONTH_REPORTED&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;MONTH_REPORTED&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[21]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>STATE</th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COLOR</th>
+      <th>MODEL_YEAR</th>
+      <th>NUMBER_OF_TRIPS</th>
+      <th>MULTIPLE_TNPS</th>
+      <th>REPORTED_YEAR</th>
+      <th>REPORTED_MONTH</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Gold</td>
+      <td>2013</td>
+      <td>151</td>
+      <td>False</td>
+      <td>2018</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Dark Red</td>
+      <td>2009</td>
+      <td>400</td>
+      <td>False</td>
+      <td>2017</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Black</td>
+      <td>2016</td>
+      <td>362</td>
+      <td>True</td>
+      <td>2017</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Silver</td>
+      <td>2016</td>
+      <td>159</td>
+      <td>True</td>
+      <td>2017</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Black</td>
+      <td>2015</td>
+      <td>113</td>
+      <td>True</td>
+      <td>2015</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1377578</th>
+      <td>IL</td>
+      <td>Kia</td>
+      <td>Rio 5 Door</td>
+      <td>Black</td>
+      <td>2018</td>
+      <td>309</td>
+      <td>False</td>
+      <td>2020</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>1377579</th>
+      <td>IL</td>
+      <td>Kia</td>
+      <td>Rio 5 Door</td>
+      <td>Silver</td>
+      <td>2020</td>
+      <td>197</td>
+      <td>False</td>
+      <td>2020</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>1377580</th>
+      <td>IL</td>
+      <td>Kia</td>
+      <td>Rio 5 Door</td>
+      <td>Black</td>
+      <td>2020</td>
+      <td>180</td>
+      <td>False</td>
+      <td>2020</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>1377581</th>
+      <td>IL</td>
+      <td>Kia</td>
+      <td>Rio 5 Door</td>
+      <td>Red</td>
+      <td>2012</td>
+      <td>194</td>
+      <td>False</td>
+      <td>2020</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>1377582</th>
+      <td>IL</td>
+      <td>Kia</td>
+      <td>Rio 5 Door</td>
+      <td>Silver</td>
+      <td>2020</td>
+      <td>189</td>
+      <td>False</td>
+      <td>2020</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+<p>1377583 rows × 9 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Rearrange-columns">Rearrange columns<a class="anchor-link" href="#Rearrange-columns">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;REPORTED_YEAR&#39;</span><span class="p">,</span> <span class="s1">&#39;REPORTED_MONTH&#39;</span><span class="p">,</span> <span class="s1">&#39;STATE&#39;</span><span class="p">,</span> <span class="s1">&#39;MAKE&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL&#39;</span><span class="p">,</span> <span class="s1">&#39;COLOR&#39;</span><span class="p">,</span> <span class="s1">&#39;MODEL_YEAR&#39;</span><span class="p">,</span> <span class="s1">&#39;NUMBER_OF_TRIPS&#39;</span><span class="p">,</span> <span class="s1">&#39;MULTIPLE_TNPS&#39;</span><span class="p">]]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[22]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>REPORTED_YEAR</th>
+      <th>REPORTED_MONTH</th>
+      <th>STATE</th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COLOR</th>
+      <th>MODEL_YEAR</th>
+      <th>NUMBER_OF_TRIPS</th>
+      <th>MULTIPLE_TNPS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018</td>
+      <td>1</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Gold</td>
+      <td>2013</td>
+      <td>151</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2017</td>
+      <td>7</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Dark Red</td>
+      <td>2009</td>
+      <td>400</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Shuffle-Rows-and-Sort-By-Reported-Month">Shuffle Rows and Sort By Reported Month<a class="anchor-link" href="#Shuffle-Rows-and-Sort-By-Reported-Month">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As a final step, sort the dataset by reported year and month.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;REPORTED_YEAR&#39;</span><span class="p">,</span> <span class="s1">&#39;REPORTED_MONTH&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[24]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>REPORTED_YEAR</th>
+      <th>REPORTED_MONTH</th>
+      <th>STATE</th>
+      <th>MAKE</th>
+      <th>MODEL</th>
+      <th>COLOR</th>
+      <th>MODEL_YEAR</th>
+      <th>NUMBER_OF_TRIPS</th>
+      <th>MULTIPLE_TNPS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2015</td>
+      <td>3</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Highlander</td>
+      <td>Black</td>
+      <td>2010</td>
+      <td>263</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2015</td>
+      <td>3</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Camry</td>
+      <td>Black</td>
+      <td>2008</td>
+      <td>204</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015</td>
+      <td>3</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Camry</td>
+      <td>Black</td>
+      <td>2009</td>
+      <td>122</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2015</td>
+      <td>3</td>
+      <td>IL</td>
+      <td>Mazda</td>
+      <td>Mazda3</td>
+      <td>Silver</td>
+      <td>2012</td>
+      <td>150</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2015</td>
+      <td>3</td>
+      <td>IL</td>
+      <td>Chrysler</td>
+      <td>Pt Cruiser</td>
+      <td>White/Pearl</td>
+      <td>2008</td>
+      <td>208</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1377578</th>
+      <td>2020</td>
+      <td>9</td>
+      <td>IL</td>
+      <td>Buick</td>
+      <td>Regal</td>
+      <td>Black</td>
+      <td>2016</td>
+      <td>182</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1377579</th>
+      <td>2020</td>
+      <td>9</td>
+      <td>IL</td>
+      <td>Dodge</td>
+      <td>Journey</td>
+      <td>Silver</td>
+      <td>2019</td>
+      <td>312</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1377580</th>
+      <td>2020</td>
+      <td>9</td>
+      <td>IL</td>
+      <td>Ford</td>
+      <td>Ecosport</td>
+      <td>Blue</td>
+      <td>2018</td>
+      <td>143</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1377581</th>
+      <td>2020</td>
+      <td>9</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Corolla</td>
+      <td>Black</td>
+      <td>2017</td>
+      <td>112</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1377582</th>
+      <td>2020</td>
+      <td>9</td>
+      <td>IL</td>
+      <td>Toyota</td>
+      <td>Rav4</td>
+      <td>Black</td>
+      <td>2018</td>
+      <td>192</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>1377583 rows × 9 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;chicago-ridesharing-vehicles.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
