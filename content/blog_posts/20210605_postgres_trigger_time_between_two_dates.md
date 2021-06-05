@@ -20,12 +20,13 @@ Triggers have many use cases. Some examples are:
 This post will implement the last example. You create a test-taking web app where you mark the start time (`start_time`) when the student hits the "Start" button. Once the student finishes taking the exam and clicks on "Submit", the web app will mark the finish time (`end_time`). You want to automatically calculate how long the test-taker spent on the exam in **seconds**.
 
 `my_table` columns:
-| Column | Type |
-|-|-|
-| id | int |
+
+| Column     | Type      |
+| ---------- | --------- |
+| id         | int       |
 | start_time | timestamp |
-| end_time | timestamp |
-| duration | integer |
+| end_time   | timestamp |
+| duration   | integer   |
 
 First, define a row-level trigger that runs on each row.
 
