@@ -23,7 +23,7 @@ This post will implement the last example. You create a test-taking web app wher
 
 | Column     | Type      |
 | ---------- | --------- |
-| id         | int       |
+| id (pk)    | integer   |
 | start_time | timestamp |
 | end_time   | timestamp |
 | duration   | integer   |
