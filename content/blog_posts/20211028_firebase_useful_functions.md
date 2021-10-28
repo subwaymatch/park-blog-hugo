@@ -85,6 +85,10 @@ export const mirrorCustomClaims = functions.firestore
   });
 ```
 
+Once you deploy the `mirrorCustomClaims()` function, you can edit user custom claims in the Firestore dashboard. Each document ID in `userClaims` collection should match a user's uid. The example below sets an `admin` custom claim to a user.
+
+![userClaims collection](https://user-images.githubusercontent.com/1064036/139214913-56f23354-45ff-4336-9bd5-7a39fe07ab3d.png)
+
 ## Auto-timestamp document updates
 
 This is another common use-case. Add any tables you'd like to auto-timestamp to the `collectionsToTimestamp` array.
