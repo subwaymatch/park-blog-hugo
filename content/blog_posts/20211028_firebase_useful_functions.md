@@ -1,5 +1,5 @@
 ---
-title: "Two useful Firebase hacks"
+title: "Two useful Firebase Hacks"
 date: 2021-10-28
 categories:
   - Firebase

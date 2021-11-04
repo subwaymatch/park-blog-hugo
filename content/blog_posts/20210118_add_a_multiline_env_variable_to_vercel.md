@@ -55,4 +55,4 @@ Copy &amp; paste the replaced version to Vercel.
 
 ![image](https://user-images.githubusercontent.com/1064036/104902268-264a8c00-5944-11eb-97b4-ff30ba42c15e.png)
 
-Vercel will now successfully build your project (unless there are other errors).
+Vercel should now successfully build your project.
