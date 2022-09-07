@@ -7,9 +7,9 @@ menu: "main"
 
 Hi, I'm Park from Seoul, South Korea.
 
-I like [writing code](https://github.com/subwaymatch). I started programming as a hobby in elementary school with Visual Basic. During my final year as an accounting major at the University of Illinois, I've made up my mind to pursue what I love to do.
+I like [writing code](https://github.com/subwaymatch).
 
-Fast-forward to 2021, I'm currently working as an instructor at the University of Illinois. I teach Data Analytics courses using Python and Tableau.
+I'm currently working as an instructor at the University of Illinois. I teach Data Analytics courses using Python and Tableau.
 
 ## Recent Projects
 
