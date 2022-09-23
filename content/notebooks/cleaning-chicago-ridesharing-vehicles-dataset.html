@@ -101,8 +101,7 @@ categories:
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -170,8 +169,7 @@ categories:
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -216,7 +214,7 @@ categories:
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>There are 7156604 rows and 9 columns.
+<pre>There are 8466571 rows and 9 columns.
 </pre>
 </div>
 </div>
@@ -317,10 +315,10 @@ dtype: object</pre>
 STATE                      14210
 MAKE                        5035
 MODEL                       5053
-COLOR                     870992
+COLOR                     875308
 YEAR                        5031
-LAST_INSPECTION_MONTH    2939655
-NUMBER_OF_TRIPS            12129
+LAST_INSPECTION_MONTH    2957715
+NUMBER_OF_TRIPS            14531
 MULTIPLE_TNPS                  0
 dtype: int64</pre>
 </div>
@@ -426,58 +424,58 @@ dtype: int64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>IL            1324779
-IN              19637
-FL               5542
-WI               3081
-TX               2794
-CA               2616
-MI               2057
-GA               1660
-OH               1632
-MO               1251
-IA               1131
-PA               1082
-NY                921
-VA                764
-CO                729
-TN                724
-AZ                683
-LA                676
-KY                636
-NJ                604
-ID                595
-MN                500
-MD                499
-WA                485
-MA                468
-OK                462
-SC                461
-NC                425
-MS                353
-AL                339
-NV                252
-AR                247
-KS                231
-CT                192
-OR                168
-NE                163
-NM                127
-SD                114
-UT                113
-ND                 99
-WV                 96
-AK                 86
-DE                 82
-RI                 76
-VT                 28
-MT                 28
-DC                 27
-ME                 19
-NH                 17
-HI                 15
+<pre>IL            1652182
+IN              24070
+FL              11257
+TX               4574
+CA               4226
+MI               4053
+WI               3990
+OH               2348
+GA               2294
+MO               1647
+IA               1611
+NY               1607
+PA               1581
+NJ               1383
+VA               1357
+CO               1191
+TN               1108
+LA               1072
+AZ               1009
+KY                909
+WA                831
+MD                819
+MN                768
+ID                704
+MA                683
+OK                668
+SC                627
+NC                579
+AL                462
+MS                438
+NV                374
+CT                373
+AR                292
+KS                257
+OR                235
+NE                225
+NM                171
+UT                156
+ND                154
+DE                143
+SD                129
+WV                113
+AK                 99
+RI                 89
+VT                 37
+MT                 35
+ME                 35
+DC                 30
+NH                 23
+HI                 20
+WY                 12
 0                  12
-WY                 10
 CALIFORNIA          6
 LEXUS               4
 S                   3
@@ -693,8 +691,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -725,33 +722,32 @@ dtype: object</pre>
       <td>1</td>
     </tr>
     <tr>
-      <th>354</th>
-      <td>Gmc</td>
-      <td>Mv1</td>
+      <th>750</th>
+      <td>Lincoln</td>
+      <td>Camry Hybrid</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>935</th>
-      <td>Nissan</td>
-      <td>Wingroad</td>
+      <th>749</th>
+      <td>Lincoln</td>
+      <td>Camry</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>339</th>
-      <td>Ford</td>
-      <td>Transit Van</td>
+      <th>746</th>
+      <td>Lincoln</td>
+      <td>Altima</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>336</th>
-      <td>Ford</td>
-      <td>Transit</td>
+      <th>744</th>
+      <td>Lexus</td>
+      <td>Ux Hybrid</td>
       <td>1</td>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -762,7 +758,7 @@ dtype: object</pre>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Remove-rows-with-make-&amp;-model-registrations-&lt;=-15">Remove rows with make &amp; model registrations &lt;= 15<a class="anchor-link" href="#Remove-rows-with-make-&amp;-model-registrations-&lt;=-15">&#182;</a></h3>
+<h3 id="Remove-rows-with-make-&amp;-model-registrations-%3C-20">Remove rows with make &amp; model registrations &lt; 20<a class="anchor-link" href="#Remove-rows-with-make-&amp;-model-registrations-%3C-20">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -771,7 +767,7 @@ dtype: object</pre>
 <div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -788,8 +784,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -814,69 +809,68 @@ dtype: object</pre>
   </thead>
   <tbody>
     <tr>
-      <th>250</th>
-      <td>Dodge</td>
-      <td>Ram</td>
-      <td>15</td>
+      <th>1249</th>
+      <td>Toyota</td>
+      <td>Rav</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>385</th>
+      <th>432</th>
       <td>Honda</td>
-      <td>Cr</td>
-      <td>15</td>
+      <td>Fit Ev</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>123</th>
-      <td>Cadillac</td>
-      <td>Xt4</td>
-      <td>15</td>
+      <th>859</th>
+      <td>Mercedes Benz</td>
+      <td>Metris</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>1172</th>
-      <td>Volkswagen</td>
-      <td>Jetta Hybrid</td>
-      <td>15</td>
+      <th>1082</th>
+      <td>Saab</td>
+      <td>42252</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>554</th>
-      <td>Jeep</td>
-      <td>Wrangler Jk</td>
-      <td>15</td>
-    </tr>
-    <tr>
-      <th>462</th>
-      <td>Hyundai</td>
-      <td>Xg300</td>
-      <td>15</td>
-    </tr>
-    <tr>
-      <th>845</th>
-      <td>Mercury</td>
-      <td>Milan Hybrid</td>
-      <td>15</td>
-    </tr>
-    <tr>
-      <th>625</th>
+      <th>689</th>
       <td>Lexus</td>
-      <td>Es Series</td>
-      <td>15</td>
+      <td>Es300h</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>661</th>
+      <th>842</th>
+      <td>Mercedes Benz</td>
+      <td>A Class</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>1153</th>
+      <td>Suzuki</td>
+      <td>Verona</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>1090</th>
+      <td>Saab</td>
+      <td>9 5</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>741</th>
       <td>Lexus</td>
-      <td>Nx 200t</td>
-      <td>16</td>
+      <td>Rx350</td>
+      <td>20</td>
     </tr>
     <tr>
-      <th>131</th>
-      <td>Chevrolet</td>
-      <td>Astra</td>
-      <td>16</td>
+      <th>1225</th>
+      <td>Toyota</td>
+      <td>Land Cruiser</td>
+      <td>21</td>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -897,7 +891,7 @@ dtype: object</pre>
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_threshold</span> <span class="o">=</span> <span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_threshold</span> <span class="o">=</span> <span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="n">df_count_by_vehicle</span><span class="p">[</span><span class="s1">&#39;COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">]</span>
 <span class="n">df_threshold</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
@@ -917,7 +911,7 @@ dtype: object</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(659, 3)</pre>
+<pre>(677, 3)</pre>
 </div>
 
 </div>
@@ -957,8 +951,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1044,8 +1037,7 @@ dtype: object</pre>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -1097,8 +1089,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1201,70 +1192,69 @@ dtype: object</pre>
       <td>...</td>
     </tr>
     <tr>
-      <th>1377578</th>
-      <td>IL</td>
+      <th>1729905</th>
+      <td>NY</td>
       <td>Kia</td>
-      <td>Rio 5 Door</td>
+      <td>E-Niro</td>
       <td>Black</td>
-      <td>2018</td>
-      <td>309</td>
+      <td>2022</td>
+      <td>338</td>
       <td>False</td>
-      <td>2020</td>
-      <td>8</td>
+      <td>2022</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>1377579</th>
+      <th>1729906</th>
       <td>IL</td>
       <td>Kia</td>
-      <td>Rio 5 Door</td>
-      <td>Silver</td>
-      <td>2020</td>
-      <td>197</td>
-      <td>False</td>
-      <td>2020</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>1377580</th>
-      <td>IL</td>
-      <td>Kia</td>
-      <td>Rio 5 Door</td>
+      <td>E-Niro</td>
       <td>Black</td>
-      <td>2020</td>
-      <td>180</td>
+      <td>2022</td>
+      <td>179</td>
       <td>False</td>
-      <td>2020</td>
-      <td>8</td>
+      <td>2022</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>1377581</th>
+      <th>1729907</th>
       <td>IL</td>
       <td>Kia</td>
-      <td>Rio 5 Door</td>
-      <td>Red</td>
-      <td>2012</td>
-      <td>194</td>
+      <td>E-Niro</td>
+      <td>Black</td>
+      <td>2022</td>
+      <td>179</td>
       <td>False</td>
-      <td>2020</td>
-      <td>8</td>
+      <td>2022</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>1377582</th>
-      <td>IL</td>
+      <th>1729908</th>
+      <td>NY</td>
       <td>Kia</td>
-      <td>Rio 5 Door</td>
-      <td>Silver</td>
-      <td>2020</td>
-      <td>189</td>
+      <td>E-Niro</td>
+      <td>Black</td>
+      <td>2022</td>
+      <td>247</td>
       <td>False</td>
-      <td>2020</td>
-      <td>9</td>
+      <td>2022</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1729909</th>
+      <td>NY</td>
+      <td>Kia</td>
+      <td>E-Niro</td>
+      <td>Black</td>
+      <td>2022</td>
+      <td>281</td>
+      <td>False</td>
+      <td>2022</td>
+      <td>7</td>
     </tr>
   </tbody>
 </table>
-<p>1377583 rows × 9 columns</p>
-</div>
-</div>
+<p>1729910 rows × 9 columns</p>
+</div></div>
 
 </div>
 
@@ -1302,8 +1292,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1359,8 +1348,7 @@ dtype: object</pre>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
+</div></div>
 
 </div>
 
@@ -1418,8 +1406,7 @@ dtype: object</pre>
 
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
+<div class="output_html rendered_html output_subarea output_execute_result"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1454,11 +1441,11 @@ dtype: object</pre>
       <td>2015</td>
       <td>3</td>
       <td>IL</td>
-      <td>Toyota</td>
-      <td>Highlander</td>
+      <td>Ford</td>
+      <td>Explorer</td>
       <td>Black</td>
-      <td>2010</td>
-      <td>263</td>
+      <td>2014</td>
+      <td>160</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1466,11 +1453,11 @@ dtype: object</pre>
       <td>2015</td>
       <td>3</td>
       <td>IL</td>
-      <td>Toyota</td>
-      <td>Camry</td>
-      <td>Black</td>
-      <td>2008</td>
-      <td>204</td>
+      <td>Ford</td>
+      <td>Escape</td>
+      <td>Green</td>
+      <td>2005</td>
+      <td>255</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1479,10 +1466,10 @@ dtype: object</pre>
       <td>3</td>
       <td>IL</td>
       <td>Toyota</td>
-      <td>Camry</td>
-      <td>Black</td>
-      <td>2009</td>
-      <td>122</td>
+      <td>Highlander Hybrid</td>
+      <td>White</td>
+      <td>2011</td>
+      <td>324</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1490,11 +1477,11 @@ dtype: object</pre>
       <td>2015</td>
       <td>3</td>
       <td>IL</td>
-      <td>Mazda</td>
-      <td>Mazda3</td>
-      <td>Silver</td>
-      <td>2012</td>
-      <td>150</td>
+      <td>Honda</td>
+      <td>Pilot</td>
+      <td>Black</td>
+      <td>2011</td>
+      <td>135</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1502,11 +1489,11 @@ dtype: object</pre>
       <td>2015</td>
       <td>3</td>
       <td>IL</td>
-      <td>Chrysler</td>
-      <td>Pt Cruiser</td>
-      <td>White/Pearl</td>
+      <td>Bmw</td>
+      <td>5-Series</td>
+      <td>Black</td>
       <td>2008</td>
-      <td>208</td>
+      <td>558</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1522,70 +1509,69 @@ dtype: object</pre>
       <td>...</td>
     </tr>
     <tr>
-      <th>1377578</th>
-      <td>2020</td>
-      <td>9</td>
+      <th>1729905</th>
+      <td>2022</td>
+      <td>7</td>
       <td>IL</td>
       <td>Buick</td>
-      <td>Regal</td>
-      <td>Black</td>
-      <td>2016</td>
-      <td>182</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1377579</th>
-      <td>2020</td>
-      <td>9</td>
-      <td>IL</td>
-      <td>Dodge</td>
-      <td>Journey</td>
-      <td>Silver</td>
+      <td>Encore</td>
+      <td>White</td>
       <td>2019</td>
-      <td>312</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>1377580</th>
-      <td>2020</td>
-      <td>9</td>
-      <td>IL</td>
-      <td>Ford</td>
-      <td>Ecosport</td>
-      <td>Blue</td>
-      <td>2018</td>
-      <td>143</td>
+      <td>134</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>1377581</th>
-      <td>2020</td>
-      <td>9</td>
+      <th>1729906</th>
+      <td>2022</td>
+      <td>7</td>
       <td>IL</td>
       <td>Toyota</td>
-      <td>Corolla</td>
+      <td>Highlander</td>
+      <td>White</td>
+      <td>2012</td>
+      <td>366</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1729907</th>
+      <td>2022</td>
+      <td>7</td>
+      <td>IL</td>
+      <td>Chevrolet</td>
+      <td>Impala</td>
       <td>Black</td>
       <td>2017</td>
-      <td>112</td>
-      <td>True</td>
+      <td>157</td>
+      <td>False</td>
     </tr>
     <tr>
-      <th>1377582</th>
-      <td>2020</td>
-      <td>9</td>
+      <th>1729908</th>
+      <td>2022</td>
+      <td>7</td>
       <td>IL</td>
-      <td>Toyota</td>
-      <td>Rav4</td>
-      <td>Black</td>
+      <td>Honda</td>
+      <td>Accord</td>
+      <td>Silver</td>
       <td>2018</td>
-      <td>192</td>
+      <td>124</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1729909</th>
+      <td>2022</td>
+      <td>7</td>
+      <td>IL</td>
+      <td>Lexus</td>
+      <td>Rx</td>
+      <td>White</td>
+      <td>2014</td>
+      <td>105</td>
       <td>False</td>
     </tr>
   </tbody>
 </table>
-<p>1377583 rows × 9 columns</p>
-</div>
-</div>
+<p>1729910 rows × 9 columns</p>
+</div></div>
 
 </div>
 
