@@ -1010,7 +1010,7 @@ memory usage: 170.7+ KB
 Analysis</a>. The pattern we're discussing is now called Split-Apply-Combine and, in the case at hand, we</p>
 <ul>
 <li>Split the data into new datasets for each country,</li>
-<li>Apply the function of "sum" for each new dataset (that is, we add/sum up the values for each column) to sum over territories/provinces/states for each country, and</li>
+<li>Apply the function of &quot;sum&quot; for each new dataset (that is, we add/sum up the values for each column) to sum over territories/provinces/states for each country, and</li>
 <li>Combine these datasets into a new dataframe.</li>
 </ul>
 <p>The <code>pandas</code> API has the <code>groupby</code> method, which allows us to do this.</p>
@@ -1773,7 +1773,7 @@ To make the index the set of dates, notice that the column names are the dates. 
 <li>If a variable takes on values over several orders of magnitude (e.g. in the 10s, 100s, and 1000s), we use a log axis so that the data is not all crammed into a small region of the visualization.</li>
 <li>If a curve is approximately linear on a log axis, then its approximately exponential growth and the gradient/slope of the line tells us about the exponent.</li>
 </ul>
-<p><strong>ESSENTIAL POINT:</strong> A logarithm scale is good for visualization <strong>BUT</strong> remember, in the thoughtful words of <a href="http://bois.caltech.edu/">Justin Bois</a>, "on the ground, in the hospitals, we live with the linear scale. The flattening of the US curve, for example is more evident on the log scale, but the growth is still rapid on a linear scale, which is what we feel."</p>
+<p><strong>ESSENTIAL POINT:</strong> A logarithm scale is good for visualization <strong>BUT</strong> remember, in the thoughtful words of <a href="http://bois.caltech.edu/">Justin Bois</a>, &quot;on the ground, in the hospitals, we live with the linear scale. The flattening of the US curve, for example is more evident on the log scale, but the growth is still rapid on a linear scale, which is what we feel.&quot;</p>
 
 </div>
 </div>
@@ -3476,7 +3476,7 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function for grouping countries by region</span>
 <span class="k">def</span> <span class="nf">group_by_country</span><span class="p">(</span><span class="n">raw_data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns data for countries indexed by date&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns data for countries indexed by date&quot;&quot;&quot;</span>
     <span class="c1"># Group by</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Lat&#39;</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># Transpose</span>
@@ -3499,7 +3499,7 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function to align growth curves</span>
 <span class="k">def</span> <span class="nf">align_curves</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">min_val</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Align growth curves  to start on the day when the number of known deaths = min_val&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Align growth curves  to start on the day when the number of known deaths = min_val&quot;&quot;&quot;</span>
     <span class="c1"># Loop over columns &amp; set values &lt; min_val to None</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_val</span><span class="p">),</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3525,7 +3525,7 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function to plot time series</span>
 <span class="k">def</span> <span class="nf">plot_time_series</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">,</span> <span class="n">x_label</span><span class="p">,</span> <span class="n">y_label</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Plot time series and make looks a bit nice&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot time series and make looks a bit nice&quot;&quot;&quot;</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
@@ -4138,9 +4138,10 @@ memory usage: 37.6+ KB
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We're going to use a tool called <a href="https://altair-viz.github.io/">Altair</a>. I like Altair for several reasons, including precisely what they state on their website:</p>
-<blockquote><p>With Altair, you can spend more time understanding your data and its meaning. Altair’s API is simple, friendly and consistent and built on top of the powerful <a href="https://vega.github.io/vega-lite/">Vega-Lite</a> visualization grammar. This elegant simplicity produces beautiful and effective visualizations with a minimal amount of code.</p>
+<blockquote>
+<p>With Altair, you can spend more time understanding your data and its meaning. Altair’s API is simple, friendly and consistent and built on top of the powerful <a href="https://vega.github.io/vega-lite/">Vega-Lite</a> visualization grammar. This elegant simplicity produces beautiful and effective visualizations with a minimal amount of code.</p>
 </blockquote>
-<p>Before jumping into Altair, let's reshape our <code>deaths_country</code> dataset. Notice that it's currently in <strong>wide data format</strong>, with a column for each country and a row for each "day" (where day 1 is the first day with over 25 confirmed deaths). This worked with the <code>pandas</code> plotting API for reasons discussed above.</p>
+<p>Before jumping into Altair, let's reshape our <code>deaths_country</code> dataset. Notice that it's currently in <strong>wide data format</strong>, with a column for each country and a row for each &quot;day&quot; (where day 1 is the first day with over 25 confirmed deaths). This worked with the <code>pandas</code> plotting API for reasons discussed above.</p>
 
 </div>
 </div>
@@ -4537,7 +4538,8 @@ memory usage: 37.6+ KB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It is nice to be able to build such an informative and elegant chart in four lines of code (which is also elegant). And, looking at the simplicity of the code we just wrote, we can see why it was great to have long data: a column for each variable allowed us to explicitly and easily tell Altair what we wanted on each axis and what we wanted for the colour.</p>
 <p>As the <a href="https://altair-viz.github.io/getting_started/overview.html">Altair documentation (which is great, by the way!) states</a>,</p>
-<blockquote><p>The key idea is that you are declaring links between <em>data columns</em> and <em>visual encoding channels</em>, such as the x-axis, y-axis, color, etc. The rest of the plot details are handled automatically. Building on this declarative plotting idea, a surprising range of simple to sophisticated plots and visualizations can be created using a relatively concise grammar.</p>
+<blockquote>
+<p>The key idea is that you are declaring links between <em>data columns</em> and <em>visual encoding channels</em>, such as the x-axis, y-axis, color, etc. The rest of the plot details are handled automatically. Building on this declarative plotting idea, a surprising range of simple to sophisticated plots and visualizations can be created using a relatively concise grammar.</p>
 </blockquote>
 
 </div>
@@ -4642,7 +4644,8 @@ memory usage: 37.6+ KB
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can also add a log y-axis. To do this, The long-form, we express the types using the long-form <code>alt.X('Day',...)</code>, which is, in the words of the <a href="https://altair-viz.github.io/user_guide/encoding.html">Altair documentation</a></p>
-<blockquote><p>useful when doing more fine-tuned adjustments to the encoding, such as binning, axis and scale properties, or more.</p>
+<blockquote>
+<p>useful when doing more fine-tuned adjustments to the encoding, such as binning, axis and scale properties, or more.</p>
 </blockquote>
 <p>We'll also now add a hover tooltip so that, when we hover our cursor over any point on any of the lines, it will tell us the 'Country', the 'Day', and the number of 'Deaths'.</p>
 
@@ -4742,7 +4745,7 @@ memory usage: 37.6+ KB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It's great that we could add that useful hover tooltip with one line of code <code>tooltip=['Country/Region', 'Day','Deaths']</code>, particularly as it adds such information rich interaction to the chart.
 One useful aspect of the NYTimes chart was that, when you hovered over a particular curve, it made it stand out against the other. We're going to do something similar here: in the resulting chart, when you click on a curve, the others turn grey.</p>
-<p><strong>Note:</strong> When first attempting to build this chart, I discovered <a href="https://github.com/altair-viz/altair/issues/1552">here</a> that "multiple conditional values in one encoding are not allowed by the Vega-Lite spec," which is what Altair uses. For this reason, we build the chart, then an overlay, and then combine them.</p>
+<p><strong>Note:</strong> When first attempting to build this chart, I discovered <a href="https://github.com/altair-viz/altair/issues/1552">here</a> that &quot;multiple conditional values in one encoding are not allowed by the Vega-Lite spec,&quot; which is what Altair uses. For this reason, we build the chart, then an overlay, and then combine them.</p>
 
 </div>
 </div>
@@ -5025,5 +5028,5 @@ One useful aspect of the NYTimes chart was that, when you hovered over a particu
 </div>
 </div>
 </div>
- 
+
 
