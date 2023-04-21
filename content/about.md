@@ -9,7 +9,8 @@ Hi, I'm Park from Seoul, South Korea.
 
 I like [writing code](https://github.com/subwaymatch).
 
-I'm currently working as an instructor at the University of Illinois. I teach Data Analytics courses using Python and Tableau.
+I'm currently working as an Instructor of Accountancy at the University of Illinois. I teach Data/Business Analytics to business major/minors, accounting students, and iMBA learners using Python, R, SQL and Tableau. I am also serving as an Associate Director at [the University of Illinois-Deloitte Foundation Center for Business Analytics
+](https://www.centerforanalytics.giesbusiness.illinois.edu/).
 
 ## Recent Projects
 
@@ -43,6 +44,7 @@ I try to remain language-agnostic, but below is the list of programming language
 
 - JavaScript, TypeScript
 - Python
+- R
 - Java
 - C#
 - C, C++
