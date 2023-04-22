@@ -96,7 +96,7 @@ If the students were given a "starter notebook" (a template file with instructio
 
 ## Storing Results
 
-MOSS results are kept on the `moss.stanford.edu` server for 14 days. Use `wget` to clone the site locally.
+MOSS results are kept on the `moss.stanford.edu` server for 14 days. Use `wget` to clone the site locally. Be sure to add the forward slash character at the end to include the `index.html` file.
 
 ```bash
 $ wget --mirror --convert-links -e robots=off http://moss.stanford.edu/results/1/1234567890123/
