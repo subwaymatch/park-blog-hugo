@@ -53,10 +53,10 @@ categories:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Data urls</span>
-<span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/&#39;</span>
-<span class="n">confirmed_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">&#39;time_series_covid19_confirmed_global.csv&#39;</span>
-<span class="n">death_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">&#39;time_series_covid19_deaths_global.csv&#39;</span>
-<span class="n">recovery_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">+</span> <span class="s1">&#39;time_series_covid19_recovered_global.csv&#39;</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'</span>
+<span class="n">confirmed_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">'time_series_covid19_confirmed_global.csv'</span>
+<span class="n">death_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">'time_series_covid19_deaths_global.csv'</span>
+<span class="n">recovery_cases_data_url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">+</span> <span class="s1">'time_series_covid19_recovered_global.csv'</span>
 <span class="c1"># Import datasets as pandas dataframes</span>
 <span class="n">raw_data_confirmed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">confirmed_cases_data_url</span><span class="p">)</span>
 <span class="n">raw_data_deaths</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">death_cases_data_url</span><span class="p">)</span>
@@ -1010,7 +1010,7 @@ memory usage: 170.7+ KB
 Analysis</a>. The pattern we're discussing is now called Split-Apply-Combine and, in the case at hand, we</p>
 <ul>
 <li>Split the data into new datasets for each country,</li>
-<li>Apply the function of &quot;sum&quot; for each new dataset (that is, we add/sum up the values for each column) to sum over territories/provinces/states for each country, and</li>
+<li>Apply the function of "sum" for each new dataset (that is, we add/sum up the values for each column) to sum over territories/provinces/states for each country, and</li>
 <li>Combine these datasets into a new dataframe.</li>
 </ul>
 <p>The <code>pandas</code> API has the <code>groupby</code> method, which allows us to do this.</p>
@@ -1024,8 +1024,8 @@ Analysis</a>. The pattern we're discussing is now called Split-Apply-Combine and
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Group by region (also drop &#39;Lat&#39;, &#39;Long&#39; as it doesn&#39;t make sense to sum them here)</span>
-<span class="n">confirmed_country</span> <span class="o">=</span> <span class="n">raw_data_confirmed</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Lat&#39;</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Group by region (also drop 'Lat', 'Long' as it doesn't make sense to sum them here)</span>
+<span class="n">confirmed_country</span> <span class="o">=</span> <span class="n">raw_data_confirmed</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Lat'</span><span class="p">,</span> <span class="s1">'Long'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">confirmed_country</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -1626,8 +1626,8 @@ To make the index the set of dates, notice that the column names are the dates. 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">poi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;China&#39;</span><span class="p">,</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;Italy&#39;</span><span class="p">,</span> <span class="s1">&#39;France&#39;</span><span class="p">,</span> <span class="s1">&#39;Spain&#39;</span><span class="p">,</span> <span class="s1">&#39;Australia&#39;</span><span class="p">]</span>
-<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;brg&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">poi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'China'</span><span class="p">,</span> <span class="s1">'US'</span><span class="p">,</span> <span class="s1">'Italy'</span><span class="p">,</span> <span class="s1">'France'</span><span class="p">,</span> <span class="s1">'Spain'</span><span class="p">,</span> <span class="s1">'Australia'</span><span class="p">]</span>
+<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'brg'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1684,10 +1684,10 @@ To make the index the set of dates, notice that the column names are the dates. 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;brg&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Reported Confirmed cases count&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Reported Confirmed Cases Time Series&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'brg'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Reported Confirmed cases count'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Reported Confirmed Cases Time Series'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -1731,10 +1731,10 @@ To make the index the set of dates, notice that the column names are the dates. 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Reported Confirmed cases count&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Reported Confirmed Cases Time Series&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">confirmed_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Reported Confirmed cases count'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Reported Confirmed Cases Time Series'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -1773,7 +1773,7 @@ To make the index the set of dates, notice that the column names are the dates. 
 <li>If a variable takes on values over several orders of magnitude (e.g. in the 10s, 100s, and 1000s), we use a log axis so that the data is not all crammed into a small region of the visualization.</li>
 <li>If a curve is approximately linear on a log axis, then its approximately exponential growth and the gradient/slope of the line tells us about the exponent.</li>
 </ul>
-<p><strong>ESSENTIAL POINT:</strong> A logarithm scale is good for visualization <strong>BUT</strong> remember, in the thoughtful words of <a href="http://bois.caltech.edu/">Justin Bois</a>, &quot;on the ground, in the hospitals, we live with the linear scale. The flattening of the US curve, for example is more evident on the log scale, but the growth is still rapid on a linear scale, which is what we feel.&quot;</p>
+<p><strong>ESSENTIAL POINT:</strong> A logarithm scale is good for visualization <strong>BUT</strong> remember, in the thoughtful words of <a href="http://bois.caltech.edu/">Justin Bois</a>, "on the ground, in the hospitals, we live with the linear scale. The flattening of the US curve, for example is more evident on the log scale, but the growth is still rapid on a linear scale, which is what we feel."</p>
 
 </div>
 </div>
@@ -2149,7 +2149,7 @@ memory usage: 170.7+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Split-Apply-Combine</span>
-<span class="n">deaths_country</span> <span class="o">=</span> <span class="n">raw_data_deaths</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Lat&#39;</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">deaths_country</span> <span class="o">=</span> <span class="n">raw_data_deaths</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Lat'</span><span class="p">,</span> <span class="s1">'Long'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Transpose</span>
 <span class="n">deaths_country</span> <span class="o">=</span> <span class="n">deaths_country</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
@@ -2417,10 +2417,10 @@ memory usage: 170.7+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;brg&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Reported Deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Reported Deaths Time Series&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'brg'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number of Reported Deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Reported Deaths Time Series'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -2464,10 +2464,10 @@ memory usage: 170.7+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;brg&#39;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Reported Deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Reported Deaths Time Series&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'brg'</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number of Reported Deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Reported Deaths Time Series'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -2727,11 +2727,11 @@ To achieve this, first off, let's set set all values less than 25 to NaN so that
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series of several countries of interest</span>
-<span class="n">poi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;China&#39;</span><span class="p">,</span> <span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;Italy&#39;</span><span class="p">,</span> <span class="s1">&#39;France&#39;</span><span class="p">,</span> <span class="s1">&#39;Australia&#39;</span><span class="p">]</span>
-<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;brg&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Reported Deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Reported Deaths Time Series&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">poi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'China'</span><span class="p">,</span> <span class="s1">'US'</span><span class="p">,</span> <span class="s1">'Italy'</span><span class="p">,</span> <span class="s1">'France'</span><span class="p">,</span> <span class="s1">'Australia'</span><span class="p">]</span>
+<span class="n">deaths_country</span><span class="p">[</span><span class="n">poi</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">'brg'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number of Reported Deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Reported Deaths Time Series'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -2774,8 +2774,8 @@ To achieve this, first off, let's set set all values less than 25 to NaN so that
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Drop columns that are all NaNs (i.e. countries that haven&#39;t yet reached 25 deaths)</span>
-<span class="n">deaths_country</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Drop columns that are all NaNs (i.e. countries that haven't yet reached 25 deaths)</span>
+<span class="n">deaths_country</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">deaths_country</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 
@@ -2884,7 +2884,7 @@ memory usage: 37.6+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># drop index, sort date column</span>
-<span class="n">deaths_country_drop</span> <span class="o">=</span> <span class="n">deaths_country</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;index&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">deaths_country_drop</span> <span class="o">=</span> <span class="n">deaths_country</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -3318,11 +3318,11 @@ memory usage: 37.6+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot time series </span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Reported Deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Total reported coronavirus deaths for places with at least 25 deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'upper right'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Days'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number of Reported Deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Total reported coronavirus deaths for places with at least 25 deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -3358,11 +3358,11 @@ memory usage: 37.6+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot semi log time series </span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Deaths Patients count&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Total reported coronavirus deaths for places with at least 25 deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'upper right'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Days'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Deaths Patients count'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Total reported coronavirus deaths for places with at least 25 deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -3406,11 +3406,11 @@ memory usage: 37.6+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot semi log time series </span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Deaths Patients count&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Total reported coronavirus deaths for places with at least 25 deaths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'upper right'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Days'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Deaths Patients count'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Total reported coronavirus deaths for places with at least 25 deaths'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
 </pre></div>
 
     </div>
@@ -3476,9 +3476,9 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function for grouping countries by region</span>
 <span class="k">def</span> <span class="nf">group_by_country</span><span class="p">(</span><span class="n">raw_data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns data for countries indexed by date&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Returns data for countries indexed by date"""</span>
     <span class="c1"># Group by</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Lat&#39;</span><span class="p">,</span> <span class="s1">&#39;Long&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Lat'</span><span class="p">,</span> <span class="s1">'Long'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># Transpose</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
     <span class="c1"># Set index as DateTimeIndex</span>
@@ -3499,14 +3499,14 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function to align growth curves</span>
 <span class="k">def</span> <span class="nf">align_curves</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">min_val</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Align growth curves  to start on the day when the number of known deaths = min_val&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Align growth curves  to start on the day when the number of known deaths = min_val"""</span>
     <span class="c1"># Loop over columns &amp; set values &lt; min_val to None</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_val</span><span class="p">),</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1"># Drop columns with all NaNs</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># Reset index, drop date</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;index&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># Shift each column to begin with first valid index</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">first_valid_index</span><span class="p">())</span>
@@ -3525,9 +3525,9 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Function to plot time series</span>
 <span class="k">def</span> <span class="nf">plot_time_series</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">plot_title</span><span class="p">,</span> <span class="n">x_label</span><span class="p">,</span> <span class="n">y_label</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot time series and make looks a bit nice&quot;&quot;&quot;</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Plot time series and make looks a bit nice"""</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="n">logy</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'lower right'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">plot_title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
@@ -3553,7 +3553,7 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">deaths_country_drop</span> <span class="o">=</span> <span class="n">group_by_country</span><span class="p">(</span><span class="n">raw_data_deaths</span><span class="p">)</span>
 <span class="n">deaths_country_drop</span> <span class="o">=</span> <span class="n">align_curves</span><span class="p">(</span><span class="n">deaths_country_drop</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">plot_time_series</span><span class="p">(</span><span class="n">deaths_country_drop</span><span class="p">,</span> <span class="s1">&#39;Number of Reported Deaths&#39;</span><span class="p">,</span> <span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="s1">&#39;Reported Deaths by Country&#39;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot_time_series</span><span class="p">(</span><span class="n">deaths_country_drop</span><span class="p">,</span> <span class="s1">'Number of Reported Deaths'</span><span class="p">,</span> <span class="s1">'Days'</span><span class="p">,</span> <span class="s1">'Reported Deaths by Country'</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -3998,7 +3998,7 @@ memory usage: 37.6+ KB
 <div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">,</span> <span class="s1">&#39;Recovered Patients Time Series&#39;</span><span class="p">,</span> <span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="s1">&#39;Recovered Patients count&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">,</span> <span class="s1">'Recovered Patients Time Series'</span><span class="p">,</span> <span class="s1">'Days'</span><span class="p">,</span> <span class="s1">'Recovered Patients count'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -4033,7 +4033,7 @@ memory usage: 37.6+ KB
 <div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">,</span> <span class="s1">&#39;Recovered Patients Time Series&#39;</span><span class="p">,</span> <span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="s1">&#39;Recovered Patients count&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">,</span> <span class="s1">'Recovered Patients Time Series'</span><span class="p">,</span> <span class="s1">'Days'</span><span class="p">,</span> <span class="s1">'Recovered Patients count'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -4076,7 +4076,7 @@ memory usage: 37.6+ KB
 <div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">[</span><span class="n">poi</span><span class="p">],</span> <span class="s1">&#39;Recovered Patients Time Series&#39;</span><span class="p">,</span> <span class="s1">&#39;Days&#39;</span><span class="p">,</span> <span class="s1">&#39;Recovered Patients count&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_time_series</span><span class="p">(</span><span class="n">recovered_country_drop</span><span class="p">[</span><span class="n">poi</span><span class="p">],</span> <span class="s1">'Recovered Patients Time Series'</span><span class="p">,</span> <span class="s1">'Days'</span><span class="p">,</span> <span class="s1">'Recovered Patients count'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -4138,10 +4138,9 @@ memory usage: 37.6+ KB
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We're going to use a tool called <a href="https://altair-viz.github.io/">Altair</a>. I like Altair for several reasons, including precisely what they state on their website:</p>
-<blockquote>
-<p>With Altair, you can spend more time understanding your data and its meaning. Altair’s API is simple, friendly and consistent and built on top of the powerful <a href="https://vega.github.io/vega-lite/">Vega-Lite</a> visualization grammar. This elegant simplicity produces beautiful and effective visualizations with a minimal amount of code.</p>
+<blockquote><p>With Altair, you can spend more time understanding your data and its meaning. Altair’s API is simple, friendly and consistent and built on top of the powerful <a href="https://vega.github.io/vega-lite/">Vega-Lite</a> visualization grammar. This elegant simplicity produces beautiful and effective visualizations with a minimal amount of code.</p>
 </blockquote>
-<p>Before jumping into Altair, let's reshape our <code>deaths_country</code> dataset. Notice that it's currently in <strong>wide data format</strong>, with a column for each country and a row for each &quot;day&quot; (where day 1 is the first day with over 25 confirmed deaths). This worked with the <code>pandas</code> plotting API for reasons discussed above.</p>
+<p>Before jumping into Altair, let's reshape our <code>deaths_country</code> dataset. Notice that it's currently in <strong>wide data format</strong>, with a column for each country and a row for each "day" (where day 1 is the first day with over 25 confirmed deaths). This worked with the <code>pandas</code> plotting API for reasons discussed above.</p>
 
 </div>
 </div>
@@ -4356,7 +4355,7 @@ memory usage: 37.6+ KB
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create long data for deaths</span>
-<span class="n">deaths_long</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;Deaths&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;Day&#39;</span> <span class="p">})</span>
+<span class="n">deaths_long</span> <span class="o">=</span> <span class="n">deaths_country_drop</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">'index'</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">'Deaths'</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span> <span class="s1">'index'</span><span class="p">:</span> <span class="s1">'Day'</span> <span class="p">})</span>
 <span class="n">deaths_long</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -4456,9 +4455,9 @@ memory usage: 37.6+ KB
 
 <span class="c1"># altair plot </span>
 <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">deaths_long</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Day&#39;</span><span class="p">,</span> 
-    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span> 
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">'Day'</span><span class="p">,</span> 
+    <span class="n">y</span><span class="o">=</span><span class="s1">'Deaths'</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -4538,8 +4537,7 @@ memory usage: 37.6+ KB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It is nice to be able to build such an informative and elegant chart in four lines of code (which is also elegant). And, looking at the simplicity of the code we just wrote, we can see why it was great to have long data: a column for each variable allowed us to explicitly and easily tell Altair what we wanted on each axis and what we wanted for the colour.</p>
 <p>As the <a href="https://altair-viz.github.io/getting_started/overview.html">Altair documentation (which is great, by the way!) states</a>,</p>
-<blockquote>
-<p>The key idea is that you are declaring links between <em>data columns</em> and <em>visual encoding channels</em>, such as the x-axis, y-axis, color, etc. The rest of the plot details are handled automatically. Building on this declarative plotting idea, a surprising range of simple to sophisticated plots and visualizations can be created using a relatively concise grammar.</p>
+<blockquote><p>The key idea is that you are declaring links between <em>data columns</em> and <em>visual encoding channels</em>, such as the x-axis, y-axis, color, etc. The rest of the plot details are handled automatically. Building on this declarative plotting idea, a surprising range of simple to sophisticated plots and visualizations can be created using a relatively concise grammar.</p>
 </blockquote>
 
 </div>
@@ -4560,9 +4558,9 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># altair plot </span>
 <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">deaths_long</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">(</span><span class="n">strokeWidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Day&#39;</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">'Day'</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">'Deaths'</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span>
 <span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">650</span>
@@ -4644,8 +4642,7 @@ memory usage: 37.6+ KB
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can also add a log y-axis. To do this, The long-form, we express the types using the long-form <code>alt.X('Day',...)</code>, which is, in the words of the <a href="https://altair-viz.github.io/user_guide/encoding.html">Altair documentation</a></p>
-<blockquote>
-<p>useful when doing more fine-tuned adjustments to the encoding, such as binning, axis and scale properties, or more.</p>
+<blockquote><p>useful when doing more fine-tuned adjustments to the encoding, such as binning, axis and scale properties, or more.</p>
 </blockquote>
 <p>We'll also now add a hover tooltip so that, when we hover our cursor over any point on any of the lines, it will tell us the 'Country', the 'Day', and the number of 'Deaths'.</p>
 
@@ -4659,10 +4656,10 @@ memory usage: 37.6+ KB
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># altair plot </span>
 <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">deaths_long</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">(</span><span class="n">strokeWidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">),</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span>
-    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span> <span class="s1">&#39;Deaths&#39;</span><span class="p">]</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'Day'</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">'Deaths'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'log'</span><span class="p">)),</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">,</span> <span class="s1">'Day'</span><span class="p">,</span> <span class="s1">'Deaths'</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">650</span>
@@ -4745,7 +4742,7 @@ memory usage: 37.6+ KB
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It's great that we could add that useful hover tooltip with one line of code <code>tooltip=['Country/Region', 'Day','Deaths']</code>, particularly as it adds such information rich interaction to the chart.
 One useful aspect of the NYTimes chart was that, when you hovered over a particular curve, it made it stand out against the other. We're going to do something similar here: in the resulting chart, when you click on a curve, the others turn grey.</p>
-<p><strong>Note:</strong> When first attempting to build this chart, I discovered <a href="https://github.com/altair-viz/altair/issues/1552">here</a> that &quot;multiple conditional values in one encoding are not allowed by the Vega-Lite spec,&quot; which is what Altair uses. For this reason, we build the chart, then an overlay, and then combine them.</p>
+<p><strong>Note:</strong> When first attempting to build this chart, I discovered <a href="https://github.com/altair-viz/altair/issues/1552">here</a> that "multiple conditional values in one encoding are not allowed by the Vega-Lite spec," which is what Altair uses. For this reason, we build the chart, then an overlay, and then combine them.</p>
 
 </div>
 </div>
@@ -4756,19 +4753,19 @@ One useful aspect of the NYTimes chart was that, when you hovered over a particu
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Selection tool</span>
-<span class="n">selection</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection_single</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">])</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection_single</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">])</span>
 <span class="c1"># Color change when clicked</span>
 <span class="n">color</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span>
-                     <span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">&#39;Country/Region:N&#39;</span><span class="p">),</span>
-                     <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;lightgray&#39;</span><span class="p">))</span>
+                     <span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'Country/Region:N'</span><span class="p">),</span>
+                     <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">'lightgray'</span><span class="p">))</span>
 
 
 <span class="c1"># Base altair plot </span>
 <span class="n">base</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">deaths_long</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">(</span><span class="n">strokeWidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">),</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span>
-    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span><span class="s1">&#39;Deaths&#39;</span><span class="p">]</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'Day'</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">'Deaths'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'log'</span><span class="p">)),</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">,</span> <span class="s1">'Day'</span><span class="p">,</span><span class="s1">'Deaths'</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">650</span>
@@ -4776,16 +4773,16 @@ One useful aspect of the NYTimes chart was that, when you hovered over a particu
 
 <span class="c1"># Chart</span>
 <span class="n">chart</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="s1">&#39;Country/Region:N&#39;</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;lightgray&#39;</span><span class="p">))</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="s1">'Country/Region:N'</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">'lightgray'</span><span class="p">))</span>
 <span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span>
     <span class="n">selection</span>
 <span class="p">)</span>
 
 <span class="c1"># Overlay</span>
 <span class="n">overlay</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">,</span>
   <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
-  <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region:N&#39;</span><span class="p">,</span> <span class="s1">&#39;Name:N&#39;</span><span class="p">]</span>
+  <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region:N'</span><span class="p">,</span> <span class="s1">'Name:N'</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span>
   <span class="n">selection</span>
 <span class="p">)</span>
@@ -4882,18 +4879,18 @@ One useful aspect of the NYTimes chart was that, when you hovered over a particu
 <span class="n">deaths_long</span> <span class="o">=</span> <span class="n">deaths_long</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
 <span class="c1"># Selection tool</span>
-<span class="n">selection</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection_single</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">])</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection_single</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region'</span><span class="p">])</span>
 <span class="c1"># Color change when clicked</span>
 <span class="n">color</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span>
-                    <span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">&#39;Country/Region:N&#39;</span><span class="p">),</span>
-                    <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;lightgray&#39;</span><span class="p">))</span>
+                    <span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'Country/Region:N'</span><span class="p">),</span>
+                    <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">'lightgray'</span><span class="p">))</span>
 
 
 <span class="c1"># Base altair plot </span>
 <span class="n">base</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">deaths_long</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">(</span><span class="n">strokeWidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">),</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)),</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'Day'</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">'Deaths'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'log'</span><span class="p">)),</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'Country/Region'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
 <span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">650</span>
@@ -4901,29 +4898,29 @@ One useful aspect of the NYTimes chart was that, when you hovered over a particu
 
 <span class="c1"># Chart</span>
 <span class="n">chart</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-  <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="s1">&#39;Country/Region:N&#39;</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;lightgray&#39;</span><span class="p">))</span>
+  <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="s1">'Country/Region:N'</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s1">'lightgray'</span><span class="p">))</span>
 <span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span>
   <span class="n">selection</span>
 <span class="p">)</span>
 
 <span class="c1"># Overlay</span>
 <span class="n">overlay</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-  <span class="n">color</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span>
+  <span class="n">color</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">,</span>
   <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span>
-  <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Country/Region:N&#39;</span><span class="p">,</span> <span class="s1">&#39;Name:N&#39;</span><span class="p">]</span>
+  <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'Country/Region:N'</span><span class="p">,</span> <span class="s1">'Name:N'</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span>
   <span class="n">selection</span>
 <span class="p">)</span>
 
 <span class="c1"># Text labels</span>
 <span class="n">text</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">mark_text</span><span class="p">(</span>
-    <span class="n">align</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+    <span class="n">align</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span>
     <span class="n">dx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">size</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span>  <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Day&#39;</span><span class="p">)),</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">&#39;Deaths&#39;</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;argmax&#39;</span><span class="p">:</span> <span class="s1">&#39;Day&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Reported Deaths&#39;</span><span class="p">)),</span>
-    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Country/Region&#39;</span><span class="p">,</span>  
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'Day'</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span>  <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Day'</span><span class="p">)),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s1">'Deaths'</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="p">{</span><span class="s1">'argmax'</span><span class="p">:</span> <span class="s1">'Day'</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Reported Deaths'</span><span class="p">)),</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Country/Region'</span><span class="p">,</span>  
 <span class="p">)</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span>
     <span class="n">selection</span>
 <span class="p">)</span>

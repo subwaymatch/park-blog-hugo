@@ -4,208 +4,169 @@ date: 2023-02-08
 categories:
   - Dataset
 ---
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A <a href="https://developer.twitter.com/">Twitter Developer account</a> is required to run this script.</p>
 
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <p>
-        A
-        <a href="https://developer.twitter.com/">Twitter Developer account</a>
-        is required to run this script.
-      </p>
-    </div>
-  </div>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[1]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="kn">import</span> <span class="nn">tweepy</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">tweepy</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre>
-        </div>
-      </div>
+</pre></div>
+
     </div>
-  </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[2]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-</pre>
-        </div>
-      </div>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_colwidth'</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_rows'</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
     </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <h2 id="Read-Twitter-API-credentials">
-        Read Twitter API credentials<a
-          class="anchor-link"
-          href="#Read-Twitter-API-credentials"
-          >&#182;</a
-        >
-      </h2>
-    </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <p>
-        Read Twitter API credentials from <code>twitter-credentials.json</code>.
-        The JSON file should contain the following key/values:
-      </p>
-      <div class="highlight">
-        <pre><span></span><span class="p">{</span>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Read-Twitter-API-credentials">Read Twitter API credentials<a class="anchor-link" href="#Read-Twitter-API-credentials">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Read Twitter API credentials from <code>twitter-credentials.json</code>. The JSON file should contain the following key/values:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;consumer_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_CONSUMER_KEY&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;consumer_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_CONSUMER_SECRET&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;access_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_ACCESS_TOKEN&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;access_token_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_ACCESS_TOKEN_SECRET&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;bearer_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BEARER_TOKEN&quot;</span>
 <span class="p">}</span>
-</pre>
-      </div>
-      <p>
-        Create the <code>twitter-credentials.json</code> with your own keys and
-        tokens in the same folder as this Jupyter notebook.
-      </p>
-    </div>
-  </div>
+</pre></div>
+<p>Create the <code>twitter-credentials.json</code> with your own keys and tokens in the same folder as this Jupyter notebook.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[3]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;twitter-credentials.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'twitter-credentials.json'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">twitter_credentials_data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     
 <span class="n">twitter_credentials</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">twitter_credentials_data</span><span class="p">)</span>
-</pre>
-        </div>
-      </div>
+</pre></div>
+
     </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <h2 id="Create-Tweepy-client-with-credentials">
-        Create Tweepy client with credentials<a
-          class="anchor-link"
-          href="#Create-Tweepy-client-with-credentials"
-          >&#182;</a
-        >
-      </h2>
-    </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <p>Initialize <code>tweepy.Client</code> (Twitter API V2).</p>
-    </div>
-  </div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Create-Tweepy-client-with-credentials">Create Tweepy client with credentials<a class="anchor-link" href="#Create-Tweepy-client-with-credentials">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Initialize <code>tweepy.Client</code> (Twitter API V2).</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[4]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">tweepy</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span>
-    <span class="n">consumer_key</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">&quot;consumer_key&quot;</span><span class="p">],</span>
-    <span class="n">consumer_secret</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">&quot;consumer_secret&quot;</span><span class="p">],</span>
-    <span class="n">access_token</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">],</span>
-    <span class="n">access_token_secret</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">&quot;access_token_secret&quot;</span><span class="p">],</span>
-    <span class="n">bearer_token</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">&quot;bearer_token&quot;</span><span class="p">],</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">tweepy</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span>
+    <span class="n">consumer_key</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">"consumer_key"</span><span class="p">],</span>
+    <span class="n">consumer_secret</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">"consumer_secret"</span><span class="p">],</span>
+    <span class="n">access_token</span><span class="o">=</span><span class="p">[</span><span class="s2">"access_token"</span><span class="p">],</span>
+    <span class="n">access_token_secret</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">"access_token_secret"</span><span class="p">],</span>
+    <span class="n">bearer_token</span><span class="o">=</span><span class="n">twitter_credentials</span><span class="p">[</span><span class="s2">"bearer_token"</span><span class="p">],</span>
     <span class="n">wait_on_rate_limit</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-</pre>
-        </div>
-      </div>
+</pre></div>
+
     </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <h2 id="Create-a-function-to-retrieve-tweets">
-        Create a function to retrieve tweets<a
-          class="anchor-link"
-          href="#Create-a-function-to-retrieve-tweets"
-          >&#182;</a
-        >
-      </h2>
-      <p>
-        Tweepy does not provide an automated way to handle pagination. This
-        function uses <code>next_token</code> in each request to make follow-up
-        requests until the maximum number of tweets are filled.
-      </p>
-    </div>
-  </div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Create-a-function-to-retrieve-tweets">Create a function to retrieve tweets<a class="anchor-link" href="#Create-a-function-to-retrieve-tweets">&#182;</a></h2><p>Tweepy does not provide an automated way to handle pagination. This function uses <code>next_token</code> in each request to make follow-up requests until the maximum number of tweets are filled.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[5]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="k">def</span> <span class="nf">retrieve_tweets</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_num_tweets</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sort_order</span><span class="o">=</span><span class="s2">&quot;recency&quot;</span><span class="p">):</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">retrieve_tweets</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">max_num_tweets</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sort_order</span><span class="o">=</span><span class="s2">"recency"</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">num_tweets_retrieved</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">next_token</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">author_id_username_map</span> <span class="o">=</span> <span class="p">{}</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;==========================================&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Retrieving tweets using query: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'=========================================='</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Retrieving tweets using query: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     
     <span class="k">while</span> <span class="p">(</span><span class="n">max_num_tweets</span> <span class="o">&gt;</span> <span class="n">num_tweets_retrieved</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">next_token</span><span class="p">):</span>
         <span class="n">max_results</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_num_tweets</span> <span class="o">-</span> <span class="n">num_tweets_retrieved</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
         
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;num_tweets_retrieved=</span><span class="si">{</span><span class="n">num_tweets_retrieved</span><span class="si">}</span><span class="s1">, max_results=</span><span class="si">{</span><span class="n">max_results</span><span class="si">}</span><span class="s1">, next_token=</span><span class="si">{</span><span class="n">next_token</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'num_tweets_retrieved=</span><span class="si">{</span><span class="n">num_tweets_retrieved</span><span class="si">}</span><span class="s1">, max_results=</span><span class="si">{</span><span class="n">max_results</span><span class="si">}</span><span class="s1">, next_token=</span><span class="si">{</span><span class="n">next_token</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         
         <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_recent_tweets</span><span class="p">(</span>
             <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
             <span class="n">max_results</span><span class="o">=</span><span class="n">max_results</span><span class="p">,</span>
             <span class="n">sort_order</span><span class="o">=</span><span class="n">sort_order</span><span class="p">,</span>
             <span class="n">next_token</span><span class="o">=</span><span class="n">next_token</span><span class="p">,</span>
-            <span class="n">user_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span> <span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">],</span>
-            <span class="n">tweet_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;author_id&quot;</span><span class="p">],</span>
-            <span class="n">expansions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;entities.mentions.username&quot;</span><span class="p">]</span>
+            <span class="n">user_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"name"</span> <span class="p">,</span> <span class="s2">"username"</span><span class="p">],</span>
+            <span class="n">tweet_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"author_id"</span><span class="p">],</span>
+            <span class="n">expansions</span><span class="o">=</span><span class="p">[</span><span class="s2">"entities.mentions.username"</span><span class="p">]</span>
         <span class="p">)</span>
         
         <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         
-        <span class="k">if</span> <span class="s1">&#39;edit_history_tweet_ids&#39;</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">new_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;edit_history_tweet_ids&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'edit_history_tweet_ids'</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">new_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'edit_history_tweet_ids'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">num_tweets_retrieved</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         
-        <span class="n">ids</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s1">&#39;author_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s1">'author_id'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">get_users</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="n">author_id_username_map</span><span class="p">[</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+            <span class="n">author_id_username_map</span><span class="p">[</span><span class="n">user</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span>
             
-        <span class="n">new_df</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s1">&#39;author_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">author_id_username_map</span><span class="p">)</span>
+        <span class="n">new_df</span><span class="p">[</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_df</span><span class="p">[</span><span class="s1">'author_id'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">author_id_username_map</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">new_df</span>
@@ -213,72 +174,65 @@ categories:
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">])</span>
         
         <span class="c1"># extract next_token for subsequent call</span>
-        <span class="n">next_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;next_token&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;next_token&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">next_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">'next_token'</span><span class="p">]</span> <span class="k">if</span> <span class="s1">'next_token'</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span> <span class="k">else</span> <span class="kc">None</span>
         
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="s1">&#39;entities&#39;</span><span class="p">]]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'username'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">,</span> <span class="s1">'entities'</span><span class="p">]]</span>
 
     <span class="k">return</span> <span class="n">df</span>
-</pre>
-        </div>
-      </div>
+</pre></div>
+
     </div>
-  </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <h2 id="Invoke-retrieve_tweets()-with-a-keyword">
-        Invoke <code>retrieve_tweets()</code> with a keyword<a
-          class="anchor-link"
-          href="#Invoke-retrieve_tweets()-with-a-keyword"
-          >&#182;</a
-        >
-      </h2>
-      <p>The first invocation queries all non-retweets from verified users.</p>
-      <p>
-        The second invocation queries only retweets from all users (including
-        both verified and non-verified users).
-      </p>
-    </div>
-  </div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Invoke-retrieve_tweets()-with-a-keyword">Invoke <code>retrieve_tweets()</code> with a keyword<a class="anchor-link" href="#Invoke-retrieve_tweets()-with-a-keyword">&#182;</a></h2><p>The first invocation queries all non-retweets from verified users.</p>
+<p>The second invocation queries only retweets from all users (including both verified and non-verified users).</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[6]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="n">search_keyword</span> <span class="o">=</span> <span class="s1">&#39;ChatGPT&#39;</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_keyword</span> <span class="o">=</span> <span class="s1">'ChatGPT'</span>
 
 <span class="n">df_tweets</span> <span class="o">=</span> <span class="n">retrieve_tweets</span><span class="p">(</span>
-    <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">&quot; -is:retweet is:verified lang:en&#39;</span><span class="p">,</span>
+    <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">" -is:retweet is:verified lang:en'</span><span class="p">,</span>
     <span class="n">max_num_tweets</span><span class="o">=</span><span class="mi">5000</span>
 <span class="p">)</span>
 
 <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">retrieve_tweets</span><span class="p">(</span>
-    <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">&quot; is:retweet lang:en&#39;</span><span class="p">,</span>
+    <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">" is:retweet lang:en'</span><span class="p">,</span>
     <span class="n">max_num_tweets</span><span class="o">=</span><span class="mi">5000</span>
 <span class="p">)</span>
 
 <span class="n">display</span><span class="p">(</span><span class="n">df_tweets</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;df_tweets has </span><span class="si">{</span><span class="n">df_tweets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row(s)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df_tweets has </span><span class="si">{</span><span class="n">df_tweets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row(s)"</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df_retweets</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;df_retweets has </span><span class="si">{</span><span class="n">df_retweets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row(s)&quot;</span><span class="p">)</span>
-</pre>
-        </div>
-      </div>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df_retweets has </span><span class="si">{</span><span class="n">df_retweets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row(s)"</span><span class="p">)</span>
+</pre></div>
+
     </div>
-  </div>
+</div>
+</div>
 
-  <div class="output_wrapper">
-    <div class="output">
-      <div class="output_area">
-        <div class="prompt"></div>
+<div class="output_wrapper">
+<div class="output">
 
-        <div class="output_subarea output_stream output_stdout output_text">
-          <pre>
-==========================================
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>==========================================
 Retrieving tweets using query: &#34;ChatGPT&#34; -is:retweet is:verified lang:en
 num_tweets_retrieved=0, max_results=100, next_token=None
 num_tweets_retrieved=100, max_results=100, next_token=b26v89c19zqg8o3fqk70du2zzuniq3oq41sg2rtdf9njx
@@ -383,214 +337,177 @@ num_tweets_retrieved=4600, max_results=100, next_token=b26v89c19zqg8o3fqk70du2pb
 num_tweets_retrieved=4700, max_results=100, next_token=b26v89c19zqg8o3fqk70du2pbxv1yetw2mvthnve8akql
 num_tweets_retrieved=4800, max_results=100, next_token=b26v89c19zqg8o3fqk70du2pagb62uow9s53klf6xium5
 num_tweets_retrieved=4900, max_results=100, next_token=b26v89c19zqg8o3fqk70du2pafgcqcibwzb9jr611glfh
-</pre
-          >
-        </div>
-      </div>
-
-      <div class="output_area">
-        <div class="prompt"></div>
-
-        <div class="output_html rendered_html output_subarea">
-          <div>
-            <style scoped>
-              .dataframe tbody tr th:only-of-type {
-                vertical-align: middle;
-              }
-
-              .dataframe tbody tr th {
-                vertical-align: top;
-              }
-
-              .dataframe thead th {
-                text-align: right;
-              }
-            </style>
-            <table border="1" class="dataframe">
-              <thead>
-                <tr style="text-align: right">
-                  <th></th>
-                  <th>id</th>
-                  <th>username</th>
-                  <th>text</th>
-                  <th>entities</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>0</th>
-                  <td>1623376134317690881</td>
-                  <td>thedailybeast</td>
-                  <td>
-                    Plus! Weill and Sommer recap a bombshell investigation into
-                    Eliza Bleu, an overnight internet sensation who rose to
-                    prominence by becoming an ombu...
-                  </td>
-                  <td>NaN</td>
-                </tr>
-                <tr>
-                  <th>1</th>
-                  <td>1623376131570413568</td>
-                  <td>thedailybeast</td>
-                  <td>
-                    Also on the podcast, Weill and Sommer interview
-                    @trevoraaronson, the host of investigative podcast the
-                    Alphabet Boys, which tells the story of FBI...
-                  </td>
-                  <td>
-                    {'mentions': [{'start': 48, 'end': 63, 'username':
-                    'trevoraaronson', 'id': '22180521'}]}
-                  </td>
-                </tr>
-                <tr>
-                  <th>2</th>
-                  <td>1623376128651182081</td>
-                  <td>thedailybeast</td>
-                  <td>
-                    “Ultimately, I think this AI stuff is awful,” Sommer says.
-                    “I think the people in 'Dune' knew what was up when they
-                    banned AI and it seemed like t...
-                  </td>
-                  <td>NaN</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="output_area">
-        <div class="prompt"></div>
-
-        <div class="output_subarea output_stream output_stdout output_text">
-          <pre>
-df_tweets has 5009 row(s)
-</pre
-          >
-        </div>
-      </div>
-
-      <div class="output_area">
-        <div class="prompt"></div>
-
-        <div class="output_html rendered_html output_subarea">
-          <div>
-            <style scoped>
-              .dataframe tbody tr th:only-of-type {
-                vertical-align: middle;
-              }
-
-              .dataframe tbody tr th {
-                vertical-align: top;
-              }
-
-              .dataframe thead th {
-                text-align: right;
-              }
-            </style>
-            <table border="1" class="dataframe">
-              <thead>
-                <tr style="text-align: right">
-                  <th></th>
-                  <th>id</th>
-                  <th>username</th>
-                  <th>text</th>
-                  <th>entities</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>0</th>
-                  <td>1623376268245798939</td>
-                  <td>afaf11140627605</td>
-                  <td>
-                    RT @acrianetwork: https://t.co/SZ1H9KCR87 will take #ChatGPT
-                    to the next level: We enable the sharing of training data
-                    💡\n\n10 Million AINF T…
-                  </td>
-                  <td>
-                    {'mentions': [{'start': 3, 'end': 16, 'username':
-                    'acrianetwork', 'id': '1344595602479468546'}]}
-                  </td>
-                </tr>
-                <tr>
-                  <th>1</th>
-                  <td>1623376261480587265</td>
-                  <td>ayon_parvez</td>
-                  <td>
-                    RT @EstadoLatente: The ΔI𝚝𝚊𝚗𝚜 are a new breed of
-                    being\n❤️‍🔥\nSubmission teaser for @runwayml's #AIFilm
-                    Festival. Pictures, animation, poems…
-                  </td>
-                  <td>
-                    {'mentions': [{'start': 3, 'end': 17, 'username':
-                    'EstadoLatente', 'id': '1137227054'}, {'start': 82, 'end':
-                    91, 'username': 'runwayml', 'id': '10...
-                  </td>
-                </tr>
-                <tr>
-                  <th>2</th>
-                  <td>1623376255163764740</td>
-                  <td>LanieGirl00</td>
-                  <td>
-                    RT @StopTechnocracy: AI will totally disrupt the knowledge
-                    world in 2023\nhttps://t.co/b3tIxqIHpC
-                  </td>
-                  <td>
-                    {'mentions': [{'start': 3, 'end': 19, 'username':
-                    'StopTechnocracy', 'id': '77918673'}]}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="output_area">
-        <div class="prompt"></div>
-
-        <div class="output_subarea output_stream output_stdout output_text">
-          <pre>
-df_retweets has 5000 row(s)
-</pre
-          >
-        </div>
-      </div>
-    </div>
-  </div>
+</pre>
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-  <div class="prompt input_prompt"></div>
-  <div class="inner_cell">
-    <div class="text_cell_render border-box-sizing rendered_html">
-      <h2 id="Save-as-CSV-files">
-        Save as CSV files<a class="anchor-link" href="#Save-as-CSV-files"
-          >&#182;</a
-        >
-      </h2>
-      <p>
-        While the &quot;entities&quot; column can be useful, we can extract
-        mentions using regular expressions later if required.
-      </p>
-    </div>
-  </div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea "><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>username</th>
+      <th>text</th>
+      <th>entities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1623376134317690881</td>
+      <td>thedailybeast</td>
+      <td>Plus! Weill and Sommer recap a bombshell investigation into Eliza Bleu, an overnight internet sensation who rose to prominence by becoming an ombu...</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1623376131570413568</td>
+      <td>thedailybeast</td>
+      <td>Also on the podcast, Weill and Sommer interview @trevoraaronson, the host of investigative podcast the Alphabet Boys, which tells the story of FBI...</td>
+      <td>{'mentions': [{'start': 48, 'end': 63, 'username': 'trevoraaronson', 'id': '22180521'}]}</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1623376128651182081</td>
+      <td>thedailybeast</td>
+      <td>“Ultimately, I think this AI stuff is awful,” Sommer says. “I think the people in 'Dune' knew what was up when they banned AI and it seemed like t...</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>df_tweets has 5009 row(s)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea "><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>username</th>
+      <th>text</th>
+      <th>entities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1623376268245798939</td>
+      <td>afaf11140627605</td>
+      <td>RT @acrianetwork: https://t.co/SZ1H9KCR87 will take #ChatGPT to the next level: We enable the sharing of training data 💡\n\n10 Million AINF T…</td>
+      <td>{'mentions': [{'start': 3, 'end': 16, 'username': 'acrianetwork', 'id': '1344595602479468546'}]}</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1623376261480587265</td>
+      <td>ayon_parvez</td>
+      <td>RT @EstadoLatente: The ΔI𝚝𝚊𝚗𝚜 are a new breed of being\n❤️‍🔥\nSubmission teaser for @runwayml's  #AIFilm Festival. Pictures, animation, poems…</td>
+      <td>{'mentions': [{'start': 3, 'end': 17, 'username': 'EstadoLatente', 'id': '1137227054'}, {'start': 82, 'end': 91, 'username': 'runwayml', 'id': '10...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1623376255163764740</td>
+      <td>LanieGirl00</td>
+      <td>RT @StopTechnocracy: AI will totally disrupt the knowledge world in 2023\nhttps://t.co/b3tIxqIHpC</td>
+      <td>{'mentions': [{'start': 3, 'end': 19, 'username': 'StopTechnocracy', 'id': '77918673'}]}</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>df_retweets has 5000 row(s)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Save-as-CSV-files">Save as CSV files<a class="anchor-link" href="#Save-as-CSV-files">&#182;</a></h2><p>While the "entities" column can be useful, we can extract mentions using regular expressions later if required.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
-  <div class="input">
-    <div class="prompt input_prompt">In&nbsp;[7]:</div>
-    <div class="inner_cell">
-      <div class="input_area">
-        <div class="highlight hl-ipython3">
-          <pre><span></span><span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">[</span><span class="n">df_tweets</span><span class="p">,</span> <span class="n">df_retweets</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="s1">&#39;withheld&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;withheld&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">[</span><span class="n">df_tweets</span><span class="p">,</span> <span class="n">df_retweets</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s1">'withheld'</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'withheld'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">df_tweets</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;entities&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">-tweets.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">df_retweets</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;entities&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">-retweets.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre>
-        </div>
-      </div>
+<span class="n">df_tweets</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'entities'</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">-tweets.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df_retweets</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'entities'</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">search_keyword</span><span class="si">}</span><span class="s1">-retweets.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
     </div>
-  </div>
 </div>
+</div>
+
+</div>
+
+
