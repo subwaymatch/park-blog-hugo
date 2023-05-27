@@ -11,7 +11,7 @@ category = "categories"
 [markup]
 
   [markup.highlight]
-  style = "colorful"
+  style = "monokailight"
 
   [markup.goldmark.renderer]
   unsafe = true
