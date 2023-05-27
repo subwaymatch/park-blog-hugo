@@ -651,7 +651,8 @@ dtype: string</pre>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer</strong>: Using a fixed-width string data type would be too limiting for most analytical applications. Pandas chose to use the Python-native string type to support variable-with strings.</p>
+<p><strong>Question</strong>: Why does <code>pandas</code> use the <code>object</code> data type for strings?</p>
+<p><strong>Answer</strong>: Using a fixed-width string data type would be too limiting for most analytical applications. Pandas used Python-native string type to support variable-with strings before the string extension type was added.</p>
 
 </div>
 </div>
@@ -724,7 +725,7 @@ dtype: string</pre>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dtype string uses </span><span class="si">{</span><span class="n">s_string</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes"</span><span class="p">)</span>
 
 <span class="c1"># StringDtype with PyArrow</span>
-<span class="c1"># dtype="string[pyarrow]" is an alias for dtype=pd.StringDtype()</span>
+<span class="c1"># dtype="string[pyarrow]" is an alias for dtype=pd.StringDtype("pyarrow")</span>
 <span class="n">s_string_pyarrow</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
     <span class="n">random_strings</span><span class="p">,</span>
     <span class="n">dtype</span><span class="o">=</span><span class="s2">"string[pyarrow]"</span>
