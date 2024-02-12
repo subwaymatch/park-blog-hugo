@@ -1,78 +1,103 @@
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons//favicon-32x32.png">
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="/images/favicons/apple-touch-icon.png"
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="/images/favicons//favicon-32x32.png"
+  />
 
-    <!-- Reset CSS -->
-    {{ $resetCSS := resources.Get "css/reset.css" | minify }}
+  <!-- Reset CSS -->
+  {{ $resetCSS := resources.Get "css/reset.css" | minify }}
 
-    <link rel="stylesheet" href="{{ $resetCSS.RelPermalink }}" media="all">
+  <link rel="stylesheet" href="{{ $resetCSS.RelPermalink }}" media="all" />
 
-    <!-- TypeKit -->
-    <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css">
+  <!-- TypeKit -->
+  <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css" />
 
-    {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS | minify | fingerprint }}
+  {{ $hamburgerSCSS := resources.Get "scss/hamburgers/hamburgers.scss" | toCSS |
+  minify | fingerprint }}
 
-    <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all">
+  <link rel="stylesheet" href="{{ $hamburgerSCSS.RelPermalink }}" media="all" />
 
-    <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <!-- Roboto Mono in case Consolas or Menlo is unavailable -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet"
+  />
 
-    {{ $variablesSCSS := resources.Get "scss/_variables.scss" }}
-    {{ $gridSCSS := resources.Get "scss/_grid.scss" }}
-    {{ $mainSCSS := resources.Get "scss/main.scss" }}
-    {{ $jupyterSCSS := resources.Get "scss/jupyter.scss" }}
+  {{ $variablesSCSS := resources.Get "scss/_variables.scss" }} {{ $gridSCSS :=
+  resources.Get "scss/_grid.scss" }} {{ $mainSCSS := resources.Get
+  "scss/main.scss" }} {{ $jupyterSCSS := resources.Get "scss/jupyter.scss" }} {{
+  $SCSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS |
+  resources.Concat "main.scss" | toCSS | fingerprint }}
 
-    {{ $SCSS := slice $variablesSCSS $gridSCSS $mainSCSS $jupyterSCSS | resources.Concat "main.scss" | toCSS | fingerprint }}
+  <link rel="stylesheet" href="{{ $SCSS.RelPermalink }}" media="all" />
 
-    <link rel="stylesheet" href="{{ $SCSS.RelPermalink }}" media="all">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ["$", "$"],
+          ["\\(", "\\)"],
+        ],
+      },
+    };
+  </script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+  ></script>
 
-    <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script type="text/javascript">
+    /* Menu pop-up */
+    window.addEventListener("DOMContentLoaded", (e) => {
+      let isMenuOpen = false;
+      let menuBtnEl = document.getElementById("btn-menu");
 
-    <script type="text/javascript">
-        /* Menu pop-up */
-        window.addEventListener('DOMContentLoaded', e => {
-            let isMenuOpen = false; 
-            let menuBtnEl = document.getElementById("btn-menu");
+      let openMenu = () => {
+        isMenuOpen = true;
+        document.body.classList.add("menu-open");
+        menuBtnEl.classList.add("is-active");
+      };
 
-            let openMenu = () => {
-                isMenuOpen = true; 
-                document.body.classList.add('menu-open')
-                menuBtnEl.classList.add('is-active');
-            }
+      let closeMenu = () => {
+        isMenuOpen = false;
+        document.body.classList.remove("menu-open");
+        menuBtnEl.classList.remove("is-active");
+      };
 
-            let closeMenu = () => {
-                isMenuOpen = false;
-                document.body.classList.remove('menu-open')
-                menuBtnEl.classList.remove('is-active');
-            }
-            
-            menuBtnEl.addEventListener('click', e => {
-                e.preventDefault(); 
-                
-                isMenuOpen = !isMenuOpen;
+      menuBtnEl.addEventListener("click", (e) => {
+        e.preventDefault();
 
-                if (isMenuOpen) {
-                    openMenu();
-                } else {
-                    closeMenu();
-                }
-            });
+        isMenuOpen = !isMenuOpen;
 
-            document.body.addEventListener('keydown', e => {
-                if (e.key == 'Escape') {
-                    closeMenu(); 
-                }
-            })
-        })
-    </script>
+        if (isMenuOpen) {
+          openMenu();
+        } else {
+          closeMenu();
+        }
+      });
 
-    {{ template "_internal/google_analytics.html" . }}
+      document.body.addEventListener("keydown", (e) => {
+        if (e.key == "Escape") {
+          closeMenu();
+        }
+      });
+    });
+  </script>
 
-    <title>{{ .Site.Title }}</title>
+  {{ template "_internal/google_analytics.html" . }}
+
+  <title>{{ .Site.Title }}</title>
 </head>
