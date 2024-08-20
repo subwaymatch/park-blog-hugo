@@ -1,13 +1,13 @@
 ---
-title: How to Replace GPU Cooling Fans without Disassembling the Entire Card
+title: How to Replace GPU Cooling Fans without Disassmbling the Entire Card
 date: 2024-08-20
 categories:
   - Hardware
 ---
 
-I've been using a Zotac RTX 2060 Super to power four 2K monitors. After five years of almost non-stop usage in a high-dust environment, the GPU's cooling performance started to degrade due to the fans slowing down.
+I've been using a Zotac RTX 2060 Super to power four 2K monitors. After five years of almost non-stop usage in a high-dust environment, the GPU's cooling performance started to degrade due to the fans slowing down. So I decided to replace the cooling fans.
 
-Replacing the cooling fans on GPUs can be a hassle, especially if you need to disassemble the PCB and heatsink. This often involves measuring the thickness of all thermal pads and purchasing them separately. Nearly every tutorial you find on the internet will first guide you to completely disassemble the graphics card.
+Replacing the cooling fans on GPUs can be a hassle, especially if you separate the PCB and heatsink. Once you take the heatsink off from the PCB, you can't reuse the thermal pads. You have no option but to measure the depth and purchase new ones online. Nearly every tutorial you find on the internet will first guide you to completely disassemble the graphics card.
 
 However, you can often manage without taking the entire card apart. This was the case with my Zotac RTX 2060 Super. You can easily check if this applies by unscrewing the M1-sized screws on the cooling fans and the plastic cover. If you can take out the plastic cover and cooling fans without separating the PCB and the heatsink, you can replace the cooling fans without having to reapply thermal pads.
 
