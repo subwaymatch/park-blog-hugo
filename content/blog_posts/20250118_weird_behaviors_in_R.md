@@ -181,7 +181,7 @@ Some base R functions require unusual syntax compared to Python libraries:
 mean(x, na.rm = TRUE)  # na.rm removes NA values
 ```
 
-## What keeps R attractive?
+## What makes R still attractive?
 
 Despite some of R's peculiar behaviors, it's still useful and powerful.
 
