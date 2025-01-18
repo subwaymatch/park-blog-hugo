@@ -14,13 +14,13 @@ v <- c(1, 2, 3)
 
 Here is a seemingly simple task - how do you print out the container type of the vector `v`?
 
-In other words, I'm looking for a function that would print out "vector" if I pass `v` as an argument.
+I'm looking for a straightforward function that would return "vector" if I pass `v` as an argument.
 
 ```R
 some_function(v) # should return "vector"
 ```
 
-Inspect the object using `typeof()`, `class()` and `mode()` functions.
+My first intuition is to use the commonly used functinos to inspect objects - `typeof()`, `class()` and `mode()`.
 
 ```R
 v <- c(1, 2, 3)
@@ -30,9 +30,9 @@ class(v)  # returns "numeric"
 mode(v)   # returns "numeric"
 ```
 
-The technical differences of the three functions aside, they all do not return the data type of the container (e.g., a vector).
+The technical differences of the three functions aside, none of them return the data type of the container (e.g., a vector).
 
-It turns out that there is NO WAY to get the data type of the container. The only workaround is to explicitly check whether the value is a vector using `is.vector()`.
+It turns out that there is NO WAY to get the data type of the container. 🤯 The only workaround is to explicitly check whether the value is a vector using `is.vector()`.
 
 ```R
 is.vector(v) # returns TRUE
@@ -181,7 +181,7 @@ Some base R functions require unusual syntax compared to Python libraries:
 mean(x, na.rm = TRUE)  # na.rm removes NA values
 ```
 
-## What makes R still attractive?
+## 🧲 What makes R still attractive?
 
 Despite some of R's peculiar behaviors, it's still useful and powerful.
 
