@@ -12,7 +12,7 @@ Consider this R code where it creates an R vector.
 v <- c(1, 2, 3)
 ```
 
-Here is a seemingly simple task - how do you print out the container type of the vector `v`?
+Here is a seemingly simple task - how do you get the container type of the vector `v`?
 
 I'm looking for a straightforward function that would return "vector" if I pass `v` as an argument.
 
@@ -20,7 +20,7 @@ I'm looking for a straightforward function that would return "vector" if I pass 
 some_function(v) # should return "vector"
 ```
 
-My first intuition is to use the commonly used functinos to inspect objects - `typeof()`, `class()` and `mode()`.
+My first intuition is to use the commonly used functions to inspect objects - `typeof()`, `class()` and `mode()`.
 
 ```R
 v <- c(1, 2, 3)
@@ -30,7 +30,7 @@ class(v)  # returns "numeric"
 mode(v)   # returns "numeric"
 ```
 
-The technical differences of the three functions aside, none of them return the data type of the container (e.g., a vector).
+The technical differences of the three functions aside, none of them returns the data type of the container (e.g., a vector).
 
 It turns out that there is NO WAY to get the data type of the container. 🤯 The only workaround is to explicitly check whether the value is a vector using `is.vector()`.
 
@@ -46,7 +46,7 @@ is.array(v)
 is.vector(v)
 ```
 
-This is only one of the many peculiar behaviors of the R programming language. Here is a compiled list.
+This is only one of the many peculiar behaviors of the R programming language. Here is a list of other surprises.
 
 ### 1. Indexing starts at 1
 
@@ -186,6 +186,8 @@ mean(x, na.rm = TRUE)  # na.rm removes NA values
 Despite some of R's peculiar behaviors, it's still useful and powerful.
 
 ### 1. ggplot2
+
+![ggplot2](https://github.com/user-attachments/assets/be790449-13d2-4f00-894e-5aa777dcc679)
 
 One of R's standout features is ggplot2, a powerful visualization package for creating high-quality and customizable plots. It has a syntax rooted in the grammar of graphics, which allows intuitive and flexible data visualization.
 
