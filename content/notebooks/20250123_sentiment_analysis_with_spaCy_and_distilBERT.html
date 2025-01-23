@@ -1,0 +1,2466 @@
+---
+title: Sentiment Analysis using spaCy and DistilBERT
+date: 2025-01-23
+categories:
+  - Python
+  - NLP
+  - Sentiment Analysis
+---
+
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=0d6e4426-8fbd-4434-a2cf-32e7f6116cc3"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Natural language processing (NLP) aims to give computers the ability to
+        understand, process, and even generate human language. This notebook
+        introduces the common preprocessing steps and demonstrates how to use a
+        widely used transformer model
+        (<code>distilbert-base-uncased-finetuned-sst-2-english</code>) to
+        perfrom a sentiment analysis. 😀😦🙁
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=a31b7a34-007c-4e89-8916-a07406598896"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [1]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=8d48c8d9-b347-4596-afe2-acbe54df942c"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [2]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_columns'</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=fa8fe7ba-291c-4abc-b95a-f80f4d6bba1f"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%97%83%EF%B8%8F-Load-data">
+        🗃️ Load data<a
+          class="anchor-link"
+          href="#%F0%9F%97%83%EF%B8%8F-Load-data"
+          >¶</a
+        >
+      </h2>
+      <p>
+        This exercise uses a small dataset that contains reviews of two
+        apartments at Indiana University Bloomington.
+      </p>
+      <ol>
+        <li>
+          <a href="https://stateoncampus.com/bloomington/"
+            >State On Campus Bloomington</a
+          >
+        </li>
+        <li>
+          <a href="https://www.thestandardbloomington.com/"
+            >The Standard at Bloomington</a
+          >
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=090f5a2e-2e23-4da0-8d7d-401d892e2b01"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [3]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_b</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s1">'https://github.com/bdi475/datasets/raw/main/campustowns-leasing-company-reviews/businesses-sample.csv'</span>
+<span class="p">)</span>
+<span class="n">df_r</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s1">'https://github.com/bdi475/datasets/raw/main/campustowns-leasing-company-reviews/reviews-sample.csv'</span><span class="p">,</span>
+    <span class="n">parse_dates</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'review_datetime_utc'</span><span class="p">,</span> <span class="s1">'owner_answer_timestamp_datetime_utc'</span><span class="p">]</span>
+<span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=a9bf5636-8f27-43c7-862c-3e9f936170c1"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [4]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># businesses</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_b</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_html rendered_html output_subarea">
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>campus</th>
+                  <th>place_id</th>
+                  <th>name</th>
+                  <th>site</th>
+                  <th>category</th>
+                  <th>borough</th>
+                  <th>street</th>
+                  <th>city</th>
+                  <th>postal_code</th>
+                  <th>state</th>
+                  <th>latitude</th>
+                  <th>longitude</th>
+                  <th>verified</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>0</th>
+                  <td>Indiana University Bloomington</td>
+                  <td>ChIJY1yB5NJmbIgRZn7E2oF5gVQ</td>
+                  <td>State On Campus Bloomington</td>
+                  <td>https://stateoncampus.com/bloomington/?utm_sou...</td>
+                  <td>Apartment complex</td>
+                  <td>NaN</td>
+                  <td>2036 N Walnut St</td>
+                  <td>Bloomington</td>
+                  <td>47404</td>
+                  <td>Indiana</td>
+                  <td>39.184846</td>
+                  <td>-86.532875</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>1</th>
+                  <td>Indiana University Bloomington</td>
+                  <td>ChIJPb8SbdpnbIgR82bkOLSKtZM</td>
+                  <td>The Standard at Bloomington</td>
+                  <td>https://www.thestandardbloomington.com/?utm_so...</td>
+                  <td>Student housing center</td>
+                  <td>NaN</td>
+                  <td>250 E 14th St</td>
+                  <td>Bloomington</td>
+                  <td>47408</td>
+                  <td>Indiana</td>
+                  <td>39.175974</td>
+                  <td>-86.531609</td>
+                  <td>True</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=d49a5620-4101-4c63-b37e-3d75b150a864"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [5]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># reviews table</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_r</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_html rendered_html output_subarea">
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>place_id</th>
+                  <th>review_id</th>
+                  <th>author_id</th>
+                  <th>author_title</th>
+                  <th>review_text</th>
+                  <th>review_rating</th>
+                  <th>review_img_url</th>
+                  <th>review_datetime_utc</th>
+                  <th>owner_answer</th>
+                  <th>owner_answer_timestamp_datetime_utc</th>
+                  <th>review_likes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>0</th>
+                  <td>ChIJY1yB5NJmbIgRZn7E2oF5gVQ</td>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>109839330111495228413</td>
+                  <td>Aziz Bohra</td>
+                  <td>This place has my heart! Spacious rooms, quali...</td>
+                  <td>5</td>
+                  <td>https://lh5.googleusercontent.com/p/AF1QipM0Jm...</td>
+                  <td>2023-04-01 03:19:15+00:00</td>
+                  <td>Thanks for your feedback. We are grateful tha...</td>
+                  <td>2022-11-01 18:54:45+00:00</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <th>1</th>
+                  <td>ChIJY1yB5NJmbIgRZn7E2oF5gVQ</td>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNaOC15NkhBEAE</td>
+                  <td>102607480175477014087</td>
+                  <td>Nessa Bacher</td>
+                  <td>I’ll start with the positives of living at Sta...</td>
+                  <td>4</td>
+                  <td>NaN</td>
+                  <td>2023-09-25 00:17:21+00:00</td>
+                  <td>We are so pleased to hear that you enjoy livin...</td>
+                  <td>2023-09-18 14:20:59+00:00</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=56af66fe-af3c-4d56-a58b-0f1924daf54a"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>Print the <code>info()</code> of the two DataFrames.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=31288b36-9bee-4290-8e4b-5343e590a28f"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [6]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_b</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 2 entries, 0 to 1
+Data columns (total 13 columns):
+ #   Column       Non-Null Count  Dtype  
+---  ------       --------------  -----  
+ 0   campus       2 non-null      object 
+ 1   place_id     2 non-null      object 
+ 2   name         2 non-null      object 
+ 3   site         2 non-null      object 
+ 4   category     2 non-null      object 
+ 5   borough      0 non-null      float64
+ 6   street       2 non-null      object 
+ 7   city         2 non-null      object 
+ 8   postal_code  2 non-null      int64  
+ 9   state        2 non-null      object 
+ 10  latitude     2 non-null      float64
+ 11  longitude    2 non-null      float64
+ 12  verified     2 non-null      bool   
+dtypes: bool(1), float64(3), int64(1), object(8)
+memory usage: 322.0+ bytes
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=d66e8cd4-f77f-4884-a2c6-984eea97f7ef"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [7]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_r</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 312 entries, 0 to 311
+Data columns (total 11 columns):
+ #   Column                               Non-Null Count  Dtype              
+---  ------                               --------------  -----              
+ 0   place_id                             312 non-null    object             
+ 1   review_id                            312 non-null    object             
+ 2   author_id                            312 non-null    object             
+ 3   author_title                         312 non-null    object             
+ 4   review_text                          236 non-null    object             
+ 5   review_rating                        312 non-null    int64              
+ 6   review_img_url                       6 non-null      object             
+ 7   review_datetime_utc                  312 non-null    datetime64[ns, UTC]
+ 8   owner_answer                         245 non-null    object             
+ 9   owner_answer_timestamp_datetime_utc  245 non-null    datetime64[ns, UTC]
+ 10  review_likes                         312 non-null    int64              
+dtypes: datetime64[ns, UTC](2), int64(2), object(7)
+memory usage: 26.9+ KB
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=b0342f66-2d12-492f-84e2-ee8afcb83839"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>The dataset has 312 reviews.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=e58317ee-85e1-4554-9987-50058c637dc4"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%AA%93-Preprocess-review-text-using-spaCy">
+        🪓 Preprocess review text using spaCy<a
+          class="anchor-link"
+          href="#%F0%9F%AA%93-Preprocess-review-text-using-spaCy"
+          >¶</a
+        >
+      </h2>
+      <p>
+        <a href="https://spacy.io/">spaCy</a> is a powerful, open-source library
+        for advanced Natural Language Processing (NLP) in Python and Cython.
+        Designed specifically for production use, spaCy helps developers build
+        applications that process and understand large volumes of text data
+        efficiently.
+      </p>
+      <p>spaCy is particularly useful for:</p>
+      <ul>
+        <li>Information extraction</li>
+        <li>Natural language understanding systems</li>
+        <li>Text pre-processing for deep learning</li>
+        <li>Building chatbots and language-based applications</li>
+        <li>Analyzing large volumes of unstructured text data</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=6b24cef9-2a97-4220-8b3b-eb7efbd1b781"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [8]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=08f56d96-e3e6-433f-b8db-e874507fe3a2"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Trained-pipelines">
+        Trained pipelines<a class="anchor-link" href="#Trained-pipelines">¶</a>
+      </h3>
+      <p>
+        Trained pipelines are models that enable spaCy to predict linguistic
+        attributes in context
+      </p>
+      <ul>
+        <li>Part-of-speech tags</li>
+        <li>Syntactic dependencies</li>
+        <li>Named entities</li>
+      </ul>
+      <p>
+        <code>'en_core_web_sm'</code> is a English pipeline optimized for CPU.
+      </p>
+      <p>Components:</p>
+      <ul>
+        <li>tok2vec</li>
+        <li>taggerparser</li>
+        <li>senter</li>
+        <li>ner</li>
+        <li>attribute_ruler</li>
+        <li>lemmatizer</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=75b38c9d-3a05-4950-b891-ca5cf5c6d6f2"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [9]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'en_core_web_sm'</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=33afd8dd-c841-4d50-96b5-30dada444a34"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        <code>spacy.load()</code> returns a <code>Language</code> object
+        containing all components and data needed to process text. Calling the
+        returned object on a string of text will return a processed
+        <code>Doc</code>.
+      </p>
+      <p>
+        Source:
+        <a href="https://spacy.io/usage/spacy-101"
+          >https://spacy.io/usage/spacy-101</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=c5361992-6f60-4a41-af12-b2a55956f15a"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [10]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s1">'I love this apartment'</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'------------------'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'text: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'lemma: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'pos: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">pos_</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span> <span class="c1"># pos_ stands for part-of-speech</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'explain: </span><span class="si">{</span><span class="n">spacy</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">pos_</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'is_stop: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">is_stop</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+------------------
+text: I
+lemma: I
+pos: PRON
+explain: pronoun
+is_stop: True
+------------------
+text: love
+lemma: love
+pos: VERB
+explain: verb
+is_stop: False
+------------------
+text: this
+lemma: this
+pos: DET
+explain: determiner
+is_stop: True
+------------------
+text: apartment
+lemma: apartment
+pos: NOUN
+explain: noun
+is_stop: False
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=bf09e847-ee8e-47c5-be77-5412459f4572"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Visualize the dependency parse using <code>displacy.render()</code>.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=f6731b4c-c2bc-4d75-a97e-2e3a10813297"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [11]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">from</span> <span class="nn">spacy</span> <span class="kn">import</span> <span class="n">displacy</span>
+
+<span class="n">displacy</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"dep"</span><span class="p">,</span> <span class="n">jupyter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_html rendered_html output_subarea">
+          <span class="tex2jax_ignore"
+            ><svg
+              class="displacy"
+              direction="ltr"
+              height="312.0"
+              id="7f17381174d042f6bc91b5bfd7e30151-0"
+              style="
+                max-width: none;
+                height: 312px;
+                color: #000000;
+                background: #ffffff;
+                font-family: Arial;
+                direction: ltr;
+              "
+              width="750"
+              xml:lang="en"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+              <text
+                class="displacy-token"
+                fill="currentColor"
+                text-anchor="middle"
+                y="222.0"
+              >
+                <tspan class="displacy-word" fill="currentColor" x="50">
+                  I
+                </tspan>
+                <tspan class="displacy-tag" dy="2em" fill="currentColor" x="50">
+                  PRON
+                </tspan>
+              </text>
+              <text
+                class="displacy-token"
+                fill="currentColor"
+                text-anchor="middle"
+                y="222.0"
+              >
+                <tspan class="displacy-word" fill="currentColor" x="225">
+                  love
+                </tspan>
+                <tspan
+                  class="displacy-tag"
+                  dy="2em"
+                  fill="currentColor"
+                  x="225"
+                >
+                  VERB
+                </tspan>
+              </text>
+              <text
+                class="displacy-token"
+                fill="currentColor"
+                text-anchor="middle"
+                y="222.0"
+              >
+                <tspan class="displacy-word" fill="currentColor" x="400">
+                  this
+                </tspan>
+                <tspan
+                  class="displacy-tag"
+                  dy="2em"
+                  fill="currentColor"
+                  x="400"
+                >
+                  DET
+                </tspan>
+              </text>
+              <text
+                class="displacy-token"
+                fill="currentColor"
+                text-anchor="middle"
+                y="222.0"
+              >
+                <tspan class="displacy-word" fill="currentColor" x="575">
+                  apartment
+                </tspan>
+                <tspan
+                  class="displacy-tag"
+                  dy="2em"
+                  fill="currentColor"
+                  x="575"
+                >
+                  NOUN
+                </tspan>
+              </text>
+              <g class="displacy-arrow">
+                <path
+                  class="displacy-arc"
+                  d="M70,177.0 C70,89.5 220.0,89.5 220.0,177.0"
+                  fill="none"
+                  id="arrow-7f17381174d042f6bc91b5bfd7e30151-0-0"
+                  stroke="currentColor"
+                  stroke-width="2px"
+                ></path>
+                <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+                  <textpath
+                    class="displacy-label"
+                    fill="currentColor"
+                    side="left"
+                    startoffset="50%"
+                    text-anchor="middle"
+                    xlink:href="#arrow-7f17381174d042f6bc91b5bfd7e30151-0-0"
+                  >
+                    nsubj
+                  </textpath>
+                </text>
+                <path
+                  class="displacy-arrowhead"
+                  d="M70,179.0 L62,167.0 78,167.0"
+                  fill="currentColor"
+                ></path>
+              </g>
+              <g class="displacy-arrow">
+                <path
+                  class="displacy-arc"
+                  d="M420,177.0 C420,89.5 570.0,89.5 570.0,177.0"
+                  fill="none"
+                  id="arrow-7f17381174d042f6bc91b5bfd7e30151-0-1"
+                  stroke="currentColor"
+                  stroke-width="2px"
+                ></path>
+                <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+                  <textpath
+                    class="displacy-label"
+                    fill="currentColor"
+                    side="left"
+                    startoffset="50%"
+                    text-anchor="middle"
+                    xlink:href="#arrow-7f17381174d042f6bc91b5bfd7e30151-0-1"
+                  >
+                    det
+                  </textpath>
+                </text>
+                <path
+                  class="displacy-arrowhead"
+                  d="M420,179.0 L412,167.0 428,167.0"
+                  fill="currentColor"
+                ></path>
+              </g>
+              <g class="displacy-arrow">
+                <path
+                  class="displacy-arc"
+                  d="M245,177.0 C245,2.0 575.0,2.0 575.0,177.0"
+                  fill="none"
+                  id="arrow-7f17381174d042f6bc91b5bfd7e30151-0-2"
+                  stroke="currentColor"
+                  stroke-width="2px"
+                ></path>
+                <text dy="1.25em" style="font-size: 0.8em; letter-spacing: 1px">
+                  <textpath
+                    class="displacy-label"
+                    fill="currentColor"
+                    side="left"
+                    startoffset="50%"
+                    text-anchor="middle"
+                    xlink:href="#arrow-7f17381174d042f6bc91b5bfd7e30151-0-2"
+                  >
+                    dobj
+                  </textpath>
+                </text>
+                <path
+                  class="displacy-arrowhead"
+                  d="M575.0,179.0 L583.0,167.0 567.0,167.0"
+                  fill="currentColor"
+                ></path>
+              </g></svg
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=84c02ab0-6e24-4cbb-8c26-e840cf5e37e8"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Tokenization-and-lemmatization">
+        Tokenization and lemmatization<a
+          class="anchor-link"
+          href="#Tokenization-and-lemmatization"
+          >¶</a
+        >
+      </h3>
+      <p>
+        Tokenization takes a piece of text and breaks it down into meaningful
+        units called "tokens." These tokens can be individual words, punctuation
+        marks, numbers, or even phrases depending on the task and chosen method.
+      </p>
+      <p>
+        Lemmatization goes a step further, focusing on the "base form" or
+        "dictionary form" of words. It groups together different grammatical
+        variations of the same word (like "playing," "plays," "played") and
+        reduces them to their core meaning ("play"). This helps capture the true
+        meaning of the text regardless of how they are used.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=9016dda5-a088-4f17-95ae-19390110b236"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [12]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"text"</span><span class="p">,</span> <span class="s2">"lemma"</span><span class="p">,</span> <span class="s2">"pos"</span><span class="p">,</span> <span class="s2">"explain"</span><span class="p">,</span> <span class="s2">"is_stop"</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">lemma_</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">pos_</span><span class="p">,</span> <span class="n">spacy</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">pos_</span><span class="p">),</span> <span class="n">t</span><span class="o">.</span><span class="n">is_stop</span><span class="p">]</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+<span class="n">df_tokens</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">df_tokens</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[12]:</div>
+        <div
+          class="output_html rendered_html output_subarea output_execute_result"
+        >
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>text</th>
+                  <th>lemma</th>
+                  <th>pos</th>
+                  <th>explain</th>
+                  <th>is_stop</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>0</th>
+                  <td>I</td>
+                  <td>I</td>
+                  <td>PRON</td>
+                  <td>pronoun</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>1</th>
+                  <td>love</td>
+                  <td>love</td>
+                  <td>VERB</td>
+                  <td>verb</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>2</th>
+                  <td>this</td>
+                  <td>this</td>
+                  <td>DET</td>
+                  <td>determiner</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>3</th>
+                  <td>apartment</td>
+                  <td>apartment</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=3880ee0c-1135-4778-970a-ebb2f8a0c9bc"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [13]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"review_id"</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">,</span> <span class="s2">"lemma"</span><span class="p">,</span> <span class="s2">"pos"</span><span class="p">,</span> <span class="s2">"explain"</span><span class="p">,</span> <span class="s2">"is_stop"</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_r</span><span class="p">[</span><span class="n">df_r</span><span class="p">[</span><span class="s1">'review_text'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'review_text'</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="n">new_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">'review_id'</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">lemma_</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">pos_</span><span class="p">,</span> <span class="n">spacy</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">pos_</span><span class="p">),</span> <span class="n">t</span><span class="o">.</span><span class="n">is_stop</span><span class="p">]</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">)</span>
+
+<span class="n">df_tokens</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">df_tokens</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[13]:</div>
+        <div
+          class="output_html rendered_html output_subarea output_execute_result"
+        >
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>review_id</th>
+                  <th>text</th>
+                  <th>lemma</th>
+                  <th>pos</th>
+                  <th>explain</th>
+                  <th>is_stop</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>0</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>This</td>
+                  <td>this</td>
+                  <td>DET</td>
+                  <td>determiner</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>1</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>place</td>
+                  <td>place</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>2</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>has</td>
+                  <td>have</td>
+                  <td>VERB</td>
+                  <td>verb</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>3</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>my</td>
+                  <td>my</td>
+                  <td>PRON</td>
+                  <td>pronoun</td>
+                  <td>True</td>
+                </tr>
+                <tr>
+                  <th>4</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>heart</td>
+                  <td>heart</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>...</th>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                </tr>
+                <tr>
+                  <th>18255</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSdUpEV2FREAE</td>
+                  <td>!</td>
+                  <td>!</td>
+                  <td>PUNCT</td>
+                  <td>punctuation</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18256</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSeUp1dUVBEAE</td>
+                  <td>Hooray</td>
+                  <td>Hooray</td>
+                  <td>PROPN</td>
+                  <td>proper noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18257</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSeUp1dUVBEAE</td>
+                  <td>!</td>
+                  <td>!</td>
+                  <td>PUNCT</td>
+                  <td>punctuation</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18258</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUR4aDZQckl3EAE</td>
+                  <td>wowie</td>
+                  <td>wowie</td>
+                  <td>VERB</td>
+                  <td>verb</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18259</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUR4aDZQckl3EAE</td>
+                  <td>zowa</td>
+                  <td>zowa</td>
+                  <td>PROPN</td>
+                  <td>proper noun</td>
+                  <td>False</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>18260 rows × 6 columns</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=3d48b4a0-ff3f-40d8-897e-c21d55127217"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Remove-stop-words">
+        Remove stop words<a class="anchor-link" href="#Remove-stop-words">¶</a>
+      </h3>
+      <p>
+        Stop words, as you might guess from the name, are a set of commonly used
+        words in a language that are often filtered out before processing text
+        in Natural Language Processing (NLP) tasks. These words, like "the,"
+        "a," "is," "and," "on," etc., are considered to carry little independent
+        meaning and contribute minimally to the overall understanding of the
+        text.
+      </p>
+      <p>We remove the stop words here for two reasons:</p>
+      <ol>
+        <li>
+          Reduce noise: By removing commonly used words, we focus on the
+          content-rich keywords that convey the core meaning of the text.
+        </li>
+        <li>
+          Improve efficiency: Removing stop words reduces the overall size of
+          the data, making NLP tasks faster and less computationally expensive.
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=36797eb5-ef67-4aa5-8c9d-1750f8170eea"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [14]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># only filter non stop words</span>
+<span class="n">df_tokens_filtered</span> <span class="o">=</span> <span class="n">df_tokens</span><span class="p">[</span><span class="o">~</span><span class="n">df_tokens</span><span class="p">[</span><span class="s1">'is_stop'</span><span class="p">]]</span>
+
+<span class="c1"># remove words shorter than 4 characters long</span>
+<span class="n">df_tokens_filtered</span> <span class="o">=</span> <span class="n">df_tokens_filtered</span><span class="p">[</span><span class="n">df_tokens_filtered</span><span class="p">[</span><span class="s1">'lemma'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="n">df_tokens_filtered</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[14]:</div>
+        <div
+          class="output_html rendered_html output_subarea output_execute_result"
+        >
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>review_id</th>
+                  <th>text</th>
+                  <th>lemma</th>
+                  <th>pos</th>
+                  <th>explain</th>
+                  <th>is_stop</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>1</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>place</td>
+                  <td>place</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>4</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>heart</td>
+                  <td>heart</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>6</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>Spacious</td>
+                  <td>spacious</td>
+                  <td>ADJ</td>
+                  <td>adjective</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>7</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>rooms</td>
+                  <td>room</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>9</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUMtbE1XaWR3EAE</td>
+                  <td>quality</td>
+                  <td>quality</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>...</th>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                  <td>...</td>
+                </tr>
+                <tr>
+                  <th>18252</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSdUpEV2FREAE</td>
+                  <td>staff</td>
+                  <td>staff</td>
+                  <td>NOUN</td>
+                  <td>noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18254</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSdUpEV2FREAE</td>
+                  <td>awesome</td>
+                  <td>awesome</td>
+                  <td>ADJ</td>
+                  <td>adjective</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18256</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUNSeUp1dUVBEAE</td>
+                  <td>Hooray</td>
+                  <td>Hooray</td>
+                  <td>PROPN</td>
+                  <td>proper noun</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18258</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUR4aDZQckl3EAE</td>
+                  <td>wowie</td>
+                  <td>wowie</td>
+                  <td>VERB</td>
+                  <td>verb</td>
+                  <td>False</td>
+                </tr>
+                <tr>
+                  <th>18259</th>
+                  <td>ChZDSUhNMG9nS0VJQ0FnSUR4aDZQckl3EAE</td>
+                  <td>zowa</td>
+                  <td>zowa</td>
+                  <td>PROPN</td>
+                  <td>proper noun</td>
+                  <td>False</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>5948 rows × 6 columns</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=7874f747-cacf-4a8c-94fd-931d9af29af8"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>Display value counts.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=bc897da7-e2ef-4ca4-ad1f-28e2ed43c80e"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [15]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_tokens_filtered</span><span class="p">[</span><span class="s1">'lemma'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[15]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>
+lemma
+apartment     125
+live          119
+place          98
+staff          73
+helpful        62
+             ... 
+respectful      1
+exit            1
+hook            1
+climbing        1
+rock            1
+Name: count, Length: 1470, dtype: int64</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=9784b5c6-839a-443a-b9af-e8c28a6c92e6"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%A7%AA-Sentiment-analysis-using-DistilBERT">
+        🧪 Sentiment analysis using DistilBERT<a
+          class="anchor-link"
+          href="#%F0%9F%A7%AA-Sentiment-analysis-using-DistilBERT"
+          >¶</a
+        >
+      </h2>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=e435b664-d1c3-4892-8fd1-68d2d160c586"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        <a
+          href="https://huggingface.co/docs/transformers/en/model_doc/distilbert"
+          >DistilBERT</a
+        >
+        is a lightweight, efficient version of the BERT (Bidirectional Encoder
+        Representations from Transformers) language model, designed for faster
+        training and inference while maintaining competitive performance in
+        natural language processing (NLP) tasks. Developed by HuggingFace,
+        DistilBERT is a distilled version of BERT that retains 97% of its
+        language understanding capabilities while being 40% smaller and 60%
+        faster.
+      </p>
+      <p>The transformer architecture is like BERT's brain.</p>
+      <p>
+        From
+        <a href="https://huggingface.co/docs/transformers/main/en/index"
+          >Hugging Face's Documentation</a
+        >:
+      </p>
+      <blockquote>
+        <p>
+          Transformers provides APIs and tools to easily download and train
+          state-of-the-art pretrained models. Using pretrained models can reduce
+          your compute costs, carbon footprint, and save you the time and
+          resources required to train a model from scratch. These models support
+          common tasks in different modalities, such as:
+        </p>
+      </blockquote>
+      <blockquote>
+        <p>
+          📝 <strong>Natural Language Processing</strong>: text classification,
+          named entity recognition, question answering, language modeling,
+          summarization, translation, multiple choice, and text generation.
+        </p>
+      </blockquote>
+      <h3 id="What-is-BERT?">
+        What is BERT?<a class="anchor-link" href="#What-is-BERT?">¶</a>
+      </h3>
+      <p>
+        Here's a simple explanation of BERT and the transformer architecture for
+        a five-year-old (with the help of
+        <a href="https://perplexity.ai/">perplexity.ai</a>):
+      </p>
+      <p>
+        Imagine you're playing with a super-smart toy robot that can read and
+        understand stories. This robot is called BERT. When BERT reads a story,
+        it doesn't just look at one word at a time like some other robots.
+        Instead, it looks at all the words in a sentence together, kind of like
+        how you look at a whole picture instead of just one tiny part.
+      </p>
+      <ol>
+        <li>
+          Think of transformers as a
+          <strong>team of helper robots</strong> working together to understand
+          language.
+        </li>
+        <li>
+          These helper robots have special <strong>"attention"</strong> powers.
+          When they read a sentence, they can focus on different words at the
+          same time, just like how you can look at different toys in your room
+          all at once.
+        </li>
+        <li>
+          The helpers <strong>talk to each other</strong> and share what they've
+          learned about each word. This helps them understand the whole sentence
+          better, like how you understand a story better when you and your
+          friends talk about it together.
+        </li>
+        <li>
+          These helper robots can learn from lots and lots of stories, so they
+          become very good at understanding language, just like how you get
+          better at reading the more books you read.
+        </li>
+        <li>
+          After they've learned from many stories, they can help with all sorts
+          of language tasks, like answering questions or figuring out if someone
+          is happy or sad in a story.
+        </li>
+      </ol>
+      <p>
+        So, BERT is like a super-smart reading buddy that uses these helper
+        robots (transformers) to understand language in a way that's similar to
+        how you understand stories – by looking at everything together and
+        sharing information.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=6e49f5b4-0d7b-448d-a038-a5703af04108"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Transfomers">
+        Transfomers<a class="anchor-link" href="#Transfomers">¶</a>
+      </h3>
+      <p>
+        Transformers, provided
+        <a href="https://huggingface.co/">Hugging Face</a>, provides APIs to
+        quickly download and use thousands of pretrained models to perform tasks
+        on text, images, and audio.
+      </p>
+      <p>Install the <code>transformers</code> package.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=83ce3601-38ea-4e4a-9b3f-bca0867747ad"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [16]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="o">!</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>transformers
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: transformers in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (4.48.0)
+Requirement already satisfied: filelock in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (3.16.1)
+Requirement already satisfied: huggingface-hub&lt;1.0,&gt;=0.24.0 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (0.27.1)
+Requirement already satisfied: numpy&gt;=1.17 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (2.1.2)
+Requirement already satisfied: packaging&gt;=20.0 in /opt/tljh/user/lib/python3.10/site-packages (from transformers) (24.1)
+Requirement already satisfied: pyyaml&gt;=5.1 in /opt/tljh/user/lib/python3.10/site-packages (from transformers) (6.0.2)
+Requirement already satisfied: regex!=2019.12.17 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (2024.11.6)
+Requirement already satisfied: requests in /opt/tljh/user/lib/python3.10/site-packages (from transformers) (2.32.3)
+Requirement already satisfied: tokenizers&lt;0.22,&gt;=0.21 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (0.21.0)
+Requirement already satisfied: safetensors&gt;=0.4.1 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from transformers) (0.5.2)
+Requirement already satisfied: tqdm&gt;=4.27 in /opt/tljh/user/lib/python3.10/site-packages (from transformers) (4.65.0)
+Requirement already satisfied: fsspec&gt;=2023.5.0 in /home/jupyter-subwaymatch/.local/lib/python3.10/site-packages (from huggingface-hub&lt;1.0,&gt;=0.24.0-&gt;transformers) (2024.12.0)
+Requirement already satisfied: typing-extensions&gt;=3.7.4.3 in /opt/tljh/user/lib/python3.10/site-packages (from huggingface-hub&lt;1.0,&gt;=0.24.0-&gt;transformers) (4.12.2)
+Requirement already satisfied: charset-normalizer&lt;4,&gt;=2 in /opt/tljh/user/lib/python3.10/site-packages (from requests-&gt;transformers) (3.1.0)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /opt/tljh/user/lib/python3.10/site-packages (from requests-&gt;transformers) (3.4)
+Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /opt/tljh/user/lib/python3.10/site-packages (from requests-&gt;transformers) (1.26.15)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /opt/tljh/user/lib/python3.10/site-packages (from requests-&gt;transformers) (2022.12.7)
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=d66cd881-ae04-433b-a37a-9a6efe67bad0"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Pipelines">
+        Pipelines<a class="anchor-link" href="#Pipelines">¶</a>
+      </h3>
+      <p>
+        Pipelines are objects that abstract complex code from the Hugging Face
+        library into simple APIs for inference tasks.
+      </p>
+      <p>
+        The <code>"sentiment-analysis"</code> pipeline uses the default model
+        for sentiment analysis
+        (<code>distilbert/distilbert-base-uncased-finetuned-sst-2-english</code>).
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=e5528104-0874-4679-82cf-b767661f03d4"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [17]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">pipeline</span>
+
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">"sentiment-analysis"</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stderr output_text">
+          <pre>
+No model was supplied, defaulted to distilbert/distilbert-base-uncased-finetuned-sst-2-english and revision 714eb0f (https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english).
+Using a pipeline without specifying a model name and revision in production is not recommended.
+Device set to use cpu
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=e4860287-0be0-401a-9db2-3eb8498da6a4"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Run-the-sentiment-classifier">
+        Run the sentiment classifier<a
+          class="anchor-link"
+          href="#Run-the-sentiment-classifier"
+          >¶</a
+        >
+      </h3>
+      <p>
+        The <code>distilbert-base-uncased-finetuned-sst-2-english</code> model
+        classifies an input text to 'POSITIVE' or 'NEGATIVE' labels, along with
+        confidence scores.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=82f9b821-d836-4df2-bf35-802ade1b2ef8"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [18]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">classifier</span><span class="p">(</span><span class="s2">"We are very happy to show you the 🤗 Transformers library."</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[18]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>[{'label': 'POSITIVE', 'score': 0.9997795224189758}]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=4c3af402-ca7e-4bc6-aa07-6a1709beff68"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        👆 For the 'POSITIVE' label: The score of 0.9997795224189758 indicates a
+        very high confidence (about 99.98%) that the input text expresses a
+        positive sentiment.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=b2ede150-76f9-4196-a98f-ae0ce660ad46"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [19]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">classifier</span><span class="p">(</span><span class="s2">"These thieves tried to steal my security deposit."</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[19]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>[{'label': 'NEGATIVE', 'score': 0.996752142906189}]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=6e731835-264b-4bb7-b597-5056722ea1ad"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        👆 For the 'NEGATIVE' label: The score of 0.996752142906189 indicates a
+        very high confidence (about 99.68%) that the input text expresses a
+        negative sentiment.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=54744cd9-8d4c-4305-b01c-bcfdc1f2aabe"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>You can supply multiple inputs to the pipeline as a list.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=c893dc20-af5f-49a5-a075-a4a61b1dea0c"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [20]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">my_inputs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"You're the best!"</span><span class="p">,</span>
+    <span class="s2">"You're the worst!"</span>
+<span class="p">]</span>
+
+<span class="n">classifier</span><span class="p">(</span><span class="n">my_inputs</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[20]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>
+[{'label': 'POSITIVE', 'score': 0.9998639822006226},
+ {'label': 'NEGATIVE', 'score': 0.9997650980949402}]</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=c06b5792-caf2-4265-8302-b104fffd7917"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="Sample-30-rows">
+        Sample 30 rows<a class="anchor-link" href="#Sample-30-rows">¶</a>
+      </h4>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=5226e927-e0cd-4b77-bf80-64e7b6c17bb7"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Although the
+        <code>distilbert-base-uncased-finetuned-sst-2-english</code> model is
+        pre-trained and distilled (40% smaller than the original BERT model), it
+        will still be slow to be used for the entire dataset.
+      </p>
+      <p>For this demo, only sample 30 rows where</p>
+      <ol>
+        <li>review_text is not missing, and</li>
+        <li>review_rating is less than or equal to 4 out of 5 stars.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=585c67cb-91d7-4b8c-8ab4-fdd75123188f"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [21]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_sample</span> <span class="o">=</span> <span class="n">df_r</span><span class="p">[</span><span class="n">df_r</span><span class="p">[</span><span class="s1">'review_text'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> 
+    <span class="p">(</span><span class="n">df_r</span><span class="p">[</span><span class="s1">'review_rating'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">)]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="n">df_sample</span><span class="p">[[</span><span class="s1">'review_rating'</span><span class="p">,</span> <span class="s1">'review_text'</span><span class="p">]]</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[21]:</div>
+        <div
+          class="output_html rendered_html output_subarea output_execute_result"
+        >
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>review_rating</th>
+                  <th>review_text</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>60</th>
+                  <td>1</td>
+                  <td>Office staff extremely rude. Have laundry mach...</td>
+                </tr>
+                <tr>
+                  <th>5</th>
+                  <td>1</td>
+                  <td>NEVER LIVE HERE!! They don't charge a security...</td>
+                </tr>
+                <tr>
+                  <th>68</th>
+                  <td>1</td>
+                  <td>I lived here for a year and it was FAR too lon...</td>
+                </tr>
+                <tr>
+                  <th>193</th>
+                  <td>1</td>
+                  <td>Avoid living here at all costs. The other revi...</td>
+                </tr>
+                <tr>
+                  <th>49</th>
+                  <td>1</td>
+                  <td>Very poor management. They seem nice and trea...</td>
+                </tr>
+                <tr>
+                  <th>65</th>
+                  <td>1</td>
+                  <td>They have maintenance come without any warning...</td>
+                </tr>
+                <tr>
+                  <th>194</th>
+                  <td>1</td>
+                  <td>This is one of the most pricey places to live ...</td>
+                </tr>
+                <tr>
+                  <th>212</th>
+                  <td>1</td>
+                  <td>Bribed students to write a review to be entere...</td>
+                </tr>
+                <tr>
+                  <th>88</th>
+                  <td>3</td>
+                  <td>Great place to live! But when it gets snowy it...</td>
+                </tr>
+                <tr>
+                  <th>207</th>
+                  <td>2</td>
+                  <td>** The reason there are so many positive revie...</td>
+                </tr>
+                <tr>
+                  <th>62</th>
+                  <td>1</td>
+                  <td>Edited to respond to comments from management:...</td>
+                </tr>
+                <tr>
+                  <th>41</th>
+                  <td>3</td>
+                  <td>Honestly 2.5 stars is more appropriate but I'm...</td>
+                </tr>
+                <tr>
+                  <th>76</th>
+                  <td>1</td>
+                  <td>DO NOT LIVE HERE. Spaces are smaller than what...</td>
+                </tr>
+                <tr>
+                  <th>53</th>
+                  <td>1</td>
+                  <td>DO NOT LIVE HERE!!!!\nManagement is horrible a...</td>
+                </tr>
+                <tr>
+                  <th>87</th>
+                  <td>1</td>
+                  <td>This complex is a joke. They don’t answer your...</td>
+                </tr>
+                <tr>
+                  <th>47</th>
+                  <td>1</td>
+                  <td>Extremely upset after finding out that “the co...</td>
+                </tr>
+                <tr>
+                  <th>54</th>
+                  <td>1</td>
+                  <td>Management here is not that great. I understan...</td>
+                </tr>
+                <tr>
+                  <th>35</th>
+                  <td>1</td>
+                  <td>My daughter rented at this horrible complex. P...</td>
+                </tr>
+                <tr>
+                  <th>31</th>
+                  <td>1</td>
+                  <td>Staff is deplorable. Maintenance let my dog ou...</td>
+                </tr>
+                <tr>
+                  <th>90</th>
+                  <td>4</td>
+                  <td>After a minor dispute on move out charges the ...</td>
+                </tr>
+                <tr>
+                  <th>93</th>
+                  <td>1</td>
+                  <td>The pipe burst this apartment upstairs office ...</td>
+                </tr>
+                <tr>
+                  <th>97</th>
+                  <td>1</td>
+                  <td>DON'T LIVE HERE! They faked on the advertiseme...</td>
+                </tr>
+                <tr>
+                  <th>26</th>
+                  <td>1</td>
+                  <td>This place is the absolute worse. They get mon...</td>
+                </tr>
+                <tr>
+                  <th>203</th>
+                  <td>1</td>
+                  <td>Visited the Standard to take a tour a few days...</td>
+                </tr>
+                <tr>
+                  <th>221</th>
+                  <td>1</td>
+                  <td>I am extremely disappointed in the Standard. H...</td>
+                </tr>
+                <tr>
+                  <th>63</th>
+                  <td>1</td>
+                  <td>This is the most horrible apartment complex I ...</td>
+                </tr>
+                <tr>
+                  <th>100</th>
+                  <td>4</td>
+                  <td>Clean space with cool atmosphere. Place can be...</td>
+                </tr>
+                <tr>
+                  <th>130</th>
+                  <td>1</td>
+                  <td>Over priced, people around you are loud and r...</td>
+                </tr>
+                <tr>
+                  <th>17</th>
+                  <td>1</td>
+                  <td>I stayed in this terrible apartment a few year...</td>
+                </tr>
+                <tr>
+                  <th>196</th>
+                  <td>1</td>
+                  <td>There is a big lack of communication around ma...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=d978e6b3-80ca-4a03-8ca0-b5bb9bc5c955"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="Run-the-classifier">
+        Run the classifier<a class="anchor-link" href="#Run-the-classifier"
+          >¶</a
+        >
+      </h4>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=d07c052d-a845-4799-80e6-582ba533b077"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        <strong><code>truncation=True</code></strong> enables truncation of
+        input sequences that exceed the maximum length accepted by the model.
+        This prevents errors that would occur if the input text is too long for
+        the model to process.
+      </p>
+      <p>
+        <strong><code>max_length=512</code></strong> sets the maximum number of
+        tokens that each input sequence can have after tokenization. If an input
+        sequence is longer than this, it will be truncated to fit within this
+        limit. The value 512 is commonly used, as it's the maximum sequence
+        length for many BERT-based models.
+      </p>
+      <p>
+        <strong><code>padding=True</code></strong> enables padding for input
+        sequences that are shorter than the maximum length15. This ensures that
+        all input sequences in a batch have the same length, which is necessary
+        for efficient processing by the model. Shorter sequences are padded with
+        a special padding token to reach the specified maximum length.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=6d0feca4-6660-408c-aea3-c5f157907d69"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [22]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">classified_result</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span>
+    <span class="n">df_sample</span><span class="p">[</span><span class="s1">'review_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">padding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">classified_result</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[22]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>
+[{'label': 'NEGATIVE', 'score': 0.999226450920105},
+ {'label': 'NEGATIVE', 'score': 0.9996181726455688},
+ {'label': 'NEGATIVE', 'score': 0.9997121691703796},
+ {'label': 'NEGATIVE', 'score': 0.9996076226234436},
+ {'label': 'NEGATIVE', 'score': 0.9990652203559875},
+ {'label': 'NEGATIVE', 'score': 0.9995266199111938},
+ {'label': 'NEGATIVE', 'score': 0.9992621541023254},
+ {'label': 'NEGATIVE', 'score': 0.9993144273757935},
+ {'label': 'POSITIVE', 'score': 0.9229395985603333},
+ {'label': 'NEGATIVE', 'score': 0.9996793270111084},
+ {'label': 'NEGATIVE', 'score': 0.9989628791809082},
+ {'label': 'NEGATIVE', 'score': 0.9937936067581177},
+ {'label': 'NEGATIVE', 'score': 0.998755693435669},
+ {'label': 'NEGATIVE', 'score': 0.9998036026954651},
+ {'label': 'NEGATIVE', 'score': 0.9996813535690308},
+ {'label': 'NEGATIVE', 'score': 0.9992544054985046},
+ {'label': 'NEGATIVE', 'score': 0.9995424747467041},
+ {'label': 'NEGATIVE', 'score': 0.9993053674697876},
+ {'label': 'NEGATIVE', 'score': 0.9993048906326294},
+ {'label': 'POSITIVE', 'score': 0.9937560558319092},
+ {'label': 'NEGATIVE', 'score': 0.999752938747406},
+ {'label': 'NEGATIVE', 'score': 0.9948915243148804},
+ {'label': 'NEGATIVE', 'score': 0.9997307658195496},
+ {'label': 'NEGATIVE', 'score': 0.9974057078361511},
+ {'label': 'NEGATIVE', 'score': 0.9996538162231445},
+ {'label': 'NEGATIVE', 'score': 0.9995594620704651},
+ {'label': 'POSITIVE', 'score': 0.8697509765625},
+ {'label': 'NEGATIVE', 'score': 0.9998201727867126},
+ {'label': 'NEGATIVE', 'score': 0.9997301697731018},
+ {'label': 'NEGATIVE', 'score': 0.9996767044067383}]</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=73cb6c98-54d9-448a-b3a7-f3ac4b991d6e"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>Check the result.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=20f56396-af18-428d-be06-dd0980480704"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [23]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">df_sample</span><span class="p">[</span><span class="s1">'sentiment'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="s1">'label'</span><span class="p">],</span> <span class="n">classified_result</span><span class="p">))</span>
+<span class="n">df_sample</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="s1">'score'</span><span class="p">],</span> <span class="n">classified_result</span><span class="p">))</span>
+
+<span class="n">df_sample</span><span class="p">[[</span><span class="s1">'review_text'</span><span class="p">,</span> <span class="s1">'sentiment'</span><span class="p">,</span> <span class="s1">'score'</span><span class="p">]]</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[23]:</div>
+        <div
+          class="output_html rendered_html output_subarea output_execute_result"
+        >
+          <div>
+            <style scoped="">
+              .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+              }
+
+              .dataframe tbody tr th {
+                vertical-align: top;
+              }
+
+              .dataframe thead th {
+                text-align: right;
+              }
+            </style>
+            <table border="1" class="dataframe">
+              <thead>
+                <tr style="text-align: right">
+                  <th></th>
+                  <th>review_text</th>
+                  <th>sentiment</th>
+                  <th>score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>60</th>
+                  <td>Office staff extremely rude. Have laundry mach...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999226</td>
+                </tr>
+                <tr>
+                  <th>5</th>
+                  <td>NEVER LIVE HERE!! They don't charge a security...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999618</td>
+                </tr>
+                <tr>
+                  <th>68</th>
+                  <td>I lived here for a year and it was FAR too lon...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999712</td>
+                </tr>
+                <tr>
+                  <th>193</th>
+                  <td>Avoid living here at all costs. The other revi...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999608</td>
+                </tr>
+                <tr>
+                  <th>49</th>
+                  <td>Very poor management. They seem nice and trea...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999065</td>
+                </tr>
+                <tr>
+                  <th>65</th>
+                  <td>They have maintenance come without any warning...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999527</td>
+                </tr>
+                <tr>
+                  <th>194</th>
+                  <td>This is one of the most pricey places to live ...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999262</td>
+                </tr>
+                <tr>
+                  <th>212</th>
+                  <td>Bribed students to write a review to be entere...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999314</td>
+                </tr>
+                <tr>
+                  <th>88</th>
+                  <td>Great place to live! But when it gets snowy it...</td>
+                  <td>POSITIVE</td>
+                  <td>0.922940</td>
+                </tr>
+                <tr>
+                  <th>207</th>
+                  <td>** The reason there are so many positive revie...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999679</td>
+                </tr>
+                <tr>
+                  <th>62</th>
+                  <td>Edited to respond to comments from management:...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.998963</td>
+                </tr>
+                <tr>
+                  <th>41</th>
+                  <td>Honestly 2.5 stars is more appropriate but I'm...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.993794</td>
+                </tr>
+                <tr>
+                  <th>76</th>
+                  <td>DO NOT LIVE HERE. Spaces are smaller than what...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.998756</td>
+                </tr>
+                <tr>
+                  <th>53</th>
+                  <td>DO NOT LIVE HERE!!!!\nManagement is horrible a...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999804</td>
+                </tr>
+                <tr>
+                  <th>87</th>
+                  <td>This complex is a joke. They don’t answer your...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999681</td>
+                </tr>
+                <tr>
+                  <th>47</th>
+                  <td>Extremely upset after finding out that “the co...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999254</td>
+                </tr>
+                <tr>
+                  <th>54</th>
+                  <td>Management here is not that great. I understan...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999542</td>
+                </tr>
+                <tr>
+                  <th>35</th>
+                  <td>My daughter rented at this horrible complex. P...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999305</td>
+                </tr>
+                <tr>
+                  <th>31</th>
+                  <td>Staff is deplorable. Maintenance let my dog ou...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999305</td>
+                </tr>
+                <tr>
+                  <th>90</th>
+                  <td>After a minor dispute on move out charges the ...</td>
+                  <td>POSITIVE</td>
+                  <td>0.993756</td>
+                </tr>
+                <tr>
+                  <th>93</th>
+                  <td>The pipe burst this apartment upstairs office ...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999753</td>
+                </tr>
+                <tr>
+                  <th>97</th>
+                  <td>DON'T LIVE HERE! They faked on the advertiseme...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.994892</td>
+                </tr>
+                <tr>
+                  <th>26</th>
+                  <td>This place is the absolute worse. They get mon...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999731</td>
+                </tr>
+                <tr>
+                  <th>203</th>
+                  <td>Visited the Standard to take a tour a few days...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.997406</td>
+                </tr>
+                <tr>
+                  <th>221</th>
+                  <td>I am extremely disappointed in the Standard. H...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999654</td>
+                </tr>
+                <tr>
+                  <th>63</th>
+                  <td>This is the most horrible apartment complex I ...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999559</td>
+                </tr>
+                <tr>
+                  <th>100</th>
+                  <td>Clean space with cool atmosphere. Place can be...</td>
+                  <td>POSITIVE</td>
+                  <td>0.869751</td>
+                </tr>
+                <tr>
+                  <th>130</th>
+                  <td>Over priced, people around you are loud and r...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999820</td>
+                </tr>
+                <tr>
+                  <th>17</th>
+                  <td>I stayed in this terrible apartment a few year...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999730</td>
+                </tr>
+                <tr>
+                  <th>196</th>
+                  <td>There is a big lack of communication around ma...</td>
+                  <td>NEGATIVE</td>
+                  <td>0.999677</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=688df354-138c-4acf-b97a-81aaaf3741ae"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="Alternatively,-use-a-for-loop-to-display-progress">
+        Alternatively, use a for loop to display progress<a
+          class="anchor-link"
+          href="#Alternatively,-use-a-for-loop-to-display-progress"
+          >¶</a
+        >
+      </h4>
+      <p>
+        Passing a long list of text can be time-consuming. If you prefer
+        tracking progress while the pipeline is running, use a for loop to run
+        the classifier on each row. Print progress in each iteration.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=914e53c4-7b31-414f-b9cb-4b82967d2316"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [24]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># create new columns to store classified result</span>
+<span class="n">df_sample</span><span class="p">[</span><span class="s1">'sentiment'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df_sample</span><span class="p">[</span><span class="s1">'score'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># set the sentiment column to a string dtype</span>
+<span class="n">df_sample</span><span class="p">[</span><span class="s1">'sentiment'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_sample</span><span class="p">[</span><span class="s1">'sentiment'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=5b943fe4-e188-4215-a917-b4d21da7b6a4"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [25]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">num_rows</span> <span class="o">=</span> <span class="n">df_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_rows</span><span class="p">):</span>
+  <span class="c1"># store review text to a variable</span>
+  <span class="n">review_text</span> <span class="o">=</span> <span class="n">df_sample</span><span class="p">[</span><span class="s1">'review_text'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+  <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">review_text</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span>
+        <span class="n">review_text</span><span class="p">,</span>
+        <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span>
+    <span class="p">)</span>
+    
+    <span class="n">df_sample</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">df_sample</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">'sentiment'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'label'</span><span class="p">]</span>
+    <span class="n">df_sample</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">df_sample</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">'score'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'score'</span><span class="p">]</span>
+
+  <span class="c1"># display progress</span>
+  <span class="n">progress_percentage</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_rows</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">num_rows</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">progress_percentage</span><span class="si">}</span><span class="s1">%)'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'===================='</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Complete'</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+1/30 (3.33%) 2/30 (6.67%) 3/30 (10.0%) 4/30 (13.33%) 5/30 (16.67%) 6/30 (20.0%) 7/30 (23.33%) 8/30 (26.67%) 9/30 (30.0%) 10/30 (33.33%) 
+11/30 (36.67%) 12/30 (40.0%) 13/30 (43.33%) 14/30 (46.67%) 15/30 (50.0%) 16/30 (53.33%) 17/30 (56.67%) 18/30 (60.0%) 19/30 (63.33%) 20/30 (66.67%) 
+21/30 (70.0%) 22/30 (73.33%) 23/30 (76.67%) 24/30 (80.0%) 25/30 (83.33%) 26/30 (86.67%) 27/30 (90.0%) 28/30 (93.33%) 29/30 (96.67%) 30/30 (100.0%) 
+====================
+Complete
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=4aa3e9d1-a10e-453a-85d3-e6280abaf91f"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%E2%9C%A8-Conclusion">
+        ✨ Conclusion<a class="anchor-link" href="#%E2%9C%A8-Conclusion">¶</a>
+      </h2>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=d5844a22-8c66-4582-a7d3-9999c4125895"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Rule-based models like
+        <a href="https://github.com/cjhutto/vaderSentiment">VADER</a> struggle
+        with nuanced language comprehension and context-dependent sentiments.
+        BERT-based sentiment analysis models generally outperform rule-based
+        models like VADER in terms of accuracy and nuanced understanding of
+        context. BERT's bidirectional training allows it to grasp context from
+        both directions, making it more effective in understanding complex
+        sentiments.
+      </p>
+      <p>
+        ModernBERT was
+        <a href="https://huggingface.co/blog/modernbert">recently introduced</a
+        >, which is a <em>slot-in</em> replacement for any BERT-like models.
+        ModernBERT is an improvment over its younger siblings across both
+        <strong>speed</strong> and <strong>accuracy</strong>. Hugging Face
+        expects to see ModernBERT become the new standard for applications where
+        encoder-only models are now deployed.
+      </p>
+    </div>
+  </div>
+</div>

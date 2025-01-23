@@ -1,5 +1,5 @@
 ---
-title: Peculiar Behaviors of the R Programming Language
+title: Unexpected Behaviors of the R Programming Language
 date: 2025-01-18
 categories:
   - R
