@@ -1,37 +1,37 @@
 <div id="menu-overlay">
-    <div id="menu-content">
-        {{ range where .Site.RegularPages "Type" "page" }}
-            <div class="menu-item">
-                <a href="{{ .Permalink }}">{{ .Title }}</a>
-            </div>
-        {{ end }}
+  <div id="menu-content">
+    {{ range where .Site.RegularPages "Type" "page" }}
+    <div class="menu-item">
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
     </div>
+    {{ end }}
+  </div>
 </div>
 
 <div id="header">
-    <div class="container-full">
-        <div class="row">
-            <div class="col-6-sm">
-                <a href="/" title="Homepage" class="link-site-title">
-                    {{ if templates.Exists "partials/svg/logo.html" }}
-                        {{ partial "svg/logo" . }}
-                    {{ else }}
-                        {{ .Site.Title }}
-                    {{ end }}
-                </a>
-            </div>
-        
-            <div class="col-6-sm">
-                <div class="header-right">
-                    <div id="btn-menu-wrapper">
-                        <button id="btn-menu" class="hamburger hamburger--collapse" type="button">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+  <div class="container-full">
+    <div class="row">
+      <div class="col-6-sm">
+        <a href="/" title="Homepage" class="link-site-title">
+          <img src="/images/park_logo_200.png" alt="Park Logo" width="72" />
+        </a>
+      </div>
+
+      <div class="col-6-sm">
+        <div class="header-right">
+          <div id="btn-menu-wrapper">
+            <button
+              id="btn-menu"
+              class="hamburger hamburger--collapse"
+              type="button"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
