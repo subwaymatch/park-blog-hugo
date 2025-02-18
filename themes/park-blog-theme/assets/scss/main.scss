@@ -192,6 +192,25 @@ ol {
   list-style-type: decimal;
 }
 
+.footnotes {
+  font-family: $font-sans-serif;
+  font-size: 0.9rem;
+
+  ol {
+    li {
+      margin-top: 0.4rem;
+      p {
+        display: inline;
+
+        a.footnote-backref {
+          color: #bbb;
+          background: none;
+        }
+      }
+    }
+  }
+}
+
 #menu-overlay {
   position: fixed;
   width: 100%;
@@ -420,7 +439,7 @@ ol {
 
 .section-post {
   padding-bottom: 10rem;
-  font-family: freight-text-pro, serif;
+  font-family: $font-serif;
   font-weight: 400;
   line-height: 1.65;
 
@@ -503,6 +522,33 @@ ol {
         color: $color-primary;
         background: transparent;
       }
+
+      &.footnote-ref {
+        font-family: $font-sans-serif;
+        color: $color-primary;
+        background: linear-gradient(
+          transparent 0%,
+          transparent 90%,
+          $color-primary 90%,
+          $color-primary 100%,
+          transparent 100%
+        );
+
+        &:hover {
+          color: darken($color-primary, 10%);
+          background: linear-gradient(
+            transparent 0%,
+            transparent 90%,
+            darken($color-primary, 10%) 90%,
+            darken($color-primary, 10%) 100%,
+            transparent 100%
+          );
+        }
+      }
+    }
+
+    sup a {
+      background: none;
     }
   }
 }
@@ -568,9 +614,6 @@ ol {
 
 sub,
 sup {
-  /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
-  font-size: 75%;
-
   /* Zero out the line-height so that it doesn't interfere with the positioning that follows */
   line-height: 0;
 
@@ -585,9 +628,17 @@ sup {
 sup {
   /* Move the superscripted text up */
   top: -0.5em;
+
+  /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
+  font-size: 60%;
+  margin-left: 0.2em;
+  margin-right: 0.1em;
 }
 
 sub {
+  /* Specified in % so that the sup/sup is the right size relative to the surrounding text */
+  font-size: 75%;
+
   /* Move the subscripted text down, but only
         half as far down as the superscript moved up */
   bottom: -0.25em;
