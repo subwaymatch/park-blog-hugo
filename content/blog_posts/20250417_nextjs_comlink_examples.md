@@ -27,7 +27,7 @@ In this post, I'll explore how to integrate Web Workers into a Next.js 15 applic
 
 Without a library like Comlink, interacting with a Web Worker looks something like this, with TypeScript adding type safety:
 
-### Shared Types - e.g., `types/worker-messages.ts`)
+### 📜 Shared Types - e.g., `types/worker-messages.ts`)
 
 ```typescript
 // Define message structures for type safety
@@ -44,7 +44,7 @@ export interface WorkerResponse {
 }
 ```
 
-### Main Thread (`page.tsx` - Vanilla Example):
+### 📜 Main Thread (`page.tsx` - Vanilla Example):
 
 ```typescript
 import type { WorkerCommand, WorkerResponse } from "@/types/worker-messages";
@@ -86,7 +86,7 @@ myWorker.onerror = (error: Event) => {
 // myWorker.terminate();
 ```
 
-### Worker Thread (`/workers/vanilla.worker.ts`):
+### 📜 Worker Thread (`/workers/vanilla.worker.ts`):
 
 ```typescript
 import type { WorkerCommand, WorkerResponse } from "@/types/worker-messages";
@@ -147,7 +147,7 @@ As you can see, even with TypeScript, this involves:
 
 Comlink simplifies this significantly.
 
-### Worker (`/workers/functions.worker.ts`):
+### 📜 Worker (`/workers/functions.worker.ts`):
 
 ```typescript
 import * as Comlink from "comlink";
@@ -162,7 +162,7 @@ Comlink.expose({
 });
 ```
 
-### Main Thread (`/app/basic/page.tsx` - Comlink Example):
+### 📜 Main Thread (`/app/basic/page.tsx` - Comlink Example):
 
 ```typescript
 "use client"; // Important for using hooks and browser APIs
@@ -231,7 +231,7 @@ The `new URL("@/workers/...", import.meta.url)` pattern is required for JavaScri
 
 Now, let's look at the more complex examples involving the Calculator class in `/workers/class-instance.worker.ts`.
 
-### Worker (`/workers/class-instance.worker.ts`):
+### 📜 Worker (`/workers/class-instance.worker.ts`):
 
 ```typescript
 import * as Comlink from "comlink";
@@ -274,6 +274,8 @@ Comlink.expose(instance);
 
 Consider the `/app/non-singleton/page.tsx` example. It creates two separate worker instances:
 
+### 📜 `/app/non-singleton/page.tsx`
+
 ```typescript
 // In useEffect...
 const worker1 = new Worker(
@@ -308,6 +310,8 @@ A **Singleton** is a design pattern that restricts the instantiation of a class 
 ### 💡 Implementing a Singleton Worker with Comlink
 
 The `/app/singleton/page.tsx` example demonstrates how to achieve shared state using the singleton pattern. The magic happens in `/lib/singletonCalculator.ts`:
+
+### 📜 `/lib/singletonCalculator.ts`
 
 ```typescript
 import * as Comlink from "comlink";
@@ -364,7 +368,7 @@ export function terminateSingletonCalculator() {
 
 This utility function ensures that the `new Worker(...)` and `Comlink.wrap(...)` calls happen only once. Subsequent calls to `getSingletonCalculator()` return the same `calculatorProxy` instance that was created the first time (unless an error occurred).
 
-### `/app/singleton/page.tsx`
+### 📜 `/app/singleton/page.tsx`
 
 ```typescript
 useEffect(() => {
