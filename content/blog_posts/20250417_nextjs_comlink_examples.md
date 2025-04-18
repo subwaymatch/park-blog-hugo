@@ -10,7 +10,7 @@ Running heavy computations or background tasks directly on the main thread can l
 
 [Comlink](https://github.com/GoogleChromeLabs/comlink) is a tiny library by the Google Chrome team that simplifies Web Worker communication, making it feel like you're interacting with local objects or functions.
 
-![Image](https://private-user-images.githubusercontent.com/1064036/434752415-3f41194c-9155-4ee5-bf99-fcf8a6561acc.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDQ4ODU0NTMsIm5iZiI6MTc0NDg4NTE1MywicGF0aCI6Ii8xMDY0MDM2LzQzNDc1MjQxNS0zZjQxMTk0Yy05MTU1LTRlZTUtYmY5OS1mY2Y4YTY1NjFhY2MuanBnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDQxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTA0MTdUMTAxOTEzWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MDU0OGJhYmM3ZjgyOTM3NzhjMWQ5ZTIzMDMwZDIzNTNhNjE2YmVlNjBjZmYzMTY4MzNiNzNjMWNkNzI5ODAxNyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.hKewRs4x6wIlv9HkjaEXVN0ocgsxbsJPOr6bvvjx7Xc)
+![Image](https://github.com/user-attachments/assets/3f41194c-9155-4ee5-bf99-fcf8a6561acc)
 
 In this post, I'll explore how to integrate Web Workers into a Next.js 15 application using Comlink, based on [this example repository](https://github.com/subwaymatch/nextjs-comlink-examples). I'll cover:
 
