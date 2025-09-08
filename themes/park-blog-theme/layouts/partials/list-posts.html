@@ -3,7 +3,7 @@
   <div class="post-item">
     {{ if isset .Params "categories" }}
     <div class="categories">
-      <ul>
+      <ul class="categories-list">
         {{ range $key, $value := .Params.Categories }}
         <li>
           <a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a>

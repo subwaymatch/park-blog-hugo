@@ -1,0 +1,1159 @@
+---
+title: Using GPT to Generate Paper Feedback
+date: 2025-09-08
+categories:
+  - Python
+  - Education
+---
+
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=cec6d515-3cbc-4cf7-a028-dd970afe0740"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        In 2012, I graded hundreds of papers as a teaching assistant. This was a
+        time-consuming and subjective process, and I often spent days grading
+        just to meet deadlines.
+      </p>
+      <p>
+        Large language models (LLMs) like GPT-5 are transforming education,
+        including the grading of written assignments. LLMs provide an efficient
+        and scalable way to assess students' writing while also generating
+        personalized feedback. However, my experience using LLMs for grading has
+        been unreliable for the following reasons:
+      </p>
+      <ol>
+        <li>
+          LLMs can produce very different grades for the same work, undermining
+          fairness and reliability in the assessment process.
+        </li>
+        <li>
+          LLMs generate outputs based on probabilistic patterns rather than
+          genuine reasoning or qualitative judgment.
+        </li>
+        <li>
+          As black-box systems, LLMs make it difficult to explain why points
+          were deducted.
+        </li>
+      </ol>
+      <p>
+        Because of these challenges, I decided not to rely solely on LLMs for
+        grading. Still, I have found them extremely useful for drafting grading
+        comments (feedback). This post demonstrates how to use the
+        <code>gpt-5-mini</code> model via the OpenAI API to generate feedback in
+        batch.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=6e461bfb-3b08-4004-bb1e-4a94e868ac81"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%A4%96-The-Role-of-LLMs-in-Providing-Feedback">
+        🤖 The Role of LLMs in Providing Feedback<a
+          class="anchor-link"
+          href="#%F0%9F%A4%96-The-Role-of-LLMs-in-Providing-Feedback"
+          >¶</a
+        >
+      </h2>
+      <p>
+        LLMs can analyze text based on predefined grading rubrics, evaluating
+        assignments for factors such as coherence, argumentation, grammar, and
+        style. Using an LLM model to only draft grading comments lets me...
+      </p>
+      <ul>
+        <li>
+          <strong>Provide detailed feedback</strong>: LLMs can highlight areas
+          for improvement in structure, logic, and language use.
+        </li>
+        <li>
+          <strong>Ensure consistency</strong>: Unlike me and other human
+          graders, AI does not suffer from fatigue or bias, making its
+          evaluations more consistent.
+        </li>
+        <li>
+          <strong>Save time</strong>: Instructors and graders can focus more on
+          instruction and student engagement rather than spending excessive
+          hours on grading.
+        </li>
+        <li>
+          <strong>Provide individualized feedback</strong>: AI can tailor
+          comments to a student's specific weaknesses and strengths.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=c9c1a73d-eea3-4bb5-8b06-f90316d90a2e"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%93%9C-Code">
+        📜 Code<a class="anchor-link" href="#%F0%9F%93%9C-Code">¶</a>
+      </h2>
+      <p>
+        This notebook iterates through a set of <code>.pdf</code> and
+        <code>.docx</code> files in specified directories, extracts the text
+        from each file, and then uses the OpenAI API to generate feedback based
+        on a rubric. The feedback is saved to a <code>.txt</code> file with the
+        same name as the original submission file.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=92859d59-9fab-4be0-942b-ba96f9d88e9b"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Import-Packages">
+        Import Packages<a class="anchor-link" href="#Import-Packages">¶</a>
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=155422c2-5b7a-46e7-973c-dd0ef7125bb8"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [1]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PyPDF2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">markdown</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=fa73f032-e2e5-493a-9cea-61c3e914b56f"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <ul>
+        <li>
+          <code>glob</code>: Used to find files matching a specified pattern.
+        </li>
+        <li>
+          <code>os</code>: Provides a way of using operating system dependent
+          functionality.
+        </li>
+        <li><code>pathlib.Path</code>: Offers a way to handle file paths.</li>
+        <li>
+          <code>openai.OpenAI</code>: OpenAI's Python library to interact with
+          the OpenAI API.
+        </li>
+        <li>
+          <code>docx.Document</code>: Used for reading <code>.docx</code> files.
+        </li>
+        <li><code>PyPDF2</code>: Used for reading <code>.pdf</code> files.</li>
+        <li><code>markdown</code>: Used to convert Markdown text to HTML.</li>
+        <li>
+          <code>bs4.BeautifulSoup</code>: Used to parse HTML and extract text.
+          BeautifulSoup combined with the <code>markdown</code> package is used
+          to strip Markdown formatting characters from the returned text.
+        </li>
+        <li>
+          <code>uuid</code>: Used to generate unique user IDs to avoid cached
+          responses.
+        </li>
+        <li><code>re</code>: Used for regular expressions.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=499c2363-2c26-4e2e-a144-b3906fe42446"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Initialize-an-OpenAI-Client">
+        Initialize an OpenAI Client<a
+          class="anchor-link"
+          href="#Initialize-an-OpenAI-Client"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=cff4448e-cded-4870-9cb6-6d05e91575d8"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Read the OpenAI API key from a file named
+        <code>openai-api-key.txt</code>.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=17af108d-19af-4294-bfbb-e6466f98af72"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [2]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'openai-api-key.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">OPENAI_API_KEY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=2db591d3-8df3-4a9d-bae7-ab2dd4063349"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [3]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">OPENAI_API_KEY</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=d7b180cf-c12a-439c-ac47-689a9ec24927"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Select-Student-Submission-Files">
+        Select Student Submission Files<a
+          class="anchor-link"
+          href="#Select-Student-Submission-Files"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=0996d2e9-c4ff-4692-a72c-476f3ede6be2"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Uses <code>glob</code> to find all <code>.pdf</code> files in the target
+        directory.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=7b2b4e1b-1df9-46e5-bb00-cbd5cadc41f0"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [4]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># find both .pdf files</span>
+<span class="n">submission_files_path</span> <span class="o">=</span> <span class="s2">"submissions/"</span>
+<span class="n">supported_file_extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">".pdf"</span><span class="p">]</span>
+
+<span class="n">files_to_grade</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">supported_file_extensions</span><span class="p">:</span>
+    <span class="n">glob_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">submission_files_path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'*</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    
+    <span class="n">files_to_grade</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">submission_files_path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'*</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="n">files_to_grade</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[4]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>['submissions/submission-01.pdf']</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=2b30ad03-a618-40c9-b856-c17b65373046"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Define-Helper-Functions">
+        Define Helper Functions<a
+          class="anchor-link"
+          href="#Define-Helper-Functions"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=607cb533-67ab-4995-8b33-f42e38ec785f"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>Create a function to strip Markdown formatting literals.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=d1fccf5e-080d-4a1e-8763-bd4dce486418"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [5]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">strip_markdown</span><span class="p">(</span><span class="n">md_text</span><span class="p">):</span>
+    <span class="c1"># Convert Markdown to HTML</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">md_text</span><span class="p">)</span>
+    <span class="c1"># Parse the HTML and extract text</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">"html.parser"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">soup</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=1d3209fb-e5e3-4f95-afb9-f8e2a4d8c510"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>Test the <code>strip_markdown()</code> function.</p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=79bff584-5ca3-44fe-848c-57e611a49bf7"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [6]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">strip_markdown</span><span class="p">(</span><span class="s1">'**bold**</span><span class="se">\n</span><span class="s1">_italic_</span><span class="se">\n</span><span class="s1">### Heading 3'</span><span class="p">))</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+bold
+italic
+Heading 3
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=681f559d-b05b-467c-b7bd-49f511cf0c0e"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Create a function to replace three or more consecutive line breaks with
+        just two line breaks.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=49add149-3b17-415d-8d21-1f86bfe3af75"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [7]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replace_extra_linebreaks</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\n{3,}'</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n\n</span><span class="s1">'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=f65115e7-de2f-4520-a120-1b615ea84b78"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Create a function to replace curly quotes with standard double quotes.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=3729d727-7092-40e5-95ec-447ec9d6fe43"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [8]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">standardize_quotes</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">standardized_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[“”]'</span><span class="p">,</span> <span class="s1">'"'</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">standardized_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[‘’]'</span><span class="p">,</span> <span class="s2">"'"</span><span class="p">,</span> <span class="n">standardized_text</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">standardized_text</span>
+
+<span class="n">sample_text</span> <span class="o">=</span> <span class="s2">"“It’s a ‘test’,” she said."</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Before: </span><span class="si">{</span><span class="n">sample_text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"After: </span><span class="si">{</span><span class="n">standardize_quotes</span><span class="p">(</span><span class="n">sample_text</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+Before: “It’s a ‘test’,” she said.
+After: "It's a 'test'," she said.
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=57c96fa4-7337-4c2b-aba7-a6f63d018413"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Create-a-rubric">
+        Create a rubric<a class="anchor-link" href="#Create-a-rubric">¶</a>
+      </h3>
+      <p>
+        Define the grading rubric as a multi-line string. This rubric is used to
+        instruct the AI on how to provide feedback.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=87a4977b-c7d5-489b-a150-ae22dd432d41"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [9]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">rubric</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">1. Content</span>
+<span class="s2">Does the student evidence a reasonable understanding of the issues in the case?</span>
+
+<span class="s2">- Clearly answer all of the questions asked in the required/questions section. Each sentence in the required section may have multiple questions—answer each one. Clearly label each answer; please do not make me search for them.</span>
+<span class="s2">- Include very little or no background summary of the case itself. Assume I have a good understanding of the background.</span>
+
+<span class="s2">2. Judgment and Originality</span>
+<span class="s2">Is the student able to go beyond the facts of the case, evidencing the ability to state and support independent professional judgment?</span>
+
+<span class="s2">- What I look for in an exceptional paper is the ability to go beyond the basic facts in the case. Put original thought, analysis, and examples into your responses. Do not simply restate the case or the case’s arguments. Come up with original ideas or original reasoning and then defend that reasoning.</span>
+<span class="s2">- Often, there is no one correct answer in these cases. If your answers are clearly stated and adequately supported, they will be “right”.</span>
+
+<span class="s2">3. Writing/Grammar</span>
+
+<span class="s2">- Proofread your paper. When feasible, have someone else read your paper as well.</span>
+<span class="s2">While you should always spell check, this is often not enough.</span>
+<span class="s2">Correct English usage entails more than simply correct spelling.</span>
+
+<span class="s2">4 Professional Impression</span>
+
+<span class="s2">Is the paper well-organized and easy to follow?</span>
+<span class="s2">Would it make a positive impression on a business professional?</span>
+
+<span class="s2">- Business readers are constrained by time so business writing should be brief. Your reader should understand your ideas as quickly and painlessly as possible.</span>
+<span class="s2">- Business writing is concise and to the point. Rambling or stream-of-consciousness type prose is not appropriate. Use headings to make your writing concise and readable. Use bullet-point lists where appropriate.</span>
+<span class="s2">- You usually see answers/recommendations in business writing at the beginning of the paper. In business, we are not telling a murder mystery where the answers come at the very end.</span>
+<span class="s2">  - Each paragraph should start with the main point of the paragraph. The rest of the paragraph should be your proof or evidence for that main point. Focus your writing on the defense of your clearly stated answers.</span>
+<span class="s2">  - For example, with very few exceptions, I should be able to understand the answers/recommendations in your paper by reading only the first paragraph of your paper and only the first sentence of each subsequent paragraph.</span>
+<span class="s2">"""</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=eb2344e8-3701-4783-b9ad-48882d236534"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="%F0%9F%94%84-Iterate-Through-Each-File-and-Generate-Feedback">
+        🔄 Iterate Through Each File and Generate Feedback<a
+          class="anchor-link"
+          href="#%F0%9F%94%84-Iterate-Through-Each-File-and-Generate-Feedback"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=2651bbbe-5618-49da-9b52-b5f883f62f01"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [10]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_to_grade</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_files</span><span class="p">):</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">files_to_grade</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'======================'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Grading file: </span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="n">feedback_txt_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">"-gpt-feedback"</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".txt"</span><span class="p">)</span>
+    
+    <span class="c1"># skip if the feedback file has already been generated</span>
+    <span class="k">if</span> <span class="n">feedback_txt_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">feedback_txt_path</span><span class="si">}</span><span class="s2"> already exists"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'SKIPPING'</span><span class="p">)</span>
+        <span class="k">continue</span>
+    
+    <span class="n">submission_file</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">file</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">),</span>
+        <span class="n">purpose</span><span class="o">=</span><span class="s2">"user_data"</span>
+    <span class="p">)</span>
+
+    <span class="n">completion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-5-mini"</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"developer"</span><span class="p">,</span> 
+                <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"You are a teaching assistant for a University course. </span><span class="se">\</span>
+<span class="s2">                Use the following writing guidelines to provide comments:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">rubric</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+                <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"file"</span><span class="p">,</span>
+                        <span class="s2">"file"</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="c1"># only works with a PDF file</span>
+                            <span class="s2">"file_id"</span><span class="p">:</span> <span class="n">submission_file</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                        <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Can you provide feedback on this written report? </span><span class="se">\</span>
+<span class="s2">You are not grading the paper, only providing comments. </span><span class="se">\</span>
+<span class="s2">Do not use markdown formatting or syntax such as ** or ###. </span><span class="se">\</span>
+<span class="s2">Focus on mostly positive feedback, but include one or two areas for improvement if applicable."</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">user</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>  <span class="c1"># pass a unique user ID per request to avoid cached response</span>
+    <span class="p">)</span>
+
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+    <span class="c1"># strip markdown format</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">strip_markdown</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="c1"># replace three or more consecutive line breaks into two</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">replace_extra_linebreaks</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="c1"># convert “” quotes to ""</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">standardize_quotes</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">feedback_txt_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">feedback_file</span><span class="p">:</span>
+        <span class="n">feedback_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Completed </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">num_files</span><span class="si">}</span><span class="s2"> submissions (</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">num_files</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">%)"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"**********************"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Complete"</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+======================
+Grading file: submissions/submission-01.pdf
+Completed 1 out of 1 submissions (100.0%)
+**********************
+Complete
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=8a653b03-561b-43ec-aa41-02c33cce829c"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="%F0%9F%92%AC-Sample-Output">
+        💬 Sample Output<a
+          class="anchor-link"
+          href="#%F0%9F%92%AC-Sample-Output"
+          >¶</a
+        >
+      </h4>
+      <p>The <code>gpt-5-mini</code> model provided the following feedback.</p>
+      <pre><code>Overall impression
+- Strong, practical report that clearly targets a business audience. The paper concisely explains the selected use case (market research and summarization) and ties capabilities to business workflows and risks. The tone and examples (e.g., using 10-Ks, analyst reports, and earnings calls) make the write-up relevant and usable for managers.
+Content (strengths)
+- Clear coverage of the chosen use case: pages 2–3 explain industry/competitor analysis, consumer insights, and summarization well and relate each to real business needs.
+- The team tested the tool (page 3: summarizing 10-Ks, analyst reports, earnings calls) — that original testing is a major plus because it moves beyond literature summary to applied evaluation.
+- The risks and limitations section (page 4) shows appropriate caution about overreliance, accuracy, and the need for human validation.
+Judgment and originality (strengths and one suggested improvement)
+- Strength: The report goes beyond basic description by describing how ChatGPT can be integrated into workflows (e.g., turning results into visuals and drafting follow-up emails), which demonstrates useful professional judgment.
+- Improvement: Expand the original analysis of limitations. For example, quantify or give concrete examples from your tests where ChatGPT produced outdated or incorrect information. A brief example (one or two concrete test cases) would strengthen your independent judgment and make the recommendations more persuasive.
+Writing / grammar (strengths and two small fixes)
+- Strength: Language is generally clear and businesslike; sections are focused on practical outcomes (what the tool can do and potential impacts).
+- Fix 1: Be consistent with product naming: you use both "Chat GPT" and "ChatGPT"; pick one form (ChatGPT) and use it consistently.
+- Fix 2: Minor punctuation/usage: change "10-K’s" to "10-Ks" (no possessive). Also check the TechRadar URL on page 5 — it appears to contain a stray character (an odd symbol before "explained").
+Professional impression / organization (strengths and one suggestion)
+- Strength: The paper is concise and oriented toward a business reader. The recommendation-style sentences and practical examples make it easy for a manager to act on.
+- Suggestion: Add a one-paragraph executive summary at the top (2–3 sentences) that states the main conclusion and recommended next steps (e.g., "Use ChatGPT for rapid summarization and initial trend detection, but require human validation and documented sourcing for any decisions"). This gives busy readers immediate guidance.
+References and sourcing (note)
+- Good that you cite multiple sources (Harvard Business School, TechRadar, Wikipedia, OpenAI).
+- Suggestion: Improve citation formatting and ensure links are clickable and accurate. Also be cautious about asserting specific model versions (e.g., "GPT‑5") without corroborated, dated sources — hedge language or verify the exact model and capabilities at time of writing.
+Summary of key actionable improvements (prioritized)
+1) Add one or two concrete examples from your testing (specific errors or summarization outputs) to support claims about accuracy/limitations.
+2) Add a short executive summary and tighten naming/citation consistency (ChatGPT vs Chat GPT; fix URL character; consistent citation format).
+Overall, well done: practical, well-targeted, and useful for business readers. With a couple of concrete examples from your tests and small editorial cleanups, this will be an even stronger, more persuasive report.
+</code></pre>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=208c757f-940c-42ab-82ef-34b11aae49a6"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="Explaining-the-code">
+        Explaining the code<a class="anchor-link" href="#Explaining-the-code"
+          >¶</a
+        >
+      </h4>
+      <ul>
+        <li>Iterate through each file in <code>files_to_grade</code>.</li>
+        <li>
+          Construct the file path for the feedback <code>.txt</code> file.
+        </li>
+        <li>Skip the file if the feedback file already exists.</li>
+        <li>
+          Upload the PDF file to OpenAI using File inputs API
+          (<code>client.files.create()</code>).
+        </li>
+        <li>
+          Call the OpenAI API to generate feedback:
+          <ul>
+            <li>Specify the <code>gpt-5-mini</code> model.</li>
+            <li>
+              Set up a conversation with two roles:
+              <ul>
+                <li>
+                  <code>developer</code>: Define the AI's role as a teaching
+                  assistant and provides the rubric.
+                </li>
+                <li>
+                  <code>user</code>: Ask for feedback on the report, instructing
+                  the AI to avoid markdown, provide positive feedback, and
+                  suggest areas for improvement.
+                </li>
+              </ul>
+            </li>
+            <li>Include the file.</li>
+            <li>Generate a unique user ID for each request.</li>
+          </ul>
+        </li>
+        <li>
+          Process the feedback from the OpenAI API:
+          <ul>
+            <li>Strip Markdown formatting.</li>
+            <li>Replace extra line breaks.</li>
+            <li>Standardize double quotes.</li>
+          </ul>
+        </li>
+        <li>Save the feedback to a <code>.txt</code> file.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=cd84073b-9c6f-44e1-8ed5-f2a9f4e863ec"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Create a function to extract text from a <code>.docx</code> file,
+        reading each paragraph and joining them with newline characters.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=ae7b11c0-bde7-4866-ab4c-cdda6b5b0425"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%F0%9F%92%A1-What-about-Microsoft-Word-documents?">
+        💡 What about Microsoft Word documents?<a
+          class="anchor-link"
+          href="#%F0%9F%92%A1-What-about-Microsoft-Word-documents?"
+          >¶</a
+        >
+      </h2>
+      <p>
+        OpenAI's file input API only allows PDF files. If the submissions
+        include other unsupported file formats like Microsoft Word documents,
+        you have to extract the text before calling the
+        <code>chat.completions</code> API.
+      </p>
+      <p>
+        However, this approach does not yield as good results as using the file
+        input API. This is because the manual extraction method will introduce
+        spacing issues to the input text. As a workaround, I've included this
+        prompt:
+      </p>
+      <pre><code>Because the text has been extracted from Word documents and PDF files using Python, they will contain inconsistent spacings. Please ignore them.
+</code></pre>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=10c5d113-0e7d-4694-91ef-cfed37fcb302"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="Select-Student-Submission-Files">
+        Select Student Submission Files<a
+          class="anchor-link"
+          href="#Select-Student-Submission-Files"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=7bf0ba0a-e2c6-4808-ba22-ed53fa209f8e"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        Uses <code>glob</code> to find all <code>.docx</code> files in the
+        target subdirectories.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=fea240ed-9dfb-4728-92b0-b609eb51780d"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [11]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="c1"># find Word Document files</span>
+<span class="n">submission_files_path</span> <span class="o">=</span> <span class="s2">"submissions/"</span>
+<span class="n">supported_file_extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">".docx"</span><span class="p">]</span>
+
+<span class="n">files_to_grade</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">supported_file_extensions</span><span class="p">:</span>
+    <span class="n">glob_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">submission_files_path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'*</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    
+    <span class="n">files_to_grade</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">submission_files_path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'*</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="n">files_to_grade</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt output_prompt">Out[11]:</div>
+        <div class="output_text output_subarea output_execute_result">
+          <pre>[]</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=e4aa8de0-9558-4dc4-bcd5-5020a6636b1c"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [12]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">extract_text_from_docx</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">para</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">])</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=a90dda98-5ea1-4581-920f-6fcb40612326"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <p>
+        You can optionally extract text from PDF files to reduce the number of
+        input tokens. Create a function to extract text from a
+        <code>.pdf</code> file, reading each paragraph and joining them with
+        newline characters.
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=130de143-f636-4b81-ab22-995827f54116"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [13]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">extract_text_from_pdf</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">PyPDF2</span><span class="o">.</span><span class="n">PdfReader</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        
+        <span class="c1"># Extract text from all pages</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="n">page</span><span class="o">.</span><span class="n">extract_text</span><span class="p">()</span>
+            
+        <span class="k">return</span> <span class="n">text</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=aab20235-22ec-48ef-a287-f0a78c1d1ea2"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h3 id="%F0%9F%94%84-Iterate-Through-Each-File-and-Generate-Feedback">
+        🔄 Iterate Through Each File and Generate Feedback<a
+          class="anchor-link"
+          href="#%F0%9F%94%84-Iterate-Through-Each-File-and-Generate-Feedback"
+          >¶</a
+        >
+      </h3>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing code_cell rendered"
+  id="cell-id=8068d433-6db1-467a-b234-7badc8bc43ec"
+>
+  <div class="input">
+    <div class="prompt input_prompt">In [14]:</div>
+    <div class="inner_cell">
+      <div class="input_area">
+        <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">num_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_to_grade</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_files</span><span class="p">):</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">files_to_grade</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'======================'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Grading file: </span><span class="si">{</span><span class="n">fp</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="n">feedback_txt_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">"-gpt-feedback"</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".txt"</span><span class="p">)</span>
+    
+    <span class="c1"># skip if the feedback file has already been generated</span>
+    <span class="k">if</span> <span class="n">feedback_txt_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">feedback_txt_path</span><span class="si">}</span><span class="s2"> already exists"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'SKIPPING'</span><span class="p">)</span>
+        <span class="k">continue</span>
+    
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">'.docx'</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">extract_text_from_docx</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># for unsupported file types, do nothing</span>
+        <span class="k">continue</span>
+
+    <span class="n">completion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-5-mini"</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"developer"</span><span class="p">,</span> 
+                <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"You are a teaching assistant for a graduate-level accounting course. </span><span class="se">\</span>
+<span class="s2">                Use the following writing guidelines to provide comments:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">rubric</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
+                <span class="s2">"content"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"text"</span><span class="p">,</span>
+                        <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Can you provide feedback on this written report? </span><span class="se">\</span>
+<span class="s2">You are not grading the paper. You are only providing comments. </span><span class="se">\</span>
+<span class="s2">Do not output markdown format. Avoid using markdown syntax like ** and ###. </span><span class="se">\</span>
+<span class="s2">Because the text has been extracted from Word documents and PDF files using Python, </span><span class="se">\</span>
+<span class="s2">they will contain inconsistent spacings. Please ignore them. </span><span class="se">\</span>
+<span class="s2">Provide mostly positive feedbacks, with one or two areas of improvement if there are any. </span><span class="se">\</span>
+<span class="s2">Here is the full report text:</span><span class="se">\n\n</span><span class="s2">"</span> \
+<span class="o">+</span> <span class="n">text</span>
+                    <span class="p">},</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">user</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>  <span class="c1"># pass a unique user ID per request to avoid cached response</span>
+    <span class="p">)</span>
+
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">completion</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+
+    <span class="c1"># strip markdown format</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">strip_markdown</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="c1"># replace three or more consecutive line breaks into two</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">replace_extra_linebreaks</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="c1"># convert “” quotes to ""</span>
+    <span class="n">gpt_feedback</span> <span class="o">=</span> <span class="n">standardize_quotes</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">feedback_txt_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">feedback_file</span><span class="p">:</span>
+        <span class="n">feedback_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gpt_feedback</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Completed </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">num_files</span><span class="si">}</span><span class="s2"> submissions (</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">num_files</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">%)"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"**********************"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Complete"</span><span class="p">)</span>
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="output_wrapper">
+    <div class="output">
+      <div class="output_area">
+        <div class="prompt"></div>
+        <div class="output_subarea output_stream output_stdout output_text">
+          <pre>
+**********************
+Complete
+</pre
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=3e1953f9-1436-4b25-8fe8-28a5f51715bb"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h4 id="Explaining-the-code">
+        Explaining the code<a class="anchor-link" href="#Explaining-the-code"
+          >¶</a
+        >
+      </h4>
+      <ul>
+        <li>Iterate through each file in <code>files_to_grade</code>.</li>
+        <li>
+          Construct the file path for the feedback <code>.txt</code> file.
+        </li>
+        <li>Skip the file if the feedback file already exists.</li>
+        <li>
+          Extract the text from the file based on its extension (<code
+            >.docx</code
+          >
+          or <code>.pdf</code>).
+        </li>
+        <li>
+          Call the OpenAI API to generate feedback:
+          <ul>
+            <li>Specify the <code>gpt-5-mini</code> model.</li>
+            <li>
+              Set up a conversation with two roles:
+              <ul>
+                <li>
+                  <code>developer</code>: Define the AI's role as a teaching
+                  assistant and provides the rubric.
+                </li>
+                <li>
+                  <code>user</code>: Ask for feedback on the report, instructing
+                  the AI to avoid markdown, provide positive feedback, and
+                  suggest areas for improvement.
+                </li>
+              </ul>
+            </li>
+            <li>Include the uploaded PDF file's <code>file.id</code>.</li>
+            <li>Generate a unique user ID for each request.</li>
+          </ul>
+        </li>
+        <li>
+          Process the feedback from the OpenAI API:
+          <ul>
+            <li>Strip Markdown formatting.</li>
+            <li>Replace extra line breaks.</li>
+            <li>Standardize double quotes.</li>
+          </ul>
+        </li>
+        <li>Save the feedback to a <code>.txt</code> file.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  class="cell border-box-sizing text_cell rendered"
+  id="cell-id=da4c965a-6e6e-46c9-82a2-7f69af14febe"
+>
+  <div class="prompt input_prompt"></div>
+  <div class="inner_cell">
+    <div class="text_cell_render border-box-sizing rendered_html">
+      <h2 id="%E2%9C%85-Closing-Thoughts">
+        ✅ Closing Thoughts<a
+          class="anchor-link"
+          href="#%E2%9C%85-Closing-Thoughts"
+          >¶</a
+        >
+      </h2>
+      <p>
+        LLMs like GPT-5 show great promise in supporting teaching, but they are
+        not yet reliable enough to replace human judgment in grading. Their real
+        strength lies in drafting feedback, spotting patterns, and reducing the
+        repetitive workload for instructors. By combining automation with human
+        oversight, we can achieve both efficiency and fairness, ensuring that
+        feedback remains constructive and student-centered.
+      </p>
+    </div>
+  </div>
+</div>
