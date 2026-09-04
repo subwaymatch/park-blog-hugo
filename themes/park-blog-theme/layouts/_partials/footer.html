@@ -1,7 +1,7 @@
 <footer class="site-footer">
-  <p>
-    © {{ now.Year }} {{ site.Params.author | default site.Title }}
-    {{- with site.Home.OutputFormats.Get "rss" }} · <a href="{{ .RelPermalink }}">RSS</a>{{ end }}
-    {{- with site.Params.github }} · <a href="{{ . }}">GitHub</a>{{ end }}
-  </p>
+  <p class="copyright">&copy; {{ now.Year }} {{ site.Params.author | default site.Title }}</p>
+  <ul class="footer-links">
+    {{ with site.Home.OutputFormats.Get "rss" }}<li><a href="{{ .RelPermalink }}">RSS</a></li>{{ end }}
+    {{ with site.Params.github }}<li><a href="{{ . }}">GitHub</a></li>{{ end }}
+  </ul>
 </footer>

@@ -720,6 +720,16 @@ mark {
   text-align: center;
   color: #999;
 
+  .copyright {
+    margin-bottom: 0.25rem;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
   a {
     color: #999;
 

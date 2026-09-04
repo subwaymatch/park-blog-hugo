@@ -5,7 +5,7 @@
   {{- $title := site.Title }}
   {{- if not .IsHome }}{{ $title = printf "%s | %s" .Title site.Title }}{{ end }}
   <title>{{ $title }}</title>
-  {{- $description := or .Description .Summary site.Params.description | plainify | truncate 160 | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+  {{- $description := or .Description .Summary site.Params.description | plainify | truncate 160 "..." | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
   <meta name="description" content="{{ $description }}">
   <link rel="canonical" href="{{ .Permalink }}">
   {{- range .AlternativeOutputFormats }}
