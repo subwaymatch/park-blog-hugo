@@ -65,4 +65,4 @@ netlify.toml          Netlify build settings (pins the Hugo version)
 
 - [Inter](https://rsms.me/inter/) font family is used for sans-serif text.
 - [Freight Text Pro](https://fonts.adobe.com/fonts/freight-text) from [Adobe Fonts](https://fonts.adobe.com/) is used for serif text (paid font, loaded from Typekit).
-- Google Analytics is off. To enable GA4, set `services.googleAnalytics.id` in `hugo.toml` to a `G-` measurement ID.
+- Google Analytics 4 is configured through `services.googleAnalytics.id` in `hugo.toml`. Hugo only emits the tag in production builds.

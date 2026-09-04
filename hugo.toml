@@ -36,10 +36,9 @@ mainSections = ["blog_posts", "notebooks"]
     unsafe = true
 
 [services]
-  # Universal Analytics (UA-*) properties stopped working in 2024.
-  # To enable Google Analytics 4, uncomment and add a G-* measurement ID.
-  # [services.googleAnalytics]
-  #   id = "G-XXXXXXXXXX"
+  # Google Analytics 4 measurement ID (property "park-blog - GA4", stream for https://park.is).
+  [services.googleAnalytics]
+    id = "G-C01P9Z634C"
 
 [menus]
   [[menus.main]]
