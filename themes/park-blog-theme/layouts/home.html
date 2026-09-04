@@ -1,0 +1,6 @@
+{{ define "main" }}
+<div class="section-list container">
+  {{ $pages := where site.RegularPages "Section" "in" site.MainSections }}
+  {{ partial "list-posts.html" (.Paginate $pages) }}
+</div>
+{{ end }}

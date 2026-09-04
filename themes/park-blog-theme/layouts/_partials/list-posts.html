@@ -1,0 +1,20 @@
+{{/* Context: a Paginator. */}}
+<div class="list-posts">
+  {{ range .Pages }}
+  <article class="post-item">
+    {{ with .GetTerms "categories" }}
+    <div class="categories">
+      <ul class="categories-list">
+        {{ range . }}
+        <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+        {{ end }}
+      </ul>
+      <span aria-hidden="true">⟶</span>
+    </div>
+    {{ end }}
+    <h2 class="post-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <time class="date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+  </article>
+  {{ end }}
+  {{ partial "pagination.html" . }}
+</div>

@@ -1,0 +1,14 @@
+{{/* Section and term (e.g. /categories/python/) listings. */}}
+{{ define "main" }}
+<div class="section-list container">
+  <div class="list-title">
+    <span class="circle" aria-hidden="true">{{ partial "svg/circle-memphis-01.html" . }}</span>
+    {{ with .Data.Singular }}
+    <span class="taxonomy-name">{{ . | humanize }}</span>
+    <span class="connector" aria-hidden="true">―</span>
+    {{ end }}
+    <h1>{{ .Title }}</h1>
+  </div>
+  {{ partial "list-posts.html" .Paginator }}
+</div>
+{{ end }}

@@ -1,0 +1,52 @@
+baseURL = "https://park.is/"
+locale = "en-US"
+title = "Ye Joo Park's Blog"
+theme = "park-blog-theme"
+enableRobotsTXT = true
+
+# Sections listed on the home page (everything except top-level pages such as /about).
+mainSections = ["blog_posts", "notebooks"]
+
+[pagination]
+  pagerSize = 5
+
+[module]
+  [module.hugoVersion]
+    # The theme uses the layout structure from Hugo 0.146 and the `locale` key from 0.158.
+    min = "0.158.0"
+
+[security]
+  # Recent Hugo versions block text/html content files by default.
+  # Notebooks under content/notebooks/ are HTML fragments produced by nbconvert.
+  allowContent = ['^text/markdown$', '^text/html$']
+
+[params]
+  author = "Ye Joo Park"
+  description = "Ye Joo Park's blog: notes on data analytics, programming, and Jupyter notebooks."
+  github = "https://github.com/subwaymatch"
+
+[taxonomies]
+  category = "categories"
+
+[markup]
+  [markup.highlight]
+    style = "monokailight"
+  [markup.goldmark.renderer]
+    # Some posts embed raw HTML (e.g. <img> tags with explicit sizes).
+    unsafe = true
+
+[services]
+  # Universal Analytics (UA-*) properties stopped working in 2024.
+  # To enable Google Analytics 4, uncomment and add a G-* measurement ID.
+  # [services.googleAnalytics]
+  #   id = "G-XXXXXXXXXX"
+
+[menus]
+  [[menus.main]]
+    name = "About"
+    pageRef = "/about"
+    weight = 10
+  [[menus.main]]
+    name = "GitHub"
+    url = "https://github.com/subwaymatch"
+    weight = 20

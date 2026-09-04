@@ -1,6 +1,5 @@
 ---
 title: About
-menu: "main"
 ---
 
 ![Park Profile Photo](https://user-images.githubusercontent.com/1064036/97115755-7eb41980-16c6-11eb-9381-9066e3303256.jpg)

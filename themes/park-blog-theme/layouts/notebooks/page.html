@@ -1,0 +1,12 @@
+{{/* Jupyter notebooks converted with `jupyter nbconvert --to html --template basic`. */}}
+{{ define "main" }}
+<article class="section-post format-jupyter">
+  <header class="post-header container">
+    {{ partial "post-meta.html" . }}
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}
