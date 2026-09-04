@@ -1,0 +1,17 @@
+{{- $terms := .GetTerms "categories" }}
+{{- if or (not .Date.IsZero) $terms }}
+<div class="post-metadata">
+  <span class="circle" aria-hidden="true">●</span>
+  {{ if not .Date.IsZero }}
+  <time class="date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+  {{ end }}
+  {{ with $terms }}
+  <span class="connector" aria-hidden="true">―</span>
+  <ul class="list-categories">
+    {{ range . }}
+    <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+</div>
+{{- end }}

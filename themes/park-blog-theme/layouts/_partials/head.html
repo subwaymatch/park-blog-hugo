@@ -1,0 +1,58 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {{- $title := site.Title }}
+  {{- if not .IsHome }}{{ $title = printf "%s | %s" .Title site.Title }}{{ end }}
+  <title>{{ $title }}</title>
+  {{- $description := or .Description .Summary site.Params.description | plainify | truncate 160 "..." | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}
+  <meta name="description" content="{{ $description }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{- range .AlternativeOutputFormats }}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
+  {{- end }}
+  {{ partial "opengraph.html" . }}
+  {{ partial "twitter_cards.html" . }}
+
+  <link rel="icon" href="{{ "images/favicons/favicon.ico" | relURL }}" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "images/favicons/favicon-32x32.png" | relURL }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "images/favicons/favicon-16x16.png" | relURL }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicons/apple-touch-icon.png" | relURL }}">
+  <link rel="manifest" href="{{ "images/favicons/site.webmanifest" | relURL }}">
+
+  {{/* Inter (sans-serif) and Freight Text Pro via Adobe Fonts (serif). */}}
+  <link rel="preconnect" href="https://rsms.me" crossorigin>
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <link rel="stylesheet" href="https://use.typekit.net/syz5dzr.css">
+
+  {{- $styles := slice }}
+  {{- range slice "css/reset.css" "css/main.css" "css/hamburger.css" "css/jupyter.css" }}
+    {{- $styles = $styles | append (resources.Get .) }}
+  {{- end }}
+  {{- $css := $styles | resources.Concat "css/site.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+
+  {{- $js := resources.Get "js/menu.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" defer></script>
+
+  {{- $isNotebook := and .IsPage (eq .Type "notebooks") }}
+  {{- if $isNotebook }}
+  {{/* Plotly and Vega outputs embedded in notebooks load their libraries through require.js. */}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.8/require.min.js"></script>
+  {{- end }}
+  {{- if or $isNotebook .Params.math }}
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      },
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-chtml.js"></script>
+  {{- end }}
+
+  {{- if hugo.IsProduction }}
+  {{ partial "google_analytics.html" . }}
+  {{- end }}
+</head>

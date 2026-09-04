@@ -1,0 +1,9 @@
+{{ define "main" }}
+<article class="section-post container">
+  {{ partial "post-meta.html" . }}
+  <h1>{{ .Title }}</h1>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}

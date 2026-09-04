@@ -1,0 +1,40 @@
+{{/* Context: a Paginator. Shows the first three pages, the last page, and a window around the current page. */}}
+{{- $pag := . }}
+{{- if gt $pag.TotalPages 1 }}
+<nav class="pagination-wrapper" aria-label="Pagination">
+  <ul class="pagination">
+    {{- with $pag.Prev }}
+    <li class="page-item">
+      <a class="page-link" href="{{ .URL }}" aria-label="Previous page"><span aria-hidden="true">←</span></a>
+    </li>
+    {{- end }}
+    {{- $ellipsed := false }}
+    {{- $shouldEllipse := false }}
+    {{- range $pag.Pagers }}
+      {{- $right := sub .TotalPages .PageNumber }}
+      {{- $showNumber := or (le .PageNumber 3) (eq $right 0) }}
+      {{- $showNumber = or $showNumber (and (gt .PageNumber (sub $pag.PageNumber 2)) (lt .PageNumber (add $pag.PageNumber 2))) }}
+      {{- if $showNumber }}
+        {{- $ellipsed = false }}
+        {{- $shouldEllipse = false }}
+      {{- else }}
+        {{- $shouldEllipse = not $ellipsed }}
+        {{- $ellipsed = true }}
+      {{- end }}
+      {{- if $showNumber }}
+    <li class="page-item{{ if eq . $pag }} active{{ end }}">
+      <a class="page-link" href="{{ .URL }}"{{ if eq . $pag }} aria-current="page"{{ end }}>{{ .PageNumber }}</a>
+      {{- if eq . $pag }}<span class="active-indicator" aria-hidden="true">•</span>{{ end }}
+    </li>
+      {{- else if $shouldEllipse }}
+    <li class="page-item disabled"><span aria-hidden="true">&hellip;</span></li>
+      {{- end }}
+    {{- end }}
+    {{- with $pag.Next }}
+    <li class="page-item">
+      <a class="page-link" href="{{ .URL }}" aria-label="Next page"><span aria-hidden="true">→</span></a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}

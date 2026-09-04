@@ -1,0 +1,101 @@
+/*
+ * Hamburger menu button ("collapse" variant), adapted from
+ * Hamburgers by Jonathan Suh (MIT) - https://github.com/jonsuh/hamburgers
+ */
+.hamburger {
+  display: inline-block;
+  margin: 0;
+  padding: 8px;
+  overflow: visible;
+  cursor: pointer;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  transition: opacity 0.15s linear;
+
+  &:hover,
+  &.is-active:hover {
+    opacity: 0.8;
+  }
+}
+
+.hamburger-box {
+  display: inline-block;
+  position: relative;
+  width: 28px;
+  height: 18px;
+}
+
+.hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -1px;
+
+  &,
+  &::before,
+  &::after {
+    position: absolute;
+    width: 28px;
+    height: 2px;
+    background-color: #000;
+    transition-property: transform;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+  }
+
+  &::before {
+    top: -8px;
+  }
+
+  &::after {
+    bottom: -8px;
+  }
+}
+
+/* Collapse animation */
+.hamburger--collapse {
+  .hamburger-inner {
+    top: auto;
+    bottom: 0;
+    transition-duration: 0.13s;
+    transition-delay: 0.13s;
+    transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+    &::after {
+      top: -16px;
+      transition: top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1),
+        opacity 0.1s linear;
+    }
+
+    &::before {
+      transition: top 0.12s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1),
+        transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+  }
+
+  &.is-active .hamburger-inner {
+    transform: translate3d(0, -8px, 0) rotate(-45deg);
+    transition-delay: 0.22s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    &::after {
+      top: 0;
+      opacity: 0;
+      transition: top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333),
+        opacity 0.1s 0.22s linear;
+    }
+
+    &::before {
+      top: 0;
+      transform: rotate(-90deg);
+      transition: top 0.1s 0.16s cubic-bezier(0.33333, 0, 0.66667, 0.33333),
+        transform 0.13s 0.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+}

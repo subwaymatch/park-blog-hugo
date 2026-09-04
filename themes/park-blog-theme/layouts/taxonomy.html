@@ -1,0 +1,17 @@
+{{/* Index of all terms in a taxonomy (e.g. /categories/). */}}
+{{ define "main" }}
+<div class="section-list container">
+  <div class="list-title">
+    <span class="circle" aria-hidden="true">{{ partial "svg/circle-memphis-01.html" . }}</span>
+    <h1>{{ .Title }}</h1>
+  </div>
+  <ul class="terms-list">
+    {{ range .Data.Terms.ByCount }}
+    <li>
+      <a href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }}</a>
+      <span class="count">{{ .Count }}</span>
+    </li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}

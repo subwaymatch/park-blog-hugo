@@ -1,0 +1,270 @@
+/* ==========================================================================
+   Jupyter notebooks (output of `jupyter nbconvert --to html --template basic`)
+   ========================================================================== */
+.format-jupyter {
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .cell {
+    margin-bottom: 2rem;
+  }
+
+  /* Markdown cells and code inputs share the regular content width. */
+  .cell.text_cell,
+  .cell.code_cell .input {
+    width: min(var(--content-width), 86%);
+    margin-inline: auto;
+
+    @media (width < 540px) {
+      width: 90%;
+    }
+  }
+
+  .cell.text_cell .prompt.input_prompt {
+    display: none;
+  }
+
+  .cell.code_cell {
+    .input {
+      position: relative;
+    }
+
+    .input .highlight {
+      font-size: 0.95em;
+
+      pre {
+        margin-bottom: 0;
+      }
+    }
+
+    /* In [n]: / Out [n]: prompts sit in the left margin on wide screens. */
+    .prompt.input_prompt,
+    .prompt.output_prompt {
+      position: absolute;
+      left: -5rem;
+      width: 4.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      text-align: right;
+
+      @media (width < 1100px) {
+        display: block;
+        position: relative;
+        top: 0;
+        left: 0;
+        width: min(var(--content-width), 86%);
+        margin-inline: auto;
+        padding-top: 1rem;
+        padding-bottom: 0.6rem;
+        text-align: left;
+      }
+
+      @media (width < 800px) {
+        width: 100%;
+      }
+    }
+
+    .prompt.input_prompt {
+      top: 0.9rem;
+      color: #303f93;
+    }
+
+    .prompt.output_prompt {
+      top: 0.2rem;
+      color: #d84315;
+    }
+
+    /* Outputs may be wider than the text column (plots, tables). */
+    .output_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.7rem;
+      margin-inline: auto;
+    }
+
+    .output_wrapper > div {
+      display: inline-block;
+      min-width: var(--content-width);
+      max-width: 85%;
+
+      @media (width < 800px) {
+        width: 90%;
+        min-width: 90%;
+        max-width: 90%;
+      }
+
+      @media (width < 540px) {
+        width: 94%;
+        min-width: 90%;
+        max-width: 94%;
+      }
+    }
+
+    .output_area {
+      position: relative;
+
+      .output_text {
+        font-family: var(--font-mono);
+      }
+
+      .output_stdout {
+        margin-top: 0.4rem;
+        font-size: 1.2rem;
+      }
+
+      pre {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+      }
+    }
+
+    .output_text,
+    .output_html {
+      overflow-x: auto;
+
+      a {
+        background: none;
+      }
+    }
+
+    .output_execute_result p {
+      margin-top: 1rem;
+      font-family: monospace;
+      font-size: 1.3rem;
+    }
+
+    .output_subarea.output_text {
+      max-height: 24rem;
+      overflow-y: auto;
+    }
+  }
+
+  a.anchor-link {
+    display: none;
+    color: #ccc;
+  }
+
+  /* DataFrame tables */
+  .rendered_html table {
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 0.85rem;
+    table-layout: fixed;
+
+    thead {
+      border-bottom: 1px solid #000;
+      vertical-align: bottom;
+    }
+  }
+
+  .rendered_html .rendered_html tr,
+  .rendered_html th,
+  .rendered_html td {
+    padding: 0.5rem;
+    border: none;
+    max-width: none;
+    line-height: normal;
+    text-align: right;
+    vertical-align: middle;
+    white-space: normal;
+  }
+
+  .rendered_html th {
+    font-weight: bold;
+  }
+
+  .rendered_html tbody tr:nth-child(odd) {
+    background: #f5f5f5;
+  }
+
+  .rendered_html tbody tr:hover {
+    background: rgba(66, 165, 245, 0.2);
+  }
+
+  .rendered_html * + table {
+    margin-top: 1em;
+  }
+
+  .rendered_html p {
+    text-align: left;
+  }
+
+  .rendered_html * + p {
+    margin-top: 1em;
+  }
+}
+
+/* Pygments "default" style used by nbconvert for code cells. */
+.format-jupyter .highlight .hll { background-color: #ffffcc; }
+.format-jupyter .highlight .c { color: #408080; font-style: italic; } /* Comment */
+.format-jupyter .highlight .err { border: 1px solid #ff0000; } /* Error */
+.format-jupyter .highlight .k { color: #008000; font-weight: bold; } /* Keyword */
+.format-jupyter .highlight .o { color: #666666; } /* Operator */
+.format-jupyter .highlight .ch { color: #408080; font-style: italic; } /* Comment.Hashbang */
+.format-jupyter .highlight .cm { color: #408080; font-style: italic; } /* Comment.Multiline */
+.format-jupyter .highlight .cp { color: #bc7a00; } /* Comment.Preproc */
+.format-jupyter .highlight .cpf { color: #408080; font-style: italic; } /* Comment.PreprocFile */
+.format-jupyter .highlight .c1 { color: #408080; font-style: italic; } /* Comment.Single */
+.format-jupyter .highlight .cs { color: #408080; font-style: italic; } /* Comment.Special */
+.format-jupyter .highlight .gd { color: #a00000; } /* Generic.Deleted */
+.format-jupyter .highlight .ge { font-style: italic; } /* Generic.Emph */
+.format-jupyter .highlight .gr { color: #ff0000; } /* Generic.Error */
+.format-jupyter .highlight .gh { color: #000080; font-weight: bold; } /* Generic.Heading */
+.format-jupyter .highlight .gi { color: #00a000; } /* Generic.Inserted */
+.format-jupyter .highlight .go { color: #888888; } /* Generic.Output */
+.format-jupyter .highlight .gp { color: #000080; font-weight: bold; } /* Generic.Prompt */
+.format-jupyter .highlight .gs { font-weight: bold; } /* Generic.Strong */
+.format-jupyter .highlight .gu { color: #800080; font-weight: bold; } /* Generic.Subheading */
+.format-jupyter .highlight .gt { color: #0044dd; } /* Generic.Traceback */
+.format-jupyter .highlight .kc { color: #008000; font-weight: bold; } /* Keyword.Constant */
+.format-jupyter .highlight .kd { color: #008000; font-weight: bold; } /* Keyword.Declaration */
+.format-jupyter .highlight .kn { color: #008000; font-weight: bold; } /* Keyword.Namespace */
+.format-jupyter .highlight .kp { color: #008000; } /* Keyword.Pseudo */
+.format-jupyter .highlight .kr { color: #008000; font-weight: bold; } /* Keyword.Reserved */
+.format-jupyter .highlight .kt { color: #b00040; } /* Keyword.Type */
+.format-jupyter .highlight .m { color: #666666; } /* Literal.Number */
+.format-jupyter .highlight .s { color: #ba2121; } /* Literal.String */
+.format-jupyter .highlight .na { color: #7d9029; } /* Name.Attribute */
+.format-jupyter .highlight .nb { color: #008000; } /* Name.Builtin */
+.format-jupyter .highlight .nc { color: #0000ff; font-weight: bold; } /* Name.Class */
+.format-jupyter .highlight .no { color: #880000; } /* Name.Constant */
+.format-jupyter .highlight .nd { color: #aa22ff; } /* Name.Decorator */
+.format-jupyter .highlight .ni { color: #999999; font-weight: bold; } /* Name.Entity */
+.format-jupyter .highlight .ne { color: #d2413a; font-weight: bold; } /* Name.Exception */
+.format-jupyter .highlight .nf { color: #0000ff; } /* Name.Function */
+.format-jupyter .highlight .nl { color: #a0a000; } /* Name.Label */
+.format-jupyter .highlight .nn { color: #0000ff; font-weight: bold; } /* Name.Namespace */
+.format-jupyter .highlight .nt { color: #008000; font-weight: bold; } /* Name.Tag */
+.format-jupyter .highlight .nv { color: #19177c; } /* Name.Variable */
+.format-jupyter .highlight .ow { color: #aa22ff; font-weight: bold; } /* Operator.Word */
+.format-jupyter .highlight .w { color: #bbbbbb; } /* Text.Whitespace */
+.format-jupyter .highlight .mb { color: #666666; } /* Literal.Number.Bin */
+.format-jupyter .highlight .mf { color: #666666; } /* Literal.Number.Float */
+.format-jupyter .highlight .mh { color: #666666; } /* Literal.Number.Hex */
+.format-jupyter .highlight .mi { color: #666666; } /* Literal.Number.Integer */
+.format-jupyter .highlight .mo { color: #666666; } /* Literal.Number.Oct */
+.format-jupyter .highlight .sa { color: #ba2121; } /* Literal.String.Affix */
+.format-jupyter .highlight .sb { color: #ba2121; } /* Literal.String.Backtick */
+.format-jupyter .highlight .sc { color: #ba2121; } /* Literal.String.Char */
+.format-jupyter .highlight .dl { color: #ba2121; } /* Literal.String.Delimiter */
+.format-jupyter .highlight .sd { color: #ba2121; font-style: italic; } /* Literal.String.Doc */
+.format-jupyter .highlight .s2 { color: #ba2121; } /* Literal.String.Double */
+.format-jupyter .highlight .se { color: #bb6622; font-weight: bold; } /* Literal.String.Escape */
+.format-jupyter .highlight .sh { color: #ba2121; } /* Literal.String.Heredoc */
+.format-jupyter .highlight .si { color: #bb6688; font-weight: bold; } /* Literal.String.Interpol */
+.format-jupyter .highlight .sx { color: #008000; } /* Literal.String.Other */
+.format-jupyter .highlight .sr { color: #bb6688; } /* Literal.String.Regex */
+.format-jupyter .highlight .s1 { color: #ba2121; } /* Literal.String.Single */
+.format-jupyter .highlight .ss { color: #19177c; } /* Literal.String.Symbol */
+.format-jupyter .highlight .bp { color: #008000; } /* Name.Builtin.Pseudo */
+.format-jupyter .highlight .fm { color: #0000ff; } /* Name.Function.Magic */
+.format-jupyter .highlight .vc { color: #19177c; } /* Name.Variable.Class */
+.format-jupyter .highlight .vg { color: #19177c; } /* Name.Variable.Global */
+.format-jupyter .highlight .vi { color: #19177c; } /* Name.Variable.Instance */
+.format-jupyter .highlight .vm { color: #19177c; } /* Name.Variable.Magic */
+.format-jupyter .highlight .il { color: #666666; } /* Literal.Number.Integer.Long */

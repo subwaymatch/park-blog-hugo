@@ -9,20 +9,60 @@
 </p>
 
 # Park Blog
-A personal blog built with [Hugo](https://gohugo.io/). The main goal of this blog was to use Jupyter notebooks as a blogging source without fancy converters. Jupyter's [nbconvert](https://github.com/jupyter/nbconvert) is  used to convert notebooks into HTML formats (`$ jupyter nbconvert notebook.ipynb --to html --template basic` ).<br><br>
 
-## Screenshots
+A personal blog built with [Hugo](https://gohugo.io/). The main goal of this blog is to use Jupyter notebooks as a blogging source without fancy converters: Jupyter's [nbconvert](https://github.com/jupyter/nbconvert) turns notebooks into HTML fragments that Hugo renders with a dedicated layout.
 
-Main Page
-![park-blog-main](https://user-images.githubusercontent.com/1064036/85345549-5ae28c00-b4b8-11ea-885b-86a5e23c21fc.png)
+## Requirements
 
-Single Post (Jupyter)
-![park-blog-jupyter-browser-screenshot](https://user-images.githubusercontent.com/1064036/85345284-c1b37580-b4b7-11ea-85ab-fb694563d154.png)
+- [Hugo](https://gohugo.io/installation/) 0.158 or newer (the standard build is enough; the theme uses plain CSS, so no Sass is needed).
+- [nbconvert](https://nbconvert.readthedocs.io/) (`pip install nbconvert`), only when converting notebooks.
+
+## Development
+
+```sh
+hugo server -D     # live-reloading dev server, including drafts
+hugo --gc --minify # production build into public/
+```
+
+## Writing
+
+### Blog posts
+
+```sh
+hugo new content blog_posts/YYYYMMDD_my_post.md
+```
+
+Front matter supports `title`, `date`, `draft`, `categories`, and `math: true` to load MathJax for a post that contains LaTeX.
+
+### Jupyter notebooks
+
+1. Put the notebook in `content/notebooks/`.
+2. Run `scripts/convert-notebooks.sh` (optionally with specific `.ipynb` paths). It writes a sibling `.html` file for each notebook.
+3. Provide the front matter (`title`, `date`, `categories`) in one of two ways:
+   - as a **raw cell** at the top of the notebook containing the YAML block (nbconvert copies it verbatim), or
+   - by editing the top of the generated `.html` file. The script keeps that block on later re-runs.
+
+   New notebooks without either get a `draft: true` stub to fill in.
+
+Notebook pages load require.js and MathJax automatically so that interactive outputs (Plotly, Vega/Altair) and equations render.
+
+## Project layout
+
+```
+content/blog_posts/   Markdown posts
+content/notebooks/    Jupyter notebooks (.ipynb) and their converted .html twins
+themes/park-blog-theme/
+  layouts/            Hugo templates (baseof, home, list, page, notebooks/page, _partials)
+  assets/css/         Plain CSS (reset, main, hamburger, jupyter), bundled and fingerprinted by Hugo Pipes
+  assets/js/          Menu toggle
+static/images/        Logo and favicons
+scripts/              Notebook conversion script
+hugo.toml             Site configuration
+netlify.toml          Netlify build settings (pins the Hugo version)
+```
 
 ## Notes
 
-- [Inter](https://rsms.me/inter/) font family was used for sans-serif texts. This is one of the best free fonts :+1::star:.
-- [Freight Text Pro](https://fonts.adobe.com/fonts/freight-text) font family from [Adobe Fonts](https://fonts.adobe.com/) has been used for serif texts. This is a paid-font.
-
-## Roadmap
-- Add support for uploading images inside Jupyter notebook to S3
+- [Inter](https://rsms.me/inter/) font family is used for sans-serif text.
+- [Freight Text Pro](https://fonts.adobe.com/fonts/freight-text) from [Adobe Fonts](https://fonts.adobe.com/) is used for serif text (paid font, loaded from Typekit).
+- Google Analytics 4 is configured through `services.googleAnalytics.id` in `hugo.toml`. Hugo only emits the tag in production builds.
